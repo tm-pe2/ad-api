@@ -1,0 +1,8 @@
+node_modules/
+build/
+**/*.sqlite3
+yarn-error.log
+**/*.env*
+.vscode/
+.vs
+
