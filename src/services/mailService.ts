@@ -5,6 +5,10 @@ export class MailService {
   private transport: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
   //using mailtrap.io -> mail development enviroment
   constructor() {
+    if (!process.env.MAILTRAP_U || !process.env.MAILTRAP_P) {
+      throw new Error("please define MAILTRAP_U and MAILTRAP_P in your .env file")
+    }
+
     this.transport = nodemailer.createTransport({
       host: "smtp.mailtrap.io",
       port: 2525,

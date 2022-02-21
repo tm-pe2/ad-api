@@ -7,5 +7,10 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
 
 (async () => {
   console.log("run");
-  new MailService().testEmail()
+  /*try{
+  const ms = new MailService();
+  ms.testEmail()
+  } catch(e){
+    console.error(e);
+  }*/
 })();
