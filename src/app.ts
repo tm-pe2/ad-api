@@ -9,7 +9,7 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
   console.log("run");
   try{
   const ms = new MailService();
-  ms.testEmail()
+  //ms.testEmail()
   } catch(e){
     console.error(e);
   }

@@ -1,7 +1,6 @@
 {
     "port": 25,
-    "domain": "testMail",
-    "host": "tester",
-    "TSL": false,
-    "SSL": false
+    "domain": "ethereal.email",
+    "host": "smtp.ethereal.email",
+    "secure": true
 }
