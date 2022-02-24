@@ -1,0 +1,7 @@
+{
+    "port": 25,
+    "domain": "testMail",
+    "host": "tester",
+    "TSL": false,
+    "SSL": false
+}
