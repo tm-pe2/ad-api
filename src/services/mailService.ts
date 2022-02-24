@@ -5,10 +5,12 @@ import * as mailConfig from '../../mailServiceConfig.json'
 
 export class MailService {
   private account: TestAccount | undefined;
-  private transport: Transporter<SMTPTransport.SentMessageInfo> | undefined;
+  private transport: Transporter<SMTPTransport.SentMessageInfo>;
   //private hostEmail: string;
   //using mailtrap.io -> mail development enviroment
   constructor() { 
+    //having uncertain member variables is bad practice
+    // use the create transport or use the env file
     this.acc();
     this.transport = this.createTrans();
     
@@ -23,8 +25,17 @@ export class MailService {
     }
   }
 
-  private async createTrans() {
-    return
+  private createTrans() {
+    if(!this.account){
+      throw new Error("no test account was able to be created")
+    }
+    return createTransport({
+      host: this.account.smtp.host,
+      port: this.account.smtp.port,
+      auth: {
+        user: this.account.user,
+        pass: this.account.pass
+      }
     })
 
 
