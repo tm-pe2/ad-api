@@ -1,41 +1,41 @@
-import { logging } from 'googleapis/build/src/apis/logging';
-import {TestAccount, Transporter, createTestAccount, createTransport,} from 'nodemailer'
+import { Logger } from '../utils/logger';
+import { Transporter, createTransport, } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as mailConfig from '../../mailServiceConfig.json'
 
 export class MailService {
-  private account: TestAccount | undefined;
+  //private account: TestAccount | undefined;
   private transport: Transporter<SMTPTransport.SentMessageInfo>;
-  //private hostEmail: string;
+  private hostEmail: string;
   //using mailtrap.io -> mail development enviroment
-  constructor() { 
+  constructor() {
     //having uncertain member variables is bad practice
     // use the create transport or use the env file
-    this.acc();
+    this.checkEnv()
+    this.hostEmail = process.env.MAILSERVICE_USER + "@" + mailConfig.domain;
     this.transport = this.createTrans();
-    
-    this.verify();
+    this.verify()
   };
 
-  private async acc() {
-    const acc = await createTestAccount();
-    if(!acc)
-    {
-      throw new Error("couldn't create test account");
-    }
+  private checkEnv() {
+    if (!process.env.MAILSERVICE_USER)
+      throw new Error("Please define MAILSERVICE_USER in your env file");
+
+    if (!process.env.MAILSERVICE_PASS)
+      throw new Error("Please define MAILSERVICE_PASS in your env file");
   }
 
   private createTrans() {
-    if(!this.account){
-      throw new Error("no test account was able to be created")
-    }
     return createTransport({
-      host: this.account.smtp.host,
-      port: this.account.smtp.port,
+      host: mailConfig.host,
+      port: mailConfig.port,
       auth: {
-        user: this.account.user,
-        pass: this.account.pass
-      }
+        user: this.hostEmail,
+        pass: process.env.MAILSERVICE_PASS
+      },
+      logger: false,
+      secure: false,
+      requireTLS: true
     })
 
 
@@ -60,21 +60,20 @@ export class MailService {
   }
 
   private async verify(): Promise<void> {
-    if (!(await this.transport?.verify()))
+    if (!(await this.transport.verify()))
       throw new Error("transport in mailService isn't valid");
   }
 
   public testEmail() {
     //supposed to be gotten from the data base
-    const userEmail = "test2@testMail"
-  
-
+    const userEmail = "maci.rohan48@ethereal.email"
+    
     this.transport.sendMail({
-      //from: this.hostEmail,
+      from: this.hostEmail,
       to: userEmail,
       text: "test",
       subject: "test"
-    }).catch((e)=> console.error(e))
+    }).catch((e) => {Logger.info(e);})
   }
 
 
