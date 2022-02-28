@@ -9,6 +9,15 @@
     "eslint": "eslint",
     "serve": "nodemon"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tm-pe2/ad-api.git"
+  },
+  "author": "PE2-2021-2022",
+  "bugs": {
+    "url": "https://github.com/tm-pe2/ad-api/issues"
+  },
+  "homepage": "https://github.com/tm-pe2/ad-api#readme",
   "dependencies": {
     "@types/node": "^14.14.10",
     "axios": "^0.26.0",
