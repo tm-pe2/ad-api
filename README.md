@@ -3,17 +3,17 @@
 ## Requirements
 
 - [node](https://nodejs.org/en/)
-- [yarn](https://yarnpkg.com/getting-started/install)
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## Installation
 
 ```sh
-yarn install
+npm install
 ```
 
 Create `.env` file in root with content:
 
-create a [mailtrap](https://mailtrap.io) account and get a login credentials
+get the MAILSERVICE credentials at [ethereal](https://ethereal.email) (this is used to test sending mails)
 
 ```md
 MAILSERVICE_USER=""
@@ -23,5 +23,5 @@ MAILSERVICE_PASS=""
 ## Running
 
 ```sh
-yarn serve
+npm run serve
 ```
