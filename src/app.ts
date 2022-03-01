@@ -1,17 +1,22 @@
 import dotenv from 'dotenv';
-import {MailService} from './services/mailService'
+import { httpServer } from './server'
+import { MailService } from './services/mailService'
+import { Logger } from './utils/logger';
 
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
-  dotenv.config();
+    dotenv.config();
 }
 
 (async () => {
-  console.log("run");
-  try{
-  const ms = await new MailService();
-  ms.testEmail()
-  } catch(e){
-    console.error(e);
-  }
+    console.log("run");
+
+    const PORT: any = process.env.PORT ?? 6060;
+    httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
+    try {
+        const ms = new MailService();
+        ms.testEmail()
+    } catch (e) {
+        console.error(e);
+    }
 })();
