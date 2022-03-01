@@ -1,6 +1,5 @@
 /** source/controllers/clients.ts */
 import { Request, Response, NextFunction } from 'express';
-import axios, { AxiosResponse } from 'axios';
 var mysql = require('mysql');
 
 var conn = mysql.createConnection({
