@@ -1,14 +1,6 @@
 /** source/controllers/clients.ts */
 import { Request, Response, NextFunction } from 'express';
-import axios, { AxiosResponse } from 'axios';
 var mysql = require('mysql');
-
-var conn = mysql.createConnection({
-        host: "localhost",
-        user: "Webuser",
-        password: "Lab2021",
-        database: "webshop"
-    });
 
 interface Address {
     street: String;
@@ -25,20 +17,30 @@ interface Client {
     address: Address;
 }
 
+var conn = mysql.createConnection({
+    host: "localhost",
+    user: "Webuser",
+    password: "Lab2021",
+    database: "webshop"
+});
+
+conn.connect(function (err: Error) {
+    if (err) {
+        console.log("error occured while connecting");
+    }
+});
+
 // get all clients
 const getClients = async (req: Request, res: Response, next: NextFunction) => {
-    conn.connect(function (err:Error) {
-        if(err){
-            console.log("error occured while connecting");
-        }
-        else{
-            console.log("connection created with Mysql successfully");
-        }});
-
-    return res.status(200).json({
-        message: "This is get all clients route"
+    conn.query("Select * FROM users", function (err: Error, clients: string) 
+    {
+        if (err) throw err;
+        return res.status(200).json({
+        clients
+        });
     });
 };
+
 
 // get one client
 const getClient = async (req: Request, res: Response, next: NextFunction) => {
