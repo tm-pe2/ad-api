@@ -2,7 +2,6 @@
 import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
-import routesPosts from './routes/posts';
 import routesClients from './routes/clients';
 
 const router: Express = express();
@@ -22,7 +21,7 @@ router.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'origin, X-Requested-With,Content-Type,Accept, Authorization');
     // set the CORS method headers
     if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'GET PATCH DELETE POST');
+        res.header('Access-Control-Allow-Methods', 'GET PATCH DELETE POST PUT');
         return res.status(200).json({});
     }
     next();
@@ -30,7 +29,6 @@ router.use((req, res, next) => {
 
 /** Routes */
 router.use('/', routesClients);
-router.use('/', routesPosts);
 
 /** Error handling */
 router.use((req, res, next) => {
