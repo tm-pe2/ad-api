@@ -42,3 +42,4 @@ router.use((req, res, next) => {
 
 /** Server */
 export const httpServer = http.createServer(router);
+export default router;

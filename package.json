@@ -5,6 +5,7 @@
   "private": true,
   "main": "src/app.ts",
   "scripts": {
+    "test": "jest",
     "tsc": "tsc",
     "eslint": "eslint",
     "serve": "nodemon"
@@ -31,13 +32,17 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jest": "^27.4.1",
     "@types/morgan": "^1.9.3",
     "@types/nodemailer": "^6.4.4",
     "@typescript-eslint/eslint-plugin": "^3.1.0",
     "@typescript-eslint/parser": "^3.1.0",
     "dotenv": "^8.6.0",
     "eslint": "^7.2.0",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.4",
+    "supertest": "^6.2.2",
+    "ts-jest": "^27.1.3",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   }
