@@ -3,6 +3,8 @@ import { Transporter, createTransport, } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as mailConfig from '../configs/mailServiceConfig.json'
 import { Customer } from '../models/customers';
+import Mail from 'nodemailer/lib/mailer';
+import { stringify } from 'querystring';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
@@ -57,10 +59,11 @@ export class MailService {
 
 
         this.transport.sendMail({
-            from: this.hostEmail,
+            from: {name: mailConfig.company, address: this.hostEmail} as Mail.Address,
             to: customer.email,
             text: this.textFormat(title, body),
-            subject: "test"
+            html: this.htmlFormat(title, body),
+            subject: "Invoice"
         }).catch((e) => { Logger.error(e); })
     }
 
@@ -70,6 +73,16 @@ export class MailService {
             text += "\n\n" + b
         }
         text += "\n\n" + this.endMail;
+        return text;
+    }
+
+    htmlFormat(title: string, body : string[]): string {
+        let text = "<p>" + title + "</p>";
+        for (const b of body) {
+            text += "<p>" + b + "</p>";
+        }
+        
+        text += "<p>" +this.endMail.replace("\n", "<br>") + "<p>";
         return text;
     }
 };
