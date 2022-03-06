@@ -110,3 +110,13 @@ describe(`DELETE /posts/:id`, () => {
         expect(response.status).toBe(200)
     })
 });
+
+
+//TICKETING
+
+describe('GET /tickets', () => {
+    it('should return a 200 response', async () => {
+        const response = await request(router).get('/tickets')
+        expect(response.status).toBe(200)
+    })
+})
