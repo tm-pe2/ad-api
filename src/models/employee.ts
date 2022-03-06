@@ -1,4 +1,4 @@
-export interface Employee {
-  id: number,
-  email: string
+import { User } from "./user";
+
+export interface Employee extends User {
 }

@@ -15,7 +15,7 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
     httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
     try {
         const ms = new MailService();
-        ms.testEmail()
+        ms.sendInvoice()
     } catch (e) {
         console.error(e);
     }

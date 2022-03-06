@@ -2,5 +2,6 @@
     "port": 25,
     "domain": "ethereal.email",
     "host": "smtp.ethereal.email",
-    "secure": true
+    "secure": true,
+    "company": "PE Inc"
 }

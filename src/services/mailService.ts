@@ -1,11 +1,13 @@
 import { Logger } from '../utils/logger';
 import { Transporter, createTransport, } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import * as mailConfig from '../../mailServiceConfig.json'
+import * as mailConfig from '../configs/mailServiceConfig.json'
+import { Customer } from '../models/customers';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
     private hostEmail: string;
+    private endMail = `Best regards,\n ${mailConfig.company}`
 
     constructor() {
         this.checkEnv()
@@ -42,17 +44,33 @@ export class MailService {
             throw new Error("transport in mailService isn't valid");
     }
 
-    public testEmail() {
+    public sendInvoice() {
         //supposed to be gotten from the data base
-        const userEmail = "maci.rohan48@ethereal.email"
+        const customer: Customer = {
+            id: 1,
+            firstName: "maci",
+            lastName: "rohan48",
+            email: "blair.fahey6@ethereal.email"
+        }
+        const title = `Dear ${customer.firstName} ${customer.lastName}`;
+        const body = ["this is a test", "a longer test message is what this is. maybe you can give me some juice."];
 
 
         this.transport.sendMail({
             from: this.hostEmail,
-            to: userEmail,
-            text: "test",
+            to: customer.email,
+            text: this.textFormat(title, body),
             subject: "test"
         }).catch((e) => { Logger.error(e); })
+    }
+
+    textFormat(title: string, body: string[]): string {
+        let text = title;
+        for (const b of body) {
+            text += "\n\n" + b
+        }
+        text += "\n\n" + this.endMail;
+        return text;
     }
 };
 
