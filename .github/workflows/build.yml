@@ -1,4 +1,4 @@
-name: Test the api routes
+name: Build API
 on:
   push:
     branches:
@@ -25,7 +25,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: npm install, run test and build production
+      - name: npm install and build
         run: |
           npm i
+          npm run tsc
           npm run test
