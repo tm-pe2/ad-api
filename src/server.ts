@@ -1,9 +1,10 @@
-/** source/server.ts */
+/** src/server.ts */
 import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
 import routesPosts from './routes/posts';
 import routesClients from './routes/clients';
+import routesTicketing from './routes/ticketing';
 
 const router: Express = express();
 
@@ -31,6 +32,7 @@ router.use((req, res, next) => {
 /** Routes */
 router.use('/', routesClients);
 router.use('/', routesPosts);
+router.use('/', routesTicketing);
 
 /** Error handling */
 router.use((req, res, next) => {
