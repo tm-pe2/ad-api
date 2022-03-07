@@ -23,7 +23,7 @@ let conn = db.connect();
 // get all clients
 const getClients = async (req: Request, res: Response, next: NextFunction) => {
     let query: string = "Select * FROM users";
-    conn.query(query, function (err: Error, clients: string) 
+    conn.query(query, function (err: Error, clients: string)
     {
         if (err) throw err;
         return res.status(200).json({
@@ -35,10 +35,8 @@ const getClients = async (req: Request, res: Response, next: NextFunction) => {
 
 // get one client
 const getClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the client id from the req
-    let id: string = req.params.id;
-    let query: string = "Select * FROM users Where UID = " + id;
-    conn.query(query, function (err: Error, client: string) 
+    let query: string = "Select * FROM users Where UID = ?";
+    conn.query(query, [req.params.id], (err, client) =>
     {
         if (err) throw err;
         return res.status(200).json({
@@ -49,19 +47,23 @@ const getClient = async (req: Request, res: Response, next: NextFunction) => {
 
 // update a client
 const updateClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the client id from the req.params
-    let id: string = req.params.id;
-    // get the data from req.body
-    let { name, lastname, imagePath, type, username, password } = req.body;
-    let query: string = `UPDATE users SET name="${name}", lastname="${lastname}",
-                            imagePath="${imagePath}", type="${type}",
-                            username="${username}", password="${password}"
-                            Where UID = ` + id;
-    
-    conn.query(query, function (err: Error, client: string) 
-    {
+    let query: string = `UPDATE users SET name = ?, lastname = ?, imagePath = ?, type = ?, username = ?, password = ? Where UID = ? `;
+    conn.query(query,
+    [
+        req.body.name,
+        req.body.lastname,
+        req.body.imagePath,
+        req.body.type,
+        req.body.username,
+        req.body.password,
+        req.params.id
+    ]
+    //req.body
+    , (err, client) => {
         if (err) throw err;
         return res.status(200).json({
+            "query" : query,
+            "request id" : req.body.id,
             client
         });
     });
@@ -69,10 +71,8 @@ const updateClient = async (req: Request, res: Response, next: NextFunction) => 
 
 // delete a client
 const deleteClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the client id from req.params
-    let id: string = req.params.id;
-    let query: string = "DELETE FROM users Where UID = " + id;
-    conn.query(query, function (err: Error, client: string) 
+    let query: string = "DELETE FROM users Where UID= ?";
+    conn.query(query, [req.params.id], (err, client) =>
     {
         if (err) throw err;
         return res.status(200).json({
@@ -83,11 +83,8 @@ const deleteClient = async (req: Request, res: Response, next: NextFunction) => 
 
 // add a client
 const addClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the data from req.body
-    let { name, lastname, imagePath, type, username, password } = req.body;
-
-    let query: string = `INSERT INTO users (name, lastname, imagePath, type, username, password) VALUES ("${name}","${lastname}","${imagePath}","${type}","${username}","${password}")`;
-    conn.query(query, function (err: Error, client: string) 
+    let query: string = `INSERT INTO users SET ?`;
+    conn.query(query, req.body, (err, client) =>
     {
         if (err) throw err;
         return res.status(200).json({
