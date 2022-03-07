@@ -43,6 +43,9 @@ const getClients = async (req: Request, res: Response, next: NextFunction) => {
 const getClient = async (req: Request, res: Response, next: NextFunction) => {
     // get the client id from the req
     let id: string = req.params.id;
+    return res.status(200).json({
+        message: "This is get one client route"
+    });
 };
 
 // update a client
@@ -51,18 +54,27 @@ const updateClient = async (req: Request, res: Response, next: NextFunction) => 
     let id: string = req.params.id;
     // get the data from req.body
     //let name: string = req.body.name ?? null;
+    return res.status(200).json({
+        message: "This is update client route"
+    });
 };
 
 // delete a client
 const deleteClient = async (req: Request, res: Response, next: NextFunction) => {
     // get the client id from req.params
     let id: string = req.params.id;
+    return res.status(200).json({
+        message: "This is delete client route"
+    });
 };
 
 // add a client
 const addClient = async (req: Request, res: Response, next: NextFunction) => {
     // get the data from req.body
     //let name: string = req.body.name ?? null;
+    return res.status(200).json({
+        message: "This is add client route"
+    });
 };
 
 export default { getClients, getClient, updateClient, deleteClient, addClient };
