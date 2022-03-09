@@ -4,12 +4,18 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as mailConfig from '../configs/mailServiceConfig.json'
 import { Customer } from '../models/customers';
 import Mail from 'nodemailer/lib/mailer';
-import { stringify } from 'querystring';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
     private hostEmail: string;
-    private endMail = `Best regards,\n ${mailConfig.company}`
+    private endMail = `Best regards,\n${mailConfig.company}`;
+    //supposed to be gotten from the data base
+    private customer: Customer = {
+        id: 1,
+        firstName: "maci",
+        lastName: "rohan48",
+        email: "rafael.mertz34@ethereal.email"
+    }
 
     constructor() {
         this.checkEnv()
@@ -35,6 +41,7 @@ export class MailService {
                 user: this.hostEmail,
                 pass: process.env.MAILSERVICE_PASS
             },
+            from: { name: mailConfig.company, address: this.hostEmail } as Mail.Address,
             logger: true,
             secure: false,
             requireTLS: true
@@ -46,24 +53,20 @@ export class MailService {
             throw new Error("transport in mailService isn't valid");
     }
 
-    public sendInvoice() {
-        //supposed to be gotten from the data base
-        const customer: Customer = {
-            id: 1,
-            firstName: "maci",
-            lastName: "rohan48",
-            email: "blair.fahey6@ethereal.email"
-        }
-        const title = `Dear ${customer.firstName} ${customer.lastName}`;
-        const body = ["this is a test", "a longer test message is what this is. maybe you can give me some juice."];
-
+    public sendInvoice(/*customer: Customer | User */): void {
+        //info from db
+        const invoice = {id: "I-0009", total: 1000.99, dueDate: new Date()}
+        const title = `Dear ${this.customer.firstName} ${this.customer.lastName}`;
+        const body = [
+            `your invoice ${invoice.id} of ${invoice.total} is due at ${invoice.dueDate.toDateString()}. Please pay this as soon as possible.`,
+            "if you wish to see more details and/or pay please visit <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
+        ];
 
         this.transport.sendMail({
-            from: {name: mailConfig.company, address: this.hostEmail} as Mail.Address,
-            to: customer.email,
+            to: this.customer.email,
+            subject: "Invoice",
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
-            subject: "Invoice"
         }).catch((e) => { Logger.error(e); })
     }
 
@@ -76,13 +79,13 @@ export class MailService {
         return text;
     }
 
-    htmlFormat(title: string, body : string[]): string {
+    htmlFormat(title: string, body: string[]): string {
         let text = "<p>" + title + "</p>";
         for (const b of body) {
             text += "<p>" + b + "</p>";
         }
-        
-        text += "<p>" +this.endMail.replace("\n", "<br>") + "<p>";
+
+        text += "<p>" + this.endMail.replace("\n", "<br>") + "</p>";
         return text;
     }
 };
