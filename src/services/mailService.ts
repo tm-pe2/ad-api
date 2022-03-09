@@ -4,6 +4,8 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as mailConfig from '../configs/mailServiceConfig.json'
 import { Customer } from '../models/customers';
 import Mail from 'nodemailer/lib/mailer';
+import { Employee } from '../models/employee';
+import { User } from '../models/user';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
@@ -64,7 +66,24 @@ export class MailService {
 
         this.transport.sendMail({
             to: this.customer.email,
-            subject: "Invoice",
+            subject: `Invoice: ${invoice.id}`,
+            text: this.textFormat(title, body),
+            html: this.htmlFormat(title, body),
+        }).catch((e) => { Logger.error(e); })
+    }
+
+    public sendWorkOrder(/*employee: Employee | User*/){
+        const employee = this.customer;
+        //info from db
+        const title = `Dear ${employee.firstName} ${employee.lastName}`;
+        const body = [
+            "you have a new work order.",
+            "for more information go to <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
+        ];
+
+        this.transport.sendMail({
+            to: this.customer.email,
+            subject: `Work order`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
         }).catch((e) => { Logger.error(e); })
