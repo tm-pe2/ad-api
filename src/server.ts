@@ -42,3 +42,7 @@ router.use((req, res, next) => {
 const httpServer = http.createServer(router);
 const PORT: any = process.env.PORT ?? 6060;
 httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+
+/* Reference : https://www.section.io/engineering-education/how-to-create-a-simple-rest-api-using-typescript-and-nodejs/ 
+   To build the basics of the API I have followed the tutorial provided in the reference. 
+*/

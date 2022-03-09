@@ -62,7 +62,6 @@ const updateClient = async (req: Request, res: Response, next: NextFunction) => 
     , (err, client) => {
         if (err) throw err;
         return res.status(200).json({
-            "query" : query,
             "request id" : req.body.id,
             client
         });
