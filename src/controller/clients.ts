@@ -1,5 +1,6 @@
 /** source/controllers/clients.ts */
 import { Request, Response, NextFunction } from 'express';
+import { MysqlError } from 'mysql';
 import { Database } from '../classes/database'
 
 let db = new Database();
@@ -8,7 +9,7 @@ let conn = db.connect();
 // get all clients
 const getClients = async (req: Request, res: Response, next: NextFunction) => {
     let query: string = "Select * FROM users";
-    conn.query(query, function (err: Error, clients: string)
+    conn.query(query, (err: MysqlError, clients: string) =>
     {
         if (err) throw err;
         return res.status(200).json({
@@ -17,11 +18,10 @@ const getClients = async (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-
 // get one client
 const getClient = async (req: Request, res: Response, next: NextFunction) => {
     let query: string = "Select * FROM users Where UID = ?";
-    conn.query(query, [req.params.id], (err, client) =>
+    conn.query(query, [req.params.id] , (err: unknown, client: string) =>
     {
         if (err) throw err;
         return res.status(200).json({
@@ -44,7 +44,8 @@ const updateClient = async (req: Request, res: Response, next: NextFunction) => 
         req.params.id
     ]
     //req.body
-    , (err, client) => {
+    , (err: unknown , client: string) =>
+    {
         if (err) throw err;
         return res.status(200).json({
             "request id" : req.body.id,
@@ -56,7 +57,7 @@ const updateClient = async (req: Request, res: Response, next: NextFunction) => 
 // delete a client
 const deleteClient = async (req: Request, res: Response, next: NextFunction) => {
     let query: string = "DELETE FROM users Where UID= ?";
-    conn.query(query, [req.params.id], (err, client) =>
+    conn.query(query, [req.params.id], (err: unknown, client: string) =>
     {
         if (err) throw err;
         return res.status(200).json({
@@ -68,7 +69,7 @@ const deleteClient = async (req: Request, res: Response, next: NextFunction) => 
 // add a client
 const addClient = async (req: Request, res: Response, next: NextFunction) => {
     let query: string = `INSERT INTO users SET ?`;
-    conn.query(query, req.body, (err, client) =>
+    conn.query(query, req.body, (err: unknown, client: string) =>
     {
         if (err) throw err;
         return res.status(200).json({
