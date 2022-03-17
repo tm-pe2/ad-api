@@ -1,6 +1,7 @@
 /** source/server.ts */
 import http from 'http';
 import express, { Express } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import routesClients from './routes/clients';
 
@@ -14,7 +15,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(express.json());
 
 /** RULES OF OUR API */
-router.use((req, res, next) => {
+router.use((req: Request, res: Response, next: NextFunction) => {
     // set the CORS policy
     res.header('Access-Control-Allow-Origin', '*');
     // set the CORS headers
@@ -31,7 +32,8 @@ router.use((req, res, next) => {
 router.use('/', routesClients);
 
 /** Error handling */
-router.use((req, res, next) => {
+router.use((req: Request, res: Response, next: NextFunction) => 
+{
     const error = new Error('not found');
     return res.status(404).json({
         message: error.message
