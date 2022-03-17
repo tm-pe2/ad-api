@@ -82,30 +82,3 @@ describe(`DELETE /clients/:id`, () => {
         expect(response.status).toBe(200)
     })
 });
-
-//test for GET /posts/:id
-
-describe(`GET /posts/:id`, () => {
-    it(`should return a 200 response`, async () => {
-        const response = await request(router).get('/posts/1')
-        expect(response.status).toBe(200)
-    })
-});
-
-//test for PUT /posts/:id
-
-describe(`PUT /posts/:id`, () => {
-    it(`should return a 200 response`, async () => {
-        const response = await request(router).put('/posts/1')
-        expect(response.status).toBe(200)
-    })
-});
-
-//test for DELETE /posts/:id
-
-describe(`DELETE /posts/:id`, () => {
-    it(`should return a 200 response`, async () => {
-        const response = await request(router).delete('/posts/1')
-        expect(response.status).toBe(200)
-    })
-});
