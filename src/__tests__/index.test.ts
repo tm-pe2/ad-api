@@ -1,6 +1,5 @@
-import router from "../server"
-
-import request from "supertest"
+import router from "../server";
+import request from "supertest";
 
 
 /* https://stackoverflow.com/a/28199817 */
