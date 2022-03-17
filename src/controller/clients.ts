@@ -2,21 +2,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Database } from '../calsses/database';
 
-interface Address {
-    street: String;
-    hNumber: Number;
-    postCode: String;
-    country: String;
-}
-
-interface Client {
-    id: Number;
-    name: String;
-    lastname: String;
-    birthday: Date;
-    address: Address;
-}
-
 let db = new Database();
 let conn = db.connect();
 
