@@ -4,6 +4,7 @@ import express, { Express } from 'express';
 import morgan from 'morgan';
 import routesPosts from './routes/posts';
 import routesClients from './routes/clients';
+import routesTechTask from './routes/techtasks';
 
 const router: Express = express();
 
@@ -31,6 +32,7 @@ router.use((req, res, next) => {
 /** Routes */
 router.use('/', routesClients);
 router.use('/', routesPosts);
+router.use('/', routesTechTask);
 
 /** Error handling */
 router.use((req, res, next) => {
