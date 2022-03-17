@@ -1,6 +1,6 @@
 /** source/controllers/clients.ts */
 import { Request, Response, NextFunction } from 'express';
-import { Database } from '../calsses/database';
+import { Database } from '../classes/database'
 
 let db = new Database();
 let conn = db.connect();
