@@ -5,8 +5,10 @@
   "private": true,
   "main": "src/app.ts",
   "scripts": {
-    "dev": "nodemon --config src/nodemon.json src/server.ts",
-    "build": "rm -rf build/ && prettier --write src/server.ts && tsc"
+    "test": "jest",
+    "serve": "nodemon --config src/nodemon.json src/server.ts",
+    "tsc": "tsc",
+    "eslint": "eslint"
   },
   "repository": {
     "type": "git",
