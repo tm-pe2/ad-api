@@ -2,7 +2,9 @@
 import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
-import routesClients from './routes/clients';
+// import routesClients from './routes/clients';
+import routesAuth from './routes/auth';
+import bodyParser from 'body-parser';
 
 const router: Express = express();
 
@@ -12,6 +14,8 @@ router.use(morgan('dev'));
 router.use(express.urlencoded({ extended: false }));
 /** Takes care of JSON data */
 router.use(express.json());
+
+router.use(bodyParser.json());
 
 /** RULES OF OUR API */
 router.use((req, res, next) => {
@@ -28,7 +32,8 @@ router.use((req, res, next) => {
 });
 
 /** Routes */
-router.use('/', routesClients);
+// router.use('/', routesClients);
+router.use('/', routesAuth);
 
 /** Error handling */
 router.use((req, res, next) => {
