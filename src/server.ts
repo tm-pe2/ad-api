@@ -6,6 +6,21 @@ import morgan from 'morgan';
 import routesAuth from './routes/auth';
 import bodyParser from 'body-parser';
 
+import dotenv from 'dotenv';
+import { Env } from './util/env';
+
+if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
+    dotenv.config();
+}
+
+try {
+    Env.validateMandatoryKeys();
+} catch (err) {
+    console.error('.env not properly configured: ', err);
+    process.exit(-1);
+}
+
+
 const router: Express = express();
 
 /** Logging */
@@ -33,7 +48,7 @@ router.use((req, res, next) => {
 
 /** Routes */
 // router.use('/', routesClients);
-router.use('/', routesAuth);
+router.use('/auth/', routesAuth);
 
 /** Error handling */
 router.use((req, res, next) => {
@@ -43,10 +58,22 @@ router.use((req, res, next) => {
     });
 });
 
-/** Server */
-const httpServer = http.createServer(router);
-const PORT: any = process.env.PORT ?? 6060;
-httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+
+(async () => {
+    console.log("run");
+    
+    const httpServer = http.createServer(router);
+    const PORT: any = process.env.PORT ?? 6060;
+    httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+  /*try{
+  const ms = new MailService();
+  ms.testEmail()
+  } catch(e){
+    console.error(e);
+  }*/
+})();
+
+
 
 /* Reference : https://www.section.io/engineering-education/how-to-create-a-simple-rest-api-using-typescript-and-nodejs/ 
    To build the basics of the API I have followed the tutorial provided in the reference. 
