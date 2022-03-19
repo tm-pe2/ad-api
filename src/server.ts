@@ -6,6 +6,7 @@ import routesPosts from './routes/posts';
 import routesClients from './routes/clients';
 import routesDashboard from './routes/dashboard';
 import routesTicketing from './routes/ticketing';
+import routesEnergyUsage from './routes/energyUsage';
 
 const router: Express = express();
 
@@ -35,6 +36,7 @@ router.use('/', routesClients);
 router.use('/', routesPosts);
 router.use('/', routesDashboard);
 router.use('/', routesTicketing);
+router.use('/', routesEnergyUsage);
 
 /** Error handling */
 router.use((req, res, next) => {
