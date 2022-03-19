@@ -64,7 +64,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
 
     if (rt === undefined)
         return res.status(403).send('Invalid refresh token'); // forbidden
-    if (rt.expiryDate > (new Date()).getTime()) {
+    if (rt.expiryDate < (new Date()).getTime()) {
         refreshTokens = refreshTokens.filter((t) => t !== rt);
         return res.status(403).send('Refresh token expired'); // forbidden
     }
