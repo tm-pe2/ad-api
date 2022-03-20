@@ -114,12 +114,21 @@ describe(`DELETE /posts/:id`, () => {
 
 //TICKETING
 
+//tickets
 describe('GET /tickets', () => {
     it('should return a 200 response', async () => {
         const response = await request(router).get('/tickets')
         expect(response.status).toBe(200)
     })
 })
+//users
+describe('GET /tickets/user/:id', () => {
+    it('should return a 200 response', async () => {
+        const response = await request(router).get('/tickets/user/1')
+        expect(response.status).toBe(200)
+    })
+}
+    )
 
 
 // Dashboard users (dummy test)
