@@ -719,12 +719,12 @@ const tickets: Array<Ticket> = [
 
 const dummyUsers: Array<User> = [
     {
-        "id": 1,
+        "id": 0,
         "name": "Buckner",
         "permissions": 0
     },
     {
-        "id": 2,
+        "id": 1,
         "name": "Mccullough",
         "permissions": 1
     }
