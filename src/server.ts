@@ -6,6 +6,8 @@ import morgan from 'morgan';
 import routesAuth from './routes/auth';
 import bodyParser from 'body-parser';
 
+import cors from 'cors'
+
 import dotenv from 'dotenv';
 import { Env } from './util/env';
 
@@ -22,6 +24,9 @@ try {
 
 
 const router: Express = express();
+
+/** Middleware for CORS */
+router.use(cors());
 
 /** Logging */
 router.use(morgan('dev'));

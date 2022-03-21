@@ -4,7 +4,7 @@ import controller from '../controller/auth';
 const router = express.Router();
 
 router.post('/login', controller.login);
-router.get('/logout', controller.logout);
-router.get('/token', controller.refreshToken);  
+router.post('/logout', controller.logout);
+router.post('/token', controller.refreshToken);  
 
 export = router;
