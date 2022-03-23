@@ -68,7 +68,8 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
         refreshTokens = refreshTokens.filter((t) => t !== rt);
         return res.status(403).send('Refresh token expired'); // forbidden
     }
-    
+    // 403 => Front-end needs to ask for login again
+
     const user = dummyUsers.find((u) => u.id == rt?.userid);
     if (user === undefined) {
         return res.sendStatus((500));

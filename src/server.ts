@@ -4,6 +4,7 @@ import express, { Express } from 'express';
 import morgan from 'morgan';
 // import routesClients from './routes/clients';
 import routesAuth from './routes/auth';
+import routesTest from './routes/test';
 import bodyParser from 'body-parser';
 
 import cors from 'cors'
@@ -54,6 +55,7 @@ router.use((req, res, next) => {
 /** Routes */
 // router.use('/', routesClients);
 router.use('/auth/', routesAuth);
+router.use('/', routesTest);
 
 /** Error handling */
 router.use((req, res, next) => {
