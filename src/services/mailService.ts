@@ -1,11 +1,8 @@
 import { Logger } from '../utils/logger';
-import { Transporter, createTransport, } from 'nodemailer'
+import { Transporter, createTransport, SentMessageInfo, } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as mailConfig from '../configs/mailServiceConfig.json'
 import { Customer } from '../models/customers';
-import Mail from 'nodemailer/lib/mailer';
-import { Employee } from '../models/employee';
-import { User } from '../models/user';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
@@ -63,7 +60,7 @@ export class MailService {
             throw new Error("transport in mailService isn't valid");
     }
 
-    public sendInvoice(/*customer: Customer | User */): void {
+    public sendInvoice(/*customer: Customer | User */): SentMessageInfo {
         //info from db
         const invoice = {id: "I-0009", total: 1000.99, dueDate: new Date()}
         const title = `Dear ${this.customer.firstName} ${this.customer.lastName}`;
@@ -72,7 +69,7 @@ export class MailService {
             "if you wish to see more details and/or pay please visit <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
         ];
 
-        this.transport.sendMail({
+        return this.transport.sendMail({
             to: this.customer.email,
             subject: `Invoice: ${invoice.id}`,
             text: this.textFormat(title, body),
@@ -80,7 +77,7 @@ export class MailService {
         }).catch((e) => { Logger.error(e); })
     }
 
-    public sendWorkOrder(/*employee: Employee | User*/){
+    public sendWorkOrder(/*employee: Employee | User*/): SentMessageInfo{
         const employee = this.customer;
         //info from db
         const title = `Dear ${employee.firstName} ${employee.lastName}`;
@@ -89,13 +86,12 @@ export class MailService {
             "for more information go to <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
         ];
         
-        this.transport.sendMail({
+        return this.transport.sendMail({
             to: this.customer.email,
             subject: `Work order`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
-        }).catch((e) => { Logger.error(e); }).then((info) => {console.info(info);
-        }, reject => console.error(reject))
+        }).catch((e) => { Logger.error(e); });
     }
 
     textFormat(title: string, body: string[]): string {
