@@ -8,7 +8,7 @@ describe("sents invoice mails", () => {
     it("should respond defined", async ()=> {
         const ms = new MailService();
         const res = await ms.sendInvoice();
-        expect(res.response).toBeDefined();
+        expect(res.response).toEqual(expect.stringContaining(`250 Accepted`));
     })
 })
 
@@ -16,6 +16,6 @@ describe("sents workorder", ()=> {
     it("should respond defined",async () => {
         const ms = new MailService();
         const res = await ms.sendWorkOrder();
-        expect(res.response).toBeDefined();
+        expect(res.response).toEqual(expect.stringContaining(`250 Accepted`));
     })
 } )
