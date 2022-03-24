@@ -10,21 +10,28 @@ import { User } from '../models/user';
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
     private hostEmail: string;
+    private from : string;
+             
     private endMail = `Best regards,\n${mailConfig.company}`;
     //supposed to be gotten from the data base
     private customer: Customer = {
         id: 1,
         firstName: "maci",
         lastName: "rohan48",
-        email: "rafael.mertz34@ethereal.email"
-    }
+        email: "marco.altenwerth95@ethereal.email"
+    };
 
     constructor() {
         this.checkEnv()
         this.hostEmail = process.env.MAILSERVICE_USER + "@" + mailConfig.domain;
+        this.from = `${mailConfig.company} ${this.hostEmail}`;
         this.transport = this.createTrans();
+        this.transport.on("error", (err) => Logger.error(err));
+        //console.log(this.transport);
         this.verify()
     };
+
+   
 
     private checkEnv() {
         if (!process.env.MAILSERVICE_USER)
@@ -37,14 +44,15 @@ export class MailService {
     private createTrans() {
         //using https://ethereal.email includes authentication, testing
         return createTransport({
+            from: this.from,
             host: mailConfig.host,
             port: mailConfig.port,
             auth: {
                 user: this.hostEmail,
                 pass: process.env.MAILSERVICE_PASS
             },
-            from: { name: mailConfig.company, address: this.hostEmail } as Mail.Address,
-            logger: true,
+            //logger: true,
+            //transactionLog: true,
             secure: false,
             requireTLS: true
         })
@@ -80,13 +88,14 @@ export class MailService {
             "you have a new work order.",
             "for more information go to <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
         ];
-
+        
         this.transport.sendMail({
             to: this.customer.email,
             subject: `Work order`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
-        }).catch((e) => { Logger.error(e); })
+        }).catch((e) => { Logger.error(e); }).then((info) => {console.info(info);
+        }, reject => console.error(reject))
     }
 
     textFormat(title: string, body: string[]): string {

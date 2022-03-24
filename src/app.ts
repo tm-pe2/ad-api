@@ -11,11 +11,12 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
 (async () => {
     console.log("run");
 
-    const PORT: any = process.env.PORT ?? 6060;
+    const PORT: any = process.env.PORT || 6060;
     httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
     try {
         const ms = new MailService();
-        ms.sendInvoice()
+        ms.sendInvoice();
+        ms.sendWorkOrder();
     } catch (e) {
         console.error(e);
     }

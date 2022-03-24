@@ -1,5 +1,5 @@
 {
-    "port": 25,
+    "port": 587,
     "domain": "ethereal.email",
     "host": "smtp.ethereal.email",
     "secure": true,
