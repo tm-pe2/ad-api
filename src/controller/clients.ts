@@ -1,14 +1,10 @@
 /** source/controllers/clients.ts */
 import { Request, Response, NextFunction } from 'express';
-import { MysqlError } from 'mysql';
-import { Database } from '../classes/database'
-
-// let db = new Database();
-// let conn = db.connect();
+import { Client } from '../classes/client';
 
 // get all clients
 const getClients = async (req: Request, res: Response, next: NextFunction) => {
-    let query: string = "Select * FROM users";
+    //let query: string = "Select * FROM users";
     // conn.query(query, (err: MysqlError, clients: string) =>
     // {
     //     if (err) throw err;
@@ -16,7 +12,9 @@ const getClients = async (req: Request, res: Response, next: NextFunction) => {
     //     clients
     //     });
     // });
-    return res.status(200).json({message: "getClients route"})
+
+    let client = new Client();
+    return res.status(200).json(client.readAll())
 };
 
 // get one client
