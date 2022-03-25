@@ -3,7 +3,7 @@ import http from 'http';
 import express, { Express } from 'express';
 import { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
-import routesClients from './routes/clients';
+import routesClients from './routes/customer';
 
 const router: Express = express();
 

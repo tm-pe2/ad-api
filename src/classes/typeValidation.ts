@@ -6,12 +6,13 @@ export class Validation
     // ID
     isID(id: number): boolean
     {
-        if(id && typeof id === 'number')
+        if( id && typeof id === 'number')
         {
             return true;
         }
         else
         {
+            console.log("Id not valid");
             return false;
         }
     }
@@ -25,6 +26,7 @@ export class Validation
         }
         else
         {
+            console.log("Number not valid!");
             return false;
         }
     }
@@ -32,25 +34,28 @@ export class Validation
     // NAME
     isName(name: string): boolean
     {
-        if(name.length > 5 && typeof name === 'string')
+        if(name != '' && typeof name === 'string')
         {
             return true;
         }
         else
         {
+            console.log("Name not valid");
             return false;
         }
     }
 
     // DATE
     isDate(date: Date): boolean
-    {
-        if(date && date.toDateString() > '01/01/1900')
+    { 
+        //&& date.toDateString() > '01/01/1900'
+        if(date)
         {
            return true; 
         }
         else
         {
+            console.log("Date not valid");
             return false;
         }
     }
@@ -68,39 +73,45 @@ export class Validation
         const isWhiteSpace: RegExp = new RegExp(/^(?=.*\s)/);
         if(isWhiteSpace.test(pass))
         {
+            console.log("Password contains white spaces!");
             return false;
         }
 
         const containsUppercase: RegExp = new RegExp(/^(?=.*[A-Z])/);
         if (!containsUppercase.test(pass)) 
         {
-          return false;
+            console.log("Password does not contain an upper case letter!");
+            return false;
         }
 
         const containsLowercase: RegExp = new RegExp(/^(?=.*[a-z])/);
         if (!containsLowercase.test(pass)) 
         {
-          return false;
+            console.log("Password does not contain lower case letter!");
+            return false;
         }
     
     
         const containsNumber: RegExp = new RegExp(/^(?=.*[0-9])/);
         if (!containsNumber.test(pass)) 
         {
-          return false;
+            console.log("Password does not contain number!");
+            return false;
         }
     
     
-        const containsSymbol: RegExp = new RegExp(/^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹])/);
-        if (!containsSymbol.test(pass)) 
-        {
-          return false;
-        }
+        // const containsSymbol: RegExp = new RegExp(/^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹])/);
+        // if (!containsSymbol.test(pass)) 
+        // {
+        //     console.log("");
+        //   return false;
+        // }
     
     
         const isValidLength: RegExp = new RegExp(/^.{8,16}$/);
         if (!isValidLength.test(pass)) 
         {
+            console.log("Length is not valid!");
           return false;
         }
 
