@@ -1,8 +1,7 @@
-import {Connection} from 'mysql';
 import * as mysql from 'mysql';
 
 export class Database {
-    private connection: Connection;
+    private connection: mysql.Connection;
 
     constructor()
     {
@@ -14,7 +13,7 @@ export class Database {
         });
     }
 
-    connect(): Connection
+    connect(): mysql.Connection
     {
         //console.log(mysql);
         this.connection.connect(function (err: Error) {
