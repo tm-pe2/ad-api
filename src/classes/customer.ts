@@ -13,12 +13,13 @@ export class Customer
     private PhoneNumber: string = '';
     private Password: string = '';
 
-    constructor(){}
+    
 
-    constructorInsert(fName: string, lName: string, bDate: Date, addID: number, email: string, pNumber: string, password: string)
+    constructor(fName: string='default', lName: string = 'default', bDate = new Date('1990-01-01'), addID: number = 0, email: string = 'default', pNumber: string = 'default', password: string = 'default', id: number = 0)
     {
-        if( this.validator.isName(fName) && this.validator.isName(lName) && this.validator.isDate(bDate) && this.validator.isID(addID) && this.validator.isEmail(email) && this.validator.isPhoneNumber(pNumber) && this.validator.isPassword(password) )
+        if(fName == '' && lName == '' && bDate == new Date('1990-01-01'))
         {
+            this.ClientID =id;
             this.Firstname = fName;
             this.Lastname = lName;
             this.Birthdate = bDate;
@@ -29,27 +30,23 @@ export class Customer
         }
         else
         {
-            console.log("Input not valid!");
+            if( this.validator.isName(fName) && this.validator.isName(lName) && this.validator.isDate(bDate) && this.validator.isID(addID) && this.validator.isEmail(email) && this.validator.isPhoneNumber(pNumber) && this.validator.isPassword(password) )
+            {
+                this.ClientID =id;
+                this.Firstname = fName;
+                this.Lastname = lName;
+                this.Birthdate = bDate;
+                this.AdressID = addID;
+                this.Email = email;
+                this.PhoneNumber = pNumber;
+                this.Password = password;
+            }
+            else
+            {
+                console.log("Input not valid!");
+            }
         }
-    }
-
-    constructorRead(id: number, fName: string, lName: string, bDate: Date, addID: number, email: string, pNumber: string, password: string)
-    {
-        if( this.validator.isID(id) && this.validator.isName(fName) && this.validator.isName(lName) && this.validator.isDate(bDate) && this.validator.isID(addID) && this.validator.isEmail(email) && this.validator.isPhoneNumber(pNumber) && this.validator.isPassword(password) )
-        {
-            this.ClientID = id;
-            this.Firstname = fName;
-            this.Lastname = lName;
-            this.Birthdate = bDate;
-            this.AdressID = addID;
-            this.Email = email;
-            this.PhoneNumber = pNumber;
-            this.Password = password;
-        }
-        else
-        {
-            console.log("Input not valid!");
-        }
+        
     }
 
     // getters
@@ -159,8 +156,6 @@ export class Customer
             this.Password = pass;
         }
     }
-
-    
 
     //methods
     toJSON()
@@ -272,7 +267,6 @@ export class Customer
         }));
 
         conn.destroy();
-
         return status;
     }
 

@@ -6,7 +6,8 @@ export class Validation
     // ID
     isID(id: number): boolean
     {
-        if( id && typeof id === 'number')
+        //id &&
+        if(  typeof id === 'number')
         {
             return true;
         }
