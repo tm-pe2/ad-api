@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import routesClients from './routes/customer';
 import routesInvoices from './routes/invoice';
+import routesContracts from './routes/contracts';
 
 const router: Express = express();
 
@@ -32,6 +33,7 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 /** Routes */
 router.use('/', routesClients);
 router.use('/', routesInvoices);
+router.use('/', routesContracts);
 
 /** Error handling */
 router.use((req: Request, res: Response, next: NextFunction) => 

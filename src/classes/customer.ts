@@ -13,8 +13,6 @@ export class Customer
     private PhoneNumber: string = '';
     private Password: string = '';
 
-    
-
     constructor(fName: string='default', lName: string = 'default', bDate = new Date('1990-01-01'), addID: number = 0, email: string = 'default', pNumber: string = 'default', password: string = 'default', id: number = 0)
     {
         if(fName == '' && lName == '' && bDate == new Date('1990-01-01'))
@@ -193,7 +191,6 @@ export class Customer
         console.log(clients);
         return clients;
     }
-
 
     async readClient(id: number): Promise<Customer>
     {

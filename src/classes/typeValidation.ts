@@ -7,7 +7,7 @@ export class Validation
     isID(id: number): boolean
     {
         //id &&
-        if(  typeof id === 'number')
+        if( typeof id === 'number')
         {
             return true;
         }
@@ -18,7 +18,19 @@ export class Validation
         }
     }
 
-    //NUMBER
+    isString(input: string): boolean
+    {
+        if(input != '' && typeof input === 'string')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //PHONE-NUMBER -> VARCHAR
     isPhoneNumber(pNum: string): boolean
     {
         if(typeof pNum === 'string' && pNum.length > 10)
