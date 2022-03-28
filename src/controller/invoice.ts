@@ -16,7 +16,6 @@ const getInvoice = async (req: Request, res: Response, next: NextFunction) => {
 
 // update invoice
 const updateInvoice = async (req: Request, res: Response, next: NextFunction) => {
-    //let client: Customer = new Customer(req.body.FirstName,req.body.LastName,new Date(req.body.BirthDate),Number(req.body.AdressID),req.body.Email,req.body.PhoneNumber,req.body.Password,Number(req.body.ClientID));
     let invoice = new Invoice(Number(req.body.ClientID),Number(req.body.SupplierID),req.body.Date,req.body.DueDate,req.body.Type,Number(req.body.Amount),Number(req.body.Price),req.body.Tax,Number(req.body.Status),Number(req.body.InvoiceID));
     if(await invoice.update())
     {
