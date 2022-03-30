@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 
 // TODO change to custom user role type, allow for self check (eg: get own user info with /user/self)
-function authorize(role: string) {
+function authorize(role: string): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
         if (process.env.JWTSECRET == undefined) {
             throw new Error('JWTSECRET undefined');
