@@ -129,3 +129,12 @@ describe('GET /dashboard/users/0', () => {
         expect(response.status).toBe(200)
     })
 })
+
+// Energy Usage 
+
+describe('GET /energyUsage/0', () => {
+    it('should return a 200 response', async () => {
+        const response = await request(router).get('/energyUsage/0')
+        expect(response.status).toBe(200)
+    })
+})
