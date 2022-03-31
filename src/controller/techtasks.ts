@@ -3,15 +3,17 @@ import { Request, Response, NextFunction } from 'express';
 interface TechTasks{
     Name: String;
     Location: String;
-    WhenDate: Date;
+    WhenDate: String;
     Completed: boolean;
 }
 
 const Tasks: Array<TechTasks> =
 [
-    {Name: "Stefaan", Location:"Thuis",WhenDate:new Date(), Completed:false},
-    {Name: "Mario", Location:"NieuwStraat 98",WhenDate:new Date(), Completed:true},
-    {Name: "Luigi", Location:"OverBuurman",WhenDate:new Date(), Completed:false}
+    {Name: "Stefaan", Location:"Thuis",WhenDate:"2022/01/02", Completed:false},
+    {Name: "Mario", Location:"NieuwStraat 98",WhenDate:"2022/01/02", Completed:true},
+    {Name: "Luigi", Location:"OverBuurman",WhenDate:"2022/08/08", Completed:false},
+    {Name: "Patrick", Location:"NaasteBuurman",WhenDate:"2022/08/08", Completed:false},
+    {Name: "Michael", Location:"Achterbuurman",WhenDate:"2022/08/08", Completed:false}
 ]
 
 const GetTasks =async (req:Request, res: Response, next: NextFunction) => {
