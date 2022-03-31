@@ -1,8 +1,7 @@
-import { Validation } from '../classes/typeValidation'
+import * as validator from '../classes/typeValidation'
 import { Database } from '../classes/database';
 
 export class Contract {
-    private validator = new Validation();
     private ContractID: number = 0;
     private StartDate: Date = new Date();
     private EndDate: Date = new Date();
@@ -13,7 +12,7 @@ export class Contract {
 
     constructor(strDate = new Date('1990-01-01'), endDate = new Date('1990-01-01'), clientID: number = 0, clientType: string = 'default', adPayment: number = 0, price: number = 0, contractID: number = 0)
     {
-        if(this.validator.isDate(strDate) && this.validator.isDate(endDate) && this.validator.isID(clientID) && this.validator.isName(clientType) && this.validator.isID(adPayment) && this.validator.isID(price) && this.validator.isID(contractID))
+        if(validator.isDate(strDate) && validator.isDate(endDate) && validator.isID(clientID) && validator.isName(clientType) && validator.isID(adPayment) && validator.isID(price) && validator.isID(contractID))
         {
             this.ContractID = contractID;
             this.StartDate = strDate;
@@ -64,7 +63,7 @@ export class Contract {
     //setters
     set setContractID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.ContractID = id;
         }
@@ -72,7 +71,7 @@ export class Contract {
 
     set setStartDate(date: Date)
     {
-        if(this.validator.isDate(date))
+        if(validator.isDate(date))
         {
             this.StartDate = date;
         }
@@ -80,7 +79,7 @@ export class Contract {
 
     set setEndDate(date: Date)
     {
-        if(this.validator.isDate(date))
+        if(validator.isDate(date))
         {
             this.EndDate = date;
         }
@@ -88,7 +87,7 @@ export class Contract {
 
     set setClientID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.ClientID = id;
         }
@@ -96,7 +95,7 @@ export class Contract {
 
     set setClientType(type: string)
     {
-        if(this.validator.isString(type))
+        if(validator.isString(type))
         {
             this.ClientType = type;
         }
@@ -104,7 +103,7 @@ export class Contract {
 
     set setAdvancedPayment(adPay: number)
     {
-        if(this.validator.isID(adPay))
+        if(validator.isID(adPay))
         {
             this.AdvancedPayment = adPay;
         }
@@ -112,7 +111,7 @@ export class Contract {
 
     set setPrice(price: number)
     {
-        if(this.validator.isID(price))
+        if(validator.isID(price))
         {
             this.Price = price;
         }

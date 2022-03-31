@@ -1,8 +1,7 @@
 import { Database } from './database';
-import { Validation } from '../classes/typeValidation';
+import * as validator from '../classes/typeValidation';
 
 export class Invoice {
-    private validator = new Validation();
     private InvoiceID: number = 0;
     private ClientID: number = 0;
     private SupplierID: number = 0;
@@ -17,9 +16,9 @@ export class Invoice {
     constructor(clientID: number = 0, suppID: number = 0, date = new Date('1990-01-01'), dueDate = new Date('1990-01-01'), 
     type: string = 'default', amount: number = 0, price: number = 0, tax: string = 'default', status: number = 0, invID: number = 0)
     {
-        if(this.validator.isID(clientID) && this.validator.isID(invID) && this.validator.isID(suppID)
-        && this.validator.isDate(date) && this.validator.isDate(dueDate) && this.validator.isName(type)
-        && this.validator.isID(amount) && this.validator.isID(price) && this.validator.isName(tax) && this.validator.isID(status))
+        if(validator.isID(clientID) && validator.isID(invID) && validator.isID(suppID)
+        && validator.isDate(date) && validator.isDate(dueDate) && validator.isName(type)
+        && validator.isID(amount) && validator.isID(price) && validator.isName(tax) && validator.isID(status))
         {
             this.InvoiceID = invID;
             this.ClientID = clientID;
@@ -92,7 +91,7 @@ export class Invoice {
     //setters
     set setInvoiceID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.InvoiceID = id;
         }
@@ -100,7 +99,7 @@ export class Invoice {
 
     set setClientID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.ClientID = id;
         }
@@ -108,7 +107,7 @@ export class Invoice {
 
     set setSupplierID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.SupplierID = id;
         }
@@ -116,7 +115,7 @@ export class Invoice {
 
     set setDate(date: Date)
     {
-        if(this.validator.isDate(date))
+        if(validator.isDate(date))
         {
             this.Date = date;
         }
@@ -124,7 +123,7 @@ export class Invoice {
 
     set setDueDate(date: Date)
     {
-        if(this.validator.isDate(date))
+        if(validator.isDate(date))
         {
             this.DueDate = date;
         }
@@ -132,7 +131,7 @@ export class Invoice {
 
     set setType(type: string)
     {
-        if(this.validator.isName(type))
+        if(validator.isName(type))
         {
             this.Type = type;
         }
@@ -140,7 +139,7 @@ export class Invoice {
 
     set setAmount(amount: number)
     {
-        if(this.validator.isID(amount))
+        if(validator.isID(amount))
         {
             this.Amount = amount;
         }
@@ -148,7 +147,7 @@ export class Invoice {
 
     set setPrice(price: number)
     {
-        if(this.validator.isID(price))
+        if(validator.isID(price))
         {
             this.Price = price;
         }
@@ -156,7 +155,7 @@ export class Invoice {
 
     set setTax(tax: string)
     {
-        if(this.validator.isName(tax))
+        if(validator.isName(tax))
         {
             this.Tax = tax;
         }

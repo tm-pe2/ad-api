@@ -22,7 +22,7 @@ const updateContract = async (req: Request, res: Response, next: NextFunction) =
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 
@@ -35,7 +35,7 @@ const deleteContract = async (req: Request, res: Response, next: NextFunction) =
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 
@@ -48,7 +48,7 @@ const addContract = async (req: Request, res: Response, next: NextFunction) => {
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 

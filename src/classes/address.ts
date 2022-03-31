@@ -1,8 +1,7 @@
-import { Validation } from '../classes/typeValidation';
+import * as validatior from '../classes/typeValidation';
 import { Database } from '../classes/database';
 
 export class Address {
-    private validatior = new Validation();
     private AdressID: number = 0;
     private City: string = '';
     private Street: string = '';
@@ -12,7 +11,7 @@ export class Address {
 
     constructor(city: string = 'default', street: string = 'default', hNumber: string = 'default', pCode: string = 'default', country: string = 'default', addID: number = 0 )
     {
-        if( this.validatior.isString(city) && this.validatior.isString(street) && this.validatior.isString(hNumber) &&this.validatior.isString(pCode) && this.validatior.isString(country) && this.validatior.isID(addID))
+        if( validatior.isString(city) && validatior.isString(street) && validatior.isString(hNumber) &&validatior.isString(pCode) && validatior.isString(country) && validatior.isID(addID))
         {
             this.AdressID = addID;
             this.City = city;
@@ -57,7 +56,7 @@ export class Address {
     //setters
     set setAdderssID(id: number)
     {
-        if(this.validatior.isID(id))
+        if(validatior.isID(id))
         {
             this.AdressID = id;
         }
@@ -65,7 +64,7 @@ export class Address {
 
     set setCity(city: string)
     {
-        if(this.validatior.isString(city))
+        if(validatior.isString(city))
         {
             this.City = city;
         }
@@ -73,7 +72,7 @@ export class Address {
 
     set setStreet(street: string)
     {
-        if(this.validatior.isString(street))
+        if(validatior.isString(street))
         {
             this.Street = street;
         }
@@ -81,7 +80,7 @@ export class Address {
 
     set setHouseNumber(hNum: string)
     {
-        if(this.validatior.isString(hNum))
+        if(validatior.isString(hNum))
         {
             this.HouseNumber = hNum;
         }
@@ -89,7 +88,7 @@ export class Address {
 
     set setPostalCode(pCode: string)
     {
-        if(this.validatior.isString(pCode))
+        if(validatior.isString(pCode))
         {
             this.PostalCode = pCode;
         }
@@ -97,7 +96,7 @@ export class Address {
 
     set setCountry(country: string)
     {
-        if(this.validatior.isString(country))
+        if(validatior.isString(country))
         {
             this.Country = country;
         }

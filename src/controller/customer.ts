@@ -23,7 +23,7 @@ const updateClient = async (req: Request, res: Response, next: NextFunction) => 
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 
@@ -36,7 +36,7 @@ const deleteClient = async (req: Request, res: Response, next: NextFunction) => 
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 
@@ -49,7 +49,7 @@ const addClient = async (req: Request, res: Response, next: NextFunction) => {
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 

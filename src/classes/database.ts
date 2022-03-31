@@ -18,10 +18,7 @@ export class Database {
     {
         //console.log(mysql);
         this.connection.connect(function (err: Error) {
-            if (err) {
-                console.log("error occured while connecting");
-                return;
-            }
+            if (err) throw err;
         });
 
         return this.connection;

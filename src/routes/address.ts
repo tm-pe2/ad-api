@@ -4,9 +4,9 @@ import controller from '../controller/address';
 const router = express.Router();
 
 router.get('/addresses', controller.getAddresses);
-router.get('/address/:id', controller.getAddress);
-router.put('/updateAddress', controller.updateAddress);
-router.delete('/deleteAddress/:id', controller.deleteAddress);
-router.post('/addAddress', controller.addAddress);
+router.get('/addresses/:id', controller.getAddress);
+router.put('/addresses', controller.updateAddress);
+router.delete('/addresses/:id', controller.deleteAddress);
+router.post('/addresses', controller.addAddress);
 
 export = router;

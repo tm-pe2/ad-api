@@ -23,7 +23,7 @@ const updateInvoice = async (req: Request, res: Response, next: NextFunction) =>
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 
@@ -36,7 +36,7 @@ const deleteInvoice = async (req: Request, res: Response, next: NextFunction) =>
     }
     else
     {
-        return res.status(404).json({"Status" : "Something went wrong!"});
+        return res.status(500).json({"Status" : "Something went wrong!"});
     }
 };
 
@@ -49,7 +49,7 @@ const addInvoice = async (req: Request, res: Response, next: NextFunction) => {
     }
     else
     {
-        return res.status(404).json({"Status" : "Invoice went wrong!"});
+        return res.status(500).json({"Status" : "Invoice went wrong!"});
     }
 };
 

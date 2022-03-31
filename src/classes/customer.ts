@@ -1,9 +1,8 @@
 import { Database } from './database';
-import { Validation } from './typeValidation';
+import * as validator from './typeValidation';
 
 export class Customer
 {
-    private validator = new Validation();
     private ClientID: number = 0;
     private Firstname: string = '';
     private Lastname: string = '';
@@ -28,7 +27,7 @@ export class Customer
         }
         else
         {
-            if( this.validator.isName(fName) && this.validator.isName(lName) && this.validator.isDate(bDate) && this.validator.isID(addID) && this.validator.isEmail(email) && this.validator.isPhoneNumber(pNumber) && this.validator.isPassword(password) )
+            if(validator.isName(fName) && validator.isName(lName) && validator.isDate(bDate) && validator.isID(addID) && validator.isEmail(email) && validator.isPhoneNumber(pNumber) && validator.isPassword(password) )
             {
                 this.ClientID =id;
                 this.Firstname = fName;
@@ -44,7 +43,6 @@ export class Customer
                 console.log("Input not valid!");
             }
         }
-        
     }
 
     // getters
@@ -93,7 +91,7 @@ export class Customer
     //should be used carefully
     set setClientID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.ClientID = id;
         }
@@ -101,7 +99,7 @@ export class Customer
 
     set setFirstname(fName: string)
     {
-        if(this.validator.isName(fName))
+        if(validator.isName(fName))
         {
             this.Firstname = fName;
         }
@@ -109,7 +107,7 @@ export class Customer
 
     set setLastname(lName: string)
     {
-        if(this.validator.isName(lName))
+        if(validator.isName(lName))
         {
             this.Lastname = lName;
         }
@@ -117,7 +115,7 @@ export class Customer
 
     set setBirthdate(bDate: Date)
     {
-        if(this.validator.isDate(bDate))
+        if(validator.isDate(bDate))
         {
             this.Birthdate = bDate;
         }
@@ -125,7 +123,7 @@ export class Customer
 
     set setAdressID(id: number)
     {
-        if(this.validator.isID(id))
+        if(validator.isID(id))
         {
             this.AdressID = id;
         }
@@ -133,7 +131,7 @@ export class Customer
 
     set setEmail(email: string)
     {
-        if(this.validator.isEmail(email))
+        if(validator.isEmail(email))
         {
             this.Email = email;
         }
@@ -141,7 +139,7 @@ export class Customer
 
     set setPhoneNumber(pNum: string)
     {
-        if(this.validator.isPhoneNumber(pNum))
+        if(validator.isPhoneNumber(pNum))
         {
             this.PhoneNumber = pNum;
         }
@@ -149,7 +147,7 @@ export class Customer
 
     set setPassword(pass: string)
     {
-        if(this.validator.isPassword(pass))
+        if(validator.isPassword(pass))
         {
             this.Password = pass;
         }
@@ -174,7 +172,6 @@ export class Customer
         let clients: Customer[] = [];
         let db = new Database();
         let conn = db.connect();
-
         let query: string = "Select * FROM clients";
 
         await(new Promise((resolve, reject) => {
