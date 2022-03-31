@@ -1,3 +1,5 @@
+import { Connection } from 'mysql';
+
 // ID
 function isID(id: number): boolean
 {
@@ -123,4 +125,13 @@ function isPassword(pass: string): boolean
     return true;
 }
 
-export { isID, isNumber, isDate, isName, isString, isPhoneNumber, isEmail, isPassword}
+function query<T>(conn: Connection, query: string, params?: unknown): Promise<T> {
+    return (new Promise((resolve, reject) => {
+        conn.query(query, params ,(err: unknown, data: T) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    }));
+}
+
+export { isID, isNumber, isDate, isName, isString, isPhoneNumber, isEmail, isPassword, query}

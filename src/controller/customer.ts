@@ -11,7 +11,7 @@ const getClients = async (req: Request, res: Response, next: NextFunction) => {
 // get one client
 const getClient = async (req: Request, res: Response, next: NextFunction) => {
     let client: Customer = new Customer();
-    return res.status(200).json(await client.readClient(Number(req.body.id)));
+    return res.status(200).json(await client.readClient(Number(req.params.id)));
 };
 
 // update a client

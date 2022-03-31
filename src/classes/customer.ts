@@ -169,43 +169,18 @@ export class Customer
 
     async readAll(): Promise<Customer[]>
     {
-        let clients: Customer[] = [];
         let db = new Database();
         let conn = db.connect();
         let query: string = "Select * FROM clients";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, (err: Error, tmpClients: Customer[]) => {
-                if (err) reject(err);
-                tmpClients.forEach(client => {
-                    clients.push(client);
-                });
-                resolve(tmpClients);
-            });
-        }));
-
-        conn.destroy();
-        console.log(clients);
-        return clients;
+        return validator.query(conn,query);
     }
 
     async readClient(id: number): Promise<Customer>
     {
-        let client = new Customer();
         let db = new Database();
         let conn = db.connect();
-
         let query: string = "Select * FROM clients Where ClientID = ?";
-        await(new Promise((resolve, reject) => {
-            conn.query(query, [id], (err: unknown, c: Customer) => {
-                if (err) reject(err);
-                client = c
-                resolve(c);
-            });
-        }));
-
-        conn.destroy();
-        return client;
+        return validator.query(conn,query,id);
     }
 
     async insert(): Promise<boolean>
@@ -223,9 +198,7 @@ export class Customer
         }));
 
         conn.destroy();
-
-        return status;
-        
+        return status;     
     }
 
     async update(): Promise<boolean>
