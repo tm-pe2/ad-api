@@ -65,20 +65,8 @@ router.use((req, res, next) => {
     });
 });
 
-
-(async () => {
-    console.log("run");
-    
-    const httpServer = http.createServer(router);
-    const PORT: any = process.env.PORT ?? 6060;
-    httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
-  /*try{
-  const ms = new MailService();
-  ms.testEmail()
-  } catch(e){
-    console.error(e);
-  }*/
-})();
+export const httpServer: http.Server = http.createServer(router);
+export default router;
 
 
 
