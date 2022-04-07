@@ -1,4 +1,3 @@
-import { Database } from './database';
 import * as validator from './typeValidation';
 
 export class Customer
@@ -153,7 +152,7 @@ export class Customer
         }
     }
 
-    //methods
+    /*
     toJSON()
     {
         return {
@@ -166,6 +165,7 @@ export class Customer
             Password: this.getPassword
         }
     }
+
 
     async readAll(): Promise<Customer[]>
     {
@@ -256,4 +256,6 @@ export class Customer
 
         return status;
     }
+
+     */
 }

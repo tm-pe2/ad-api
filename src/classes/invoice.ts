@@ -1,4 +1,3 @@
-import { Database } from './database';
 import * as validator from '../classes/typeValidation';
 
 export class Invoice {
@@ -166,7 +165,7 @@ export class Invoice {
         this.Status = status;
     }
 
-    //methods
+    /*
     toJSON()
     {
         return {
@@ -299,5 +298,7 @@ export class Invoice {
 
         conn.destroy();
         return status;
-    }
+    }µ
+
+     */
 }
