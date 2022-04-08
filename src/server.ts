@@ -3,7 +3,10 @@ import http from 'http';
 import express, { Express } from 'express';
 import { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
-import routesClients from './routes/clients';
+import routesClients from './routes/customer';
+import routesInvoices from './routes/invoice';
+import routesContracts from './routes/contracts';
+import routesAddresses from './routes/address';
 
 const router: Express = express();
 
@@ -30,6 +33,9 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 
 /** Routes */
 router.use('/', routesClients);
+router.use('/', routesInvoices);
+router.use('/', routesContracts);
+router.use('/', routesAddresses);
 
 /** Error handling */
 router.use((req: Request, res: Response, next: NextFunction) => 
