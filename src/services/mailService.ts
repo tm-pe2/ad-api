@@ -15,13 +15,13 @@ export class MailService {
         id: 1,
         firstName: "maci",
         lastName: "rohan48",
-        email: "marco.altenwerth95@ethereal.email"
+        email: "AD0830686@PE2022.com"
     };
 
     constructor() {
         this.checkEnv()
-        this.hostEmail = process.env.MAILSERVICE_USER + "@" + mailConfig.domain;
-        this.from = `${mailConfig.company} ${this.hostEmail}`;
+        this.hostEmail = process.env.MAILSERVER_U + "@" + mailConfig.domain;
+        this.from = `${mailConfig.company} info ${this.hostEmail}`;
         this.transport = this.createTrans();
         this.transport.on("error", (err) => Logger.error(err));
         //console.log(this.transport);
@@ -40,18 +40,19 @@ export class MailService {
 
     private createTrans() {
         //using https://ethereal.email includes authentication, testing
+        //mailserver doesn't have authentication (no TLS)
         return createTransport({
             from: this.from,
             host: mailConfig.host,
             port: mailConfig.port,
             auth: {
                 user: this.hostEmail,
-                pass: process.env.MAILSERVICE_PASS
+                pass: process.env.MAILSERVER_P
             },
             //logger: true,
             //transactionLog: true,
             secure: false,
-            requireTLS: true
+            requireTLS: false
         })
     }
 
@@ -70,6 +71,7 @@ export class MailService {
         ];
 
         return this.transport.sendMail({
+            from: this.from,
             to: this.customer.email,
             subject: `Invoice: ${invoice.id}`,
             text: this.textFormat(title, body),

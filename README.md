@@ -13,11 +13,14 @@ npm install
 
 Create `.env` file in root with content:
 
-get the MAILSERVICE credentials at [ethereal](https://ethereal.email) (this is used to test sending mails)
+you have to be connected to the vpn
 
 ```md
-MAILSERVICE_USER=""
-MAILSERVICE_PASS=""
+# .env
+
+## this is your vpn user login + mail password
+MAILSERVER_U=""
+MAILSERVER_P=""
 ```
 
 ## Running
