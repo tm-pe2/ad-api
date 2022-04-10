@@ -1,7 +1,6 @@
 import * as validator from './typeValidation';
 
-export class Customer
-{
+export class Customer {
     private ClientID: number = 0;
     private Firstname: string = '';
     private Lastname: string = '';
@@ -11,11 +10,9 @@ export class Customer
     private PhoneNumber: string = '';
     private Password: string = '';
 
-    constructor(fName: string='default', lName: string = 'default', bDate = new Date('1990-01-01'), addID: number = 0, email: string = 'default', pNumber: string = 'default', password: string = 'default', id: number = 0)
-    {
-        if(fName == '' && lName == '' && bDate == new Date('1990-01-01'))
-        {
-            this.ClientID =id;
+    constructor(fName: string = 'default', lName: string = 'default', bDate = new Date('1990-01-01'), addID: number = 0, email: string = 'default', pNumber: string = 'default', password: string = 'default', id: number = 0) {
+        if (fName == '' && lName == '' && bDate == new Date('1990-01-01')) {
+            this.ClientID = id;
             this.Firstname = fName;
             this.Lastname = lName;
             this.Birthdate = bDate;
@@ -23,12 +20,9 @@ export class Customer
             this.Email = email;
             this.PhoneNumber = pNumber;
             this.Password = password;
-        }
-        else
-        {
-            if(validator.isName(fName) && validator.isName(lName) && validator.isDate(bDate) && validator.isID(addID) && validator.isEmail(email) && validator.isPhoneNumber(pNumber) && validator.isPassword(password) )
-            {
-                this.ClientID =id;
+        } else {
+            if (validator.isName(fName) && validator.isName(lName) && validator.isDate(bDate) && validator.isID(addID) && validator.isEmail(email) && validator.isPhoneNumber(pNumber) && validator.isPassword(password)) {
+                this.ClientID = id;
                 this.Firstname = fName;
                 this.Lastname = lName;
                 this.Birthdate = bDate;
@@ -36,118 +30,92 @@ export class Customer
                 this.Email = email;
                 this.PhoneNumber = pNumber;
                 this.Password = password;
-            }
-            else
-            {
+            } else {
                 console.log("Input not valid!");
             }
         }
     }
 
     // getters
-    get getClientID(): number
-    {
+    get getClientID(): number {
         return this.ClientID;
     }
 
-    get getFirstName(): string
-    {
+    get getFirstName(): string {
         return this.Firstname;
     }
 
-    get getLastName(): string
-    {
+    get getLastName(): string {
         return this.Lastname;
     }
 
-    get getBirthDate(): Date
-    {
+    get getBirthDate(): Date {
         return this.Birthdate;
     }
 
-    get getAdressID(): number
-    {
+    get getAdressID(): number {
         return this.AdressID;
     }
 
-    get getEmail(): string
-    {
+    get getEmail(): string {
         return this.Email;
     }
 
-    get getPhoneNumber(): string
-    {
+    get getPhoneNumber(): string {
         return this.PhoneNumber;
     }
 
-    get getPassword(): string
-    {
+    get getPassword(): string {
         return this.Password;
     }
 
 
     //setters
     //should be used carefully
-    set setClientID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setClientID(id: number) {
+        if (validator.isID(id)) {
             this.ClientID = id;
         }
     }
 
-    set setFirstname(fName: string)
-    {
-        if(validator.isName(fName))
-        {
+    set setFirstname(fName: string) {
+        if (validator.isName(fName)) {
             this.Firstname = fName;
         }
     }
 
-    set setLastname(lName: string)
-    {
-        if(validator.isName(lName))
-        {
+    set setLastname(lName: string) {
+        if (validator.isName(lName)) {
             this.Lastname = lName;
         }
     }
 
-    set setBirthdate(bDate: Date)
-    {
-        if(validator.isDate(bDate))
-        {
+    set setBirthdate(bDate: Date) {
+        if (validator.isDate(bDate)) {
             this.Birthdate = bDate;
         }
     }
 
-    set setAdressID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setAdressID(id: number) {
+        if (validator.isID(id)) {
             this.AdressID = id;
         }
     }
 
-    set setEmail(email: string)
-    {
-        if(validator.isEmail(email))
-        {
+    set setEmail(email: string) {
+        if (validator.isEmail(email)) {
             this.Email = email;
         }
     }
 
-    set setPhoneNumber(pNum: string)
-    {
-        if(validator.isPhoneNumber(pNum))
-        {
+    set setPhoneNumber(pNum: string) {
+        if (validator.isPhoneNumber(pNum)) {
             this.PhoneNumber = pNum;
         }
     }
 
-    set setPassword(pass: string)
-    {
-        if(validator.isPassword(pass))
-        {
+    set setPassword(pass: string) {
+        if (validator.isPassword(pass)) {
             this.Password = pass;
         }
     }

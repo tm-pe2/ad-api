@@ -1,6 +1,7 @@
 /** source/routes/address.ts */
 import express from 'express';
 import * as addressController from '../controllers/addressController';
+
 const router = express.Router();
 
 router.get('/addresses', addressController.getAllAddresses);

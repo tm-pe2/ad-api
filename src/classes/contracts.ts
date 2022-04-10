@@ -9,10 +9,8 @@ export class Contract {
     private AdvancedPayment: number = 0;
     private Price: number = 0;
 
-    constructor(strDate = new Date('1990-01-01'), endDate = new Date('1990-01-01'), clientID: number = 0, clientType: string = 'default', adPayment: number = 0, price: number = 0, contractID: number = 0)
-    {
-        if(validator.isDate(strDate) && validator.isDate(endDate) && validator.isID(clientID) && validator.isName(clientType) && validator.isID(adPayment) && validator.isID(price) && validator.isID(contractID))
-        {
+    constructor(strDate = new Date('1990-01-01'), endDate = new Date('1990-01-01'), clientID: number = 0, clientType: string = 'default', adPayment: number = 0, price: number = 0, contractID: number = 0) {
+        if (validator.isDate(strDate) && validator.isDate(endDate) && validator.isID(clientID) && validator.isName(clientType) && validator.isID(adPayment) && validator.isID(price) && validator.isID(contractID)) {
             this.ContractID = contractID;
             this.StartDate = strDate;
             this.EndDate = endDate;
@@ -24,94 +22,73 @@ export class Contract {
     }
 
     //getters
-    get getContractID(): number
-    {
+    get getContractID(): number {
         return this.ContractID;
     }
 
-    get getStartDate(): Date
-    {
+    get getStartDate(): Date {
         return this.StartDate;
     }
 
-    get getEndDate(): Date
-    {
+    get getEndDate(): Date {
         return this.EndDate;
     }
 
-    get getClientID(): number
-    {
+    get getClientID(): number {
         return this.ClientID;
-    }    
+    }
 
-    get getClientType(): string
-    {
+    get getClientType(): string {
         return this.ClientType;
     }
 
-    get getAdvancedPayment(): number
-    {
+    get getAdvancedPayment(): number {
         return this.AdvancedPayment;
     }
 
-    get getPrice(): number
-    {
+    get getPrice(): number {
         return this.Price;
     }
 
     //setters
-    set setContractID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setContractID(id: number) {
+        if (validator.isID(id)) {
             this.ContractID = id;
         }
     }
 
-    set setStartDate(date: Date)
-    {
-        if(validator.isDate(date))
-        {
+    set setStartDate(date: Date) {
+        if (validator.isDate(date)) {
             this.StartDate = date;
         }
     }
 
-    set setEndDate(date: Date)
-    {
-        if(validator.isDate(date))
-        {
+    set setEndDate(date: Date) {
+        if (validator.isDate(date)) {
             this.EndDate = date;
         }
     }
 
-    set setClientID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setClientID(id: number) {
+        if (validator.isID(id)) {
             this.ClientID = id;
         }
     }
 
-    set setClientType(type: string)
-    {
-        if(validator.isString(type))
-        {
+    set setClientType(type: string) {
+        if (validator.isString(type)) {
             this.ClientType = type;
         }
     }
 
-    set setAdvancedPayment(adPay: number)
-    {
-        if(validator.isID(adPay))
-        {
+    set setAdvancedPayment(adPay: number) {
+        if (validator.isID(adPay)) {
             this.AdvancedPayment = adPay;
         }
     }
 
-    set setPrice(price: number)
-    {
-        if(validator.isID(price))
-        {
+    set setPrice(price: number) {
+        if (validator.isID(price)) {
             this.Price = price;
         }
     }

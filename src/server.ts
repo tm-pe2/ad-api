@@ -1,12 +1,14 @@
 /** source/server.ts */
 import http from 'http';
-import express, { Express } from 'express';
-import { Request, Response, NextFunction } from 'express';
+import express, {Express} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
-import routesClients from './routes/customerRoutes';
-import routesInvoices from './routes/invoiceRoutes';
-import routesContracts from './routes/contractRoutes';
-import routesAddresses from './routes/adressRoutes';
+import customerRoutes from './routes/customerRoutes';
+import invoiceRoutes from './routes/invoiceRoutes';
+import contractRoutes from './routes/contractRoutes';
+import addressroutes from './routes/adressRoutes';
+import employeeRoutes from './routes/employeeRoutes';
+
 import * as MySQLConnector from './utils/mysql.connector';
 
 
@@ -15,7 +17,7 @@ const router: Express = express();
 /** Logging */
 router.use(morgan('dev'));
 /** Parse the request */
-router.use(express.urlencoded({ extended: false }));
+router.use(express.urlencoded({extended: false}));
 /** Takes care of JSON data */
 router.use(express.json());
 
@@ -37,14 +39,10 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 MySQLConnector.init();
 
 /** Routes */
-router.use('/api/', routesClients);
-router.use('/api/', routesInvoices);
-router.use('/api/', routesContracts);
-router.use('/api/', routesAddresses);
+router.use('/api/', customerRoutes, invoiceRoutes, contractRoutes, addressroutes, employeeRoutes);
 
 /** Error handling */
-router.use((req: Request, res: Response, next: NextFunction) =>
-{
+router.use((req: Request, res: Response, next: NextFunction) => {
     const error = new Error('not found');
     return res.status(404).json({
         message: error.message

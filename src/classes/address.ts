@@ -8,10 +8,8 @@ export class Address {
     private PostalCode: string = '';
     private Country: string = '';
 
-    constructor(city: string = 'default', street: string = 'default', hNumber: string = 'default', pCode: string = 'default', country: string = 'default', addID: number = 0 )
-    {
-        if( validatior.isString(city) && validatior.isString(street) && validatior.isString(hNumber) &&validatior.isString(pCode) && validatior.isString(country) && validatior.isID(addID))
-        {
+    constructor(city: string = 'default', street: string = 'default', hNumber: string = 'default', pCode: string = 'default', country: string = 'default', addID: number = 0) {
+        if (validatior.isString(city) && validatior.isString(street) && validatior.isString(hNumber) && validatior.isString(pCode) && validatior.isString(country) && validatior.isID(addID)) {
             this.AdressID = addID;
             this.City = city;
             this.Street = street;
@@ -22,81 +20,63 @@ export class Address {
     }
 
     //getters
-    get getAddressID(): number
-    {
+    get getAddressID(): number {
         return this.AdressID;
     }
 
-    get getCity(): string
-    {
+    get getCity(): string {
         return this.City;
     }
 
-    get getStreet(): string
-    {
+    get getStreet(): string {
         return this.Street;
     }
 
-    get getHouseNumber(): string
-    {
+    get getHouseNumber(): string {
         return this.HouseNumber;
     }
 
-    get getPostalCode(): string
-    {
+    get getPostalCode(): string {
         return this.PostalCode;
     }
 
-    get getCountry(): string
-    {
+    get getCountry(): string {
         return this.Country;
     }
 
     //setters
-    set setAdderssID(id: number)
-    {
-        if(validatior.isID(id))
-        {
+    set setAdderssID(id: number) {
+        if (validatior.isID(id)) {
             this.AdressID = id;
         }
     }
 
-    set setCity(city: string)
-    {
-        if(validatior.isString(city))
-        {
+    set setCity(city: string) {
+        if (validatior.isString(city)) {
             this.City = city;
         }
     }
 
-    set setStreet(street: string)
-    {
-        if(validatior.isString(street))
-        {
+    set setStreet(street: string) {
+        if (validatior.isString(street)) {
             this.Street = street;
         }
     }
 
-    set setHouseNumber(hNum: string)
-    {
-        if(validatior.isString(hNum))
-        {
+    set setHouseNumber(hNum: string) {
+        if (validatior.isString(hNum)) {
             this.HouseNumber = hNum;
         }
     }
 
-    set setPostalCode(pCode: string)
-    {
-        if(validatior.isString(pCode))
-        {
+    set setPostalCode(pCode: string) {
+        if (validatior.isString(pCode)) {
             this.PostalCode = pCode;
         }
     }
 
-    set setCountry(country: string)
-    {
-        if(validatior.isString(country))
-        {
+    set setCountry(country: string) {
+        if (validatior.isString(country)) {
             this.Country = country;
         }
     }

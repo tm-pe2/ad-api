@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import {NextFunction, Request, RequestHandler, Response} from 'express';
 import * as ContractService from '../services/contractService';
 import {Contract} from "../classes/contracts";
 

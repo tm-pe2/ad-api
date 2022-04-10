@@ -2,15 +2,15 @@ export const AddressQueries = {
     getAllAddresses: `
     SELECT * FROM address
     `,
-  
+
     getAddressById: `
     SELECT * FROM address WHERE AdressID = ?
     `,
-  
+
     addAddress: `
     INSERT INTO address SET ?
     `,
-  
+
     updateAddress: `
     UPDATE address 
     SET 
@@ -21,8 +21,8 @@ export const AddressQueries = {
         Country = ? 
     WHERE AdressID = ?
     `,
-  
+
     deleteAddressById: `
     DELETE FROM address WHERE AdressID = ?
     `
-  };
+};

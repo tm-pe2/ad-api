@@ -1,6 +1,7 @@
 /** source/routes/clients.ts */
 import express from 'express';
 import * as CustomerController from '../controllers/customerController';
+
 const router = express.Router();
 
 router.get('/customers', CustomerController.getAllCustomers);

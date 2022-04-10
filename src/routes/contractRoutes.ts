@@ -1,6 +1,7 @@
 /** source/routes/contracts.ts */
 import express from 'express';
 import * as ContractController from '../controllers/contractController';
+
 const router = express.Router();
 
 router.get('/contracts', ContractController.getAllContracts);

@@ -12,13 +12,11 @@ export class Invoice {
     private Tax: string = '';
     private Status: number = 0;
 
-    constructor(clientID: number = 0, suppID: number = 0, date = new Date('1990-01-01'), dueDate = new Date('1990-01-01'), 
-    type: string = 'default', amount: number = 0, price: number = 0, tax: string = 'default', status: number = 0, invID: number = 0)
-    {
-        if(validator.isID(clientID) && validator.isID(invID) && validator.isID(suppID)
-        && validator.isDate(date) && validator.isDate(dueDate) && validator.isName(type)
-        && validator.isID(amount) && validator.isID(price) && validator.isName(tax) && validator.isID(status))
-        {
+    constructor(clientID: number = 0, suppID: number = 0, date = new Date('1990-01-01'), dueDate = new Date('1990-01-01'),
+                type: string = 'default', amount: number = 0, price: number = 0, tax: string = 'default', status: number = 0, invID: number = 0) {
+        if (validator.isID(clientID) && validator.isID(invID) && validator.isID(suppID)
+            && validator.isDate(date) && validator.isDate(dueDate) && validator.isName(type)
+            && validator.isID(amount) && validator.isID(price) && validator.isName(tax) && validator.isID(status)) {
             this.InvoiceID = invID;
             this.ClientID = clientID;
             this.SupplierID = suppID;
@@ -29,139 +27,108 @@ export class Invoice {
             this.Price = price;
             this.Tax = tax;
             this.Status = status;
-        }
-        else
-        {
+        } else {
             console.log("Input not valid!");
         }
     }
 
     //getters
-    get getInvoiceID(): number
-    {
+    get getInvoiceID(): number {
         return this.InvoiceID;
     }
 
-    get getClientID(): number
-    {
+    get getClientID(): number {
         return this.ClientID;
     }
 
-    get getSupplierID(): number
-    {
+    get getSupplierID(): number {
         return this.SupplierID;
     }
 
-    get getDate(): Date
-    {
+    get getDate(): Date {
         return this.Date;
     }
 
-    get getDueDate(): Date
-    {
+    get getDueDate(): Date {
         return this.DueDate;
     }
 
-    get getType(): string
-    {
+    get getType(): string {
         return this.Type;
     }
 
-    get getAmount(): number
-    {
+    get getAmount(): number {
         return this.Amount;
     }
 
-    get getPrice(): number
-    {
+    get getPrice(): number {
         return this.Price;
     }
 
-    get getTax(): string
-    {
+    get getTax(): string {
         return this.Tax;
     }
 
-    get getStatus(): number
-    {
+    get getStatus(): number {
         return this.Status;
     }
 
     //setters
-    set setInvoiceID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setInvoiceID(id: number) {
+        if (validator.isID(id)) {
             this.InvoiceID = id;
         }
     }
 
-    set setClientID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setClientID(id: number) {
+        if (validator.isID(id)) {
             this.ClientID = id;
         }
     }
 
-    set setSupplierID(id: number)
-    {
-        if(validator.isID(id))
-        {
+    set setSupplierID(id: number) {
+        if (validator.isID(id)) {
             this.SupplierID = id;
         }
     }
 
-    set setDate(date: Date)
-    {
-        if(validator.isDate(date))
-        {
+    set setDate(date: Date) {
+        if (validator.isDate(date)) {
             this.Date = date;
         }
     }
 
-    set setDueDate(date: Date)
-    {
-        if(validator.isDate(date))
-        {
+    set setDueDate(date: Date) {
+        if (validator.isDate(date)) {
             this.DueDate = date;
         }
     }
 
-    set setType(type: string)
-    {
-        if(validator.isName(type))
-        {
+    set setType(type: string) {
+        if (validator.isName(type)) {
             this.Type = type;
         }
     }
 
-    set setAmount(amount: number)
-    {
-        if(validator.isID(amount))
-        {
+    set setAmount(amount: number) {
+        if (validator.isID(amount)) {
             this.Amount = amount;
         }
     }
 
-    set setPrice(price: number)
-    {
-        if(validator.isID(price))
-        {
+    set setPrice(price: number) {
+        if (validator.isID(price)) {
             this.Price = price;
         }
     }
 
-    set setTax(tax: string)
-    {
-        if(validator.isName(tax))
-        {
+    set setTax(tax: string) {
+        if (validator.isName(tax)) {
             this.Tax = tax;
         }
     }
 
-    set setStatus(status: number)
-    {
+    set setStatus(status: number) {
         this.Status = status;
     }
 

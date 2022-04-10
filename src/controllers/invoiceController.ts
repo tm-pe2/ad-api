@@ -1,5 +1,5 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { Invoice } from '../classes/invoice';
+import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Invoice} from '../classes/invoice';
 import * as InvoiceService from '../services/invoiceService';
 
 export const getAllInvoices: RequestHandler = async (req: Request, res: Response) => {
@@ -53,7 +53,6 @@ export const addInvoice: RequestHandler = async (req: Request, res: Response, ne
         });
     } catch (error) {
         next(error);
-        //console.error('[customerController][addCustomer][Error] ', typeof error === 'object' ? JSON.stringify(error) : error);
         res.status(500).json({
             message: 'There was an error when adding new invoice'
         });
