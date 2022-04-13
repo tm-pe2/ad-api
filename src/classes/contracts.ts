@@ -1,223 +1,107 @@
-import * as validator from '../classes/typeValidation'
-
 export class Contract {
-    private ContractID: number = 0;
-    private StartDate: Date = new Date();
-    private EndDate: Date = new Date();
-    private ClientID: number = 0;
-    private ClientType: string = '';
-    private AdvancedPayment: number = 0;
-    private Price: number = 0;
+    private _contractId: number;
+    private _startDate: Date;
+    private _endDate: Date;
+    private _customerId: number;
+    private _customerType: string;
+    private _advancedPayment: number;
+    private _price: number;
+    private _tariffId : number;
+    private _estimatedId: number;
 
-    constructor(strDate = new Date('1990-01-01'), endDate = new Date('1990-01-01'), clientID: number = 0, clientType: string = 'default', adPayment: number = 0, price: number = 0, contractID: number = 0) {
-        if (validator.isDate(strDate) && validator.isDate(endDate) && validator.isID(clientID) && validator.isName(clientType) && validator.isID(adPayment) && validator.isID(price) && validator.isID(contractID)) {
-            this.ContractID = contractID;
-            this.StartDate = strDate;
-            this.EndDate = endDate;
-            this.ClientID = clientID;
-            this.ClientType = clientType;
-            this.AdvancedPayment = adPayment;
-            this.Price = price;
-        }
+    constructor(contractId: any, startDate: Date, endDate: Date, customerId: number, customerType: string, advancedPayment: number, price: number, tariffId: number, estimatedId: number) {
+        this.contractId = contractId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.customerId = customerId;
+        this.customerType = customerType;
+        this.advancedPayment = advancedPayment;
+        this.price = price;
+        this.tariffId = tariffId;
+        this.estimatedId = estimatedId
     }
 
-    //getters
-    get getContractID(): number {
-        return this.ContractID;
+    get contractId(): number {
+        return this._contractId;
     }
 
-    get getStartDate(): Date {
-        return this.StartDate;
+    set contractId(value: number) {
+        this._contractId = value;
     }
 
-    get getEndDate(): Date {
-        return this.EndDate;
+    get startDate(): Date {
+        return this._startDate;
     }
 
-    get getClientID(): number {
-        return this.ClientID;
+    set startDate(value: Date) {
+        this._startDate = value;
     }
 
-    get getClientType(): string {
-        return this.ClientType;
+    get endDate(): Date {
+        return this._endDate;
     }
 
-    get getAdvancedPayment(): number {
-        return this.AdvancedPayment;
+    set endDate(value: Date) {
+        this._endDate = value;
     }
 
-    get getPrice(): number {
-        return this.Price;
+    get customerId(): number {
+        return this._customerId;
     }
 
-    //setters
-    set setContractID(id: number) {
-        if (validator.isID(id)) {
-            this.ContractID = id;
-        }
+    set customerId(value: number) {
+        this._customerId = value;
     }
 
-    set setStartDate(date: Date) {
-        if (validator.isDate(date)) {
-            this.StartDate = date;
-        }
+    get customerType(): string {
+        return this._customerType;
     }
 
-    set setEndDate(date: Date) {
-        if (validator.isDate(date)) {
-            this.EndDate = date;
-        }
+    set customerType(value: string) {
+        this._customerType = value;
     }
 
-    set setClientID(id: number) {
-        if (validator.isID(id)) {
-            this.ClientID = id;
-        }
+    get advancedPayment(): number {
+        return this._advancedPayment;
     }
 
-    set setClientType(type: string) {
-        if (validator.isString(type)) {
-            this.ClientType = type;
-        }
+    set advancedPayment(value: number) {
+        this._advancedPayment = value;
     }
 
-    set setAdvancedPayment(adPay: number) {
-        if (validator.isID(adPay)) {
-            this.AdvancedPayment = adPay;
-        }
+    get price(): number {
+        return this._price;
     }
 
-    set setPrice(price: number) {
-        if (validator.isID(price)) {
-            this.Price = price;
-        }
+    set price(value: number) {
+        this._price = value;
     }
 
-    /*
-    toJSON()
-    {
-        return {
-            StartDate: this.getStartDate,
-            EndDate: this.getEndDate,
-            ClientID: this.getClientID,
-            ClientType: this.getClientType,
-            AdvancedPayement: this.getAdvancedPayment,
-            Price: this.getPrice
-        }
+    get tariffId(): number {
+        return this._tariffId;
     }
 
-    /*
-    async readAll(): Promise<Contract[]>
-    {
-        let contracts: Contract[] = [];
-        let db = new Database();
-        let conn = db.connect();
-
-        let query: string = "Select * FROM clientcontracts";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, (err: Error, tmpContracts: Contract[]) => {
-                if (err) reject(err);
-                tmpContracts.forEach(contract => {
-                    contracts.push(contract);
-                });
-                resolve(tmpContracts);
-            });
-        }));
-
-        conn.destroy();
-        console.log(contracts);
-        return contracts;
+    set tariffId(value: number) {
+        this._tariffId = value;
     }
 
-    async readContract(id: number): Promise<Contract>
-    {
-        let contract = new Contract();
-        let db = new Database();
-        let conn = db.connect();
-
-        let query: string = "Select * FROM clientcontracts Where ContractID = ?";
-        await(new Promise((resolve, reject) => {
-            conn.query(query, [id], (err: unknown, c: Contract) => {
-                if (err) reject(err);
-                contract = c
-                resolve(c);
-            });
-        }));
-
-        conn.destroy();
-        return contract;
+    get estimatedId(): number {
+        return this._estimatedId;
     }
 
-    async insert(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `INSERT INTO clientcontracts SET ?`;
-        await(new Promise((resolve, reject) => {
-            conn.query(query, this.toJSON() , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
+    set estimatedId(value: number) {
+        this._estimatedId = value;
     }
 
-    async update(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `UPDATE clientcontracts SET 
-        StartDate = ?,
-        EndDate = ?,
-        ClientID = ?,
-        ClientType = ?,
-        AdvancedPayement = ?,
-        Price = ?  Where ContractID = ? `;
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query,
-            [
-                this.StartDate,
-                this.EndDate,
-                this.ClientID,
-                this.ClientType,
-                this.AdvancedPayment,
-                this.Price,
-                this.ContractID
-            ]
-            , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }
-
-    async delete(id: number): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = "DELETE FROM clientcontracts Where ContractID = ?";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, id ,(err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }
-     */
+    toJSON = () => ({
+        ContractID: this.contractId,
+        StartDate: this.startDate,
+        EndDate: this.endDate,
+        CustomerID: this.customerId,
+        CustomerType: this.customerType,
+        AdvancedPayement: this.advancedPayment,
+        Price: this.price,
+        TarifID: this.tariffId,
+        EstimatedID: this.estimatedId
+    });
 }

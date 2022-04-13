@@ -1,42 +1,40 @@
-import * as validator from '../classes/typeValidation';
+import {isEmail, isPassword, isPhoneNumber} from './type-validation';
 
 export class Employee {
     private _employeeId: number;
     private _firstName: string;
     private _lastName: string;
-    private _dateOfBirth: Date;
+    private _birthDate: Date;
     private _addressId: number;
     private _email: string;
     private _phoneNumber: string;
     private _password: string;
     private _department: string;
+    private _permissions: number;
     private _hireDate: Date;
-    private _gender: string;
-    private _permissions: string;
+    private _gender: number;
 
-    constructor(employeeId: any, firstName: string, lastName: string, dateOfBirth: Date, addressId: number, email: string, phoneNumber: string, password: string, department: string, hireDate: Date, gender: string, permissions: string) {
+    constructor(employeeId: any, firstName: string, lastName: string, birthDate: Date, addressId: number, email: string, phoneNumber: string, password: string, department: string, permissions: number, hireDate: Date, gender: number) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
+        this.birthDate = birthDate;
         this.addressId = addressId;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.department = department;
+        this.permissions = permissions;
         this.hireDate = hireDate;
         this.gender = gender;
-        this.permissions = permissions
     }
-
 
     get employeeId(): number {
         return this._employeeId;
     }
 
     set employeeId(value: number) {
-        if (validator.isID(value))
-            this._employeeId = value;
+        this._employeeId = value;
     }
 
     get firstName(): string {
@@ -44,8 +42,7 @@ export class Employee {
     }
 
     set firstName(value: string) {
-        if (validator.isName(value))
-            this._firstName = value;
+        this._firstName = value;
     }
 
     get lastName(): string {
@@ -53,17 +50,15 @@ export class Employee {
     }
 
     set lastName(value: string) {
-        if (validator.isName(value))
-            this._lastName = value;
+        this._lastName = value;
     }
 
-    get dateOfBirth(): Date {
-        return this._dateOfBirth;
+    get birthDate(): Date {
+        return this._birthDate;
     }
 
-    set dateOfBirth(value: Date) {
-        if (validator.isDate(value))
-            this._dateOfBirth = value;
+    set birthDate(value: Date) {
+        this._birthDate = value;
     }
 
     get addressId(): number {
@@ -71,8 +66,7 @@ export class Employee {
     }
 
     set addressId(value: number) {
-        if (validator.isID(value))
-            this._addressId = value;
+        this._addressId = value;
     }
 
     get email(): string {
@@ -80,8 +74,11 @@ export class Employee {
     }
 
     set email(value: string) {
-        if (validator.isEmail(value))
-            this._email = value;
+        if (!isEmail(value)) {
+            throw new Error(value + " is not a valid email address [employee.email]");
+        }
+
+        this._email = value;
     }
 
     get phoneNumber(): string {
@@ -89,8 +86,11 @@ export class Employee {
     }
 
     set phoneNumber(value: string) {
-        if (validator.isPhoneNumber(value))
-            this._phoneNumber = value;
+        if (!isPhoneNumber(value)) {
+            throw new Error(value + " is not a valid phone number [employee.phoneNumber]");
+        }
+
+        this._phoneNumber = value;
     }
 
     get password(): string {
@@ -98,8 +98,11 @@ export class Employee {
     }
 
     set password(value: string) {
-        if (validator.isPassword(value))
-            this._password = value;
+        if (!isPassword(value)) {
+            throw new Error("An invalid password was entered [employee.password]");
+        }
+
+        this._password = value;
     }
 
     get department(): string {
@@ -110,6 +113,14 @@ export class Employee {
         this._department = value;
     }
 
+    get permissions(): number {
+        return this._permissions;
+    }
+
+    set permissions(value: number) {
+        this._permissions = value;
+    }
+
     get hireDate(): Date {
         return this._hireDate;
     }
@@ -118,19 +129,25 @@ export class Employee {
         this._hireDate = value;
     }
 
-    get gender(): string {
+    get gender(): number {
         return this._gender;
     }
 
-    set gender(value: string) {
+    set gender(value: number) {
         this._gender = value;
     }
 
-    get permissions(): string {
-        return this._permissions;
-    }
-
-    set permissions(value: string) {
-        this._permissions = value;
-    }
+    toJSON = () => ({
+        FirstName: this.firstName,
+        LastName: this.lastName,
+        BirthDate: this.birthDate,
+        Email: this.email,
+        PhoneNumber: this.phoneNumber,
+        AdressID: this.addressId,
+        Departement: this.department,
+        Permissions: this.permissions,
+        HireDate: this.hireDate,
+        Gender: this.gender,
+        Password: this.password
+    });
 }

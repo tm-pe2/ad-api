@@ -1,229 +1,132 @@
-import * as validator from './typeValidation';
+import {isEmail, isPassword, isPhoneNumber} from "./type-validation";
 
 export class Customer {
-    private ClientID: number = 0;
-    private Firstname: string = '';
-    private Lastname: string = '';
-    private Birthdate: Date = new Date;
-    private AdressID: number = 0;
-    private Email: string = '';
-    private PhoneNumber: string = '';
-    private Password: string = '';
+    private _customerId: number;
+    private _firstName: string;
+    private _lastName: string;
+    private _birthDate: Date;
+    private _addressId: number;
+    private _email: string;
+    private _phoneNumber: string;
+    private _password: string;
+    private _gasType: string;
+    private _electricityType: string;
 
-    constructor(fName: string = 'default', lName: string = 'default', bDate = new Date('1990-01-01'), addID: number = 0, email: string = 'default', pNumber: string = 'default', password: string = 'default', id: number = 0) {
-        if (fName == '' && lName == '' && bDate == new Date('1990-01-01')) {
-            this.ClientID = id;
-            this.Firstname = fName;
-            this.Lastname = lName;
-            this.Birthdate = bDate;
-            this.AdressID = addID;
-            this.Email = email;
-            this.PhoneNumber = pNumber;
-            this.Password = password;
-        } else {
-            if (validator.isName(fName) && validator.isName(lName) && validator.isDate(bDate) && validator.isID(addID) && validator.isEmail(email) && validator.isPhoneNumber(pNumber) && validator.isPassword(password)) {
-                this.ClientID = id;
-                this.Firstname = fName;
-                this.Lastname = lName;
-                this.Birthdate = bDate;
-                this.AdressID = addID;
-                this.Email = email;
-                this.PhoneNumber = pNumber;
-                this.Password = password;
-            } else {
-                console.log("Input not valid!");
-            }
+    constructor(customerId: any, firstName: string, lastName: string, birthDate: Date, addressId: number, email: string, phoneNumber: string, password: string, gasType: string, electricityType: string) {
+        this.customerId = customerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.addressId = addressId;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.gasType = gasType;
+        this.electricityType = electricityType;
+    }
+
+    get customerId(): number {
+        return this._customerId;
+    }
+
+    set customerId(value: number) {
+        this._customerId = value;
+    }
+
+    get firstName(): string {
+        return this._firstName;
+    }
+
+    set firstName(value: string) {
+        this._firstName = value;
+    }
+
+    get lastName(): string {
+        return this._lastName;
+    }
+
+    set lastName(value: string) {
+        this._lastName = value;
+    }
+
+    get birthDate(): Date {
+        return this._birthDate;
+    }
+
+    set birthDate(value: Date) {
+        this._birthDate = value;
+    }
+
+    get addressId(): number {
+        return this._addressId;
+    }
+
+    set addressId(value: number) {
+        this._addressId = value;
+    }
+
+    get email(): string {
+        return this._email;
+    }
+
+    set email(value: string) {
+        if (!isEmail(value)) {
+            throw new Error(value + " is not a valid email address [customer.email]");
         }
+
+        this._email = value;
     }
 
-    // getters
-    get getClientID(): number {
-        return this.ClientID;
+    get phoneNumber(): string {
+        return this._phoneNumber;
     }
 
-    get getFirstName(): string {
-        return this.Firstname;
-    }
-
-    get getLastName(): string {
-        return this.Lastname;
-    }
-
-    get getBirthDate(): Date {
-        return this.Birthdate;
-    }
-
-    get getAdressID(): number {
-        return this.AdressID;
-    }
-
-    get getEmail(): string {
-        return this.Email;
-    }
-
-    get getPhoneNumber(): string {
-        return this.PhoneNumber;
-    }
-
-    get getPassword(): string {
-        return this.Password;
-    }
-
-
-    //setters
-    //should be used carefully
-    set setClientID(id: number) {
-        if (validator.isID(id)) {
-            this.ClientID = id;
+    set phoneNumber(value: string) {
+        if (!isPhoneNumber(value)) {
+            throw new Error(value + " is not a valid phone number [customer.phoneNumber]");
         }
+
+        this._phoneNumber = value;
     }
 
-    set setFirstname(fName: string) {
-        if (validator.isName(fName)) {
-            this.Firstname = fName;
+    get password(): string {
+        return this._password;
+    }
+
+    set password(value: string) {
+        if (!isPassword(value)) {
+            throw new Error("An invalid password was entered [customer.password]");
         }
+
+        this._password = value;
     }
 
-    set setLastname(lName: string) {
-        if (validator.isName(lName)) {
-            this.Lastname = lName;
-        }
+    get gasType(): string {
+        return this._gasType;
     }
 
-    set setBirthdate(bDate: Date) {
-        if (validator.isDate(bDate)) {
-            this.Birthdate = bDate;
-        }
+    set gasType(value: string) {
+        this._gasType = value;
     }
 
-    set setAdressID(id: number) {
-        if (validator.isID(id)) {
-            this.AdressID = id;
-        }
+    get electricityType(): string {
+        return this._electricityType;
     }
 
-    set setEmail(email: string) {
-        if (validator.isEmail(email)) {
-            this.Email = email;
-        }
+    set electricityType(value: string) {
+        this._electricityType = value;
     }
 
-    set setPhoneNumber(pNum: string) {
-        if (validator.isPhoneNumber(pNum)) {
-            this.PhoneNumber = pNum;
-        }
-    }
-
-    set setPassword(pass: string) {
-        if (validator.isPassword(pass)) {
-            this.Password = pass;
-        }
-    }
-
-    /*
-    toJSON()
-    {
-        return {
-            FirstName: this.getFirstName,
-            LastName: this.getLastName,
-            BirthDate: this.getBirthDate,
-            AdressID: this.getAdressID,
-            Email: this.getEmail,
-            PhoneNumber: this.getPhoneNumber,
-            Password: this.getPassword
-        }
-    }
-
-
-    async readAll(): Promise<Customer[]>
-    {
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = "Select * FROM clients";
-        return validator.query(conn,query);
-    }
-
-    async readClient(id: number): Promise<Customer>
-    {
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = "Select * FROM clients Where ClientID = ?";
-        return validator.query(conn,query,id);
-    }
-
-    async insert(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `INSERT INTO clients SET ?`;
-        await(new Promise((resolve, reject) => {
-            conn.query(query, this.toJSON() , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;     
-    }
-
-    async update(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `UPDATE clients SET 
-        FirstName = ?,
-        LastName = ?,
-        BirthDate = ?,
-        AdressID = ?,
-        Email = ?,
-        PhoneNumber = ?,
-        Password = ? Where ClientID = ? `;
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query,
-            [
-                this.getFirstName,
-                this.getLastName,
-                this.getBirthDate,
-                this.getAdressID,
-                this.getEmail,
-                this.getPhoneNumber,
-                this.getPassword,
-                this.getClientID
-            ]
-            , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }
-
-    async delete(id: number): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = "DELETE FROM clients Where ClientID = ?";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, id ,(err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-
-        return status;
-    }
-
-     */
+    toJSON = () => ({
+        CustomerID: this.customerId,
+        FirstName: this.firstName,
+        LastName: this.lastName,
+        BirthDate: this.birthDate,
+        AdressID: this.addressId, // typo
+        Email: this.email,
+        PhoneNumber: this.phoneNumber,
+        Password: this.password,
+        GasType: this.gasType,
+        Electricitytype: this.electricityType
+    });
 }

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { httpServer } from './server'
-import { MailService } from './services/mailService'
+import { MailService } from './services/mail-service'
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
   dotenv.config();

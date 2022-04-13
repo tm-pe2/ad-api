@@ -20,10 +20,20 @@ export const init = () => {
 
         console.debug('MySql Adapter Pool generated successfully');
     } catch (error) {
-        console.error('[mysql.connector][init][Error]: ', error);
+        console.error(error);
         throw new Error('failed to initialized pool');
     }
 };
+
+export const end = () => {
+    try {
+    pool.end();
+        console.debug('MySql Adapter Pool closed successfully');
+    } catch (error) {
+        console.error(error);
+        throw new Error('failed to end pool');
+    }
+}
 
 /**
  * executes SQL queries in MySQL db

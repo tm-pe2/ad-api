@@ -5,7 +5,7 @@
   "private": true,
   "main": "src/app.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --forceExit",
     "tsc": "tsc",
     "eslint": "eslint",
     "serve": "nodemon"

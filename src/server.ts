@@ -3,11 +3,15 @@ import http from 'http';
 import express, {Express} from 'express';
 import {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
-import customerRoutes from './routes/customerRoutes';
-import invoiceRoutes from './routes/invoiceRoutes';
-import contractRoutes from './routes/contractRoutes';
-import addressroutes from './routes/adressRoutes';
-import employeeRoutes from './routes/employeeRoutes';
+import customerRoutes from './routes/customer-routes';
+import invoiceRoutes from './routes/invoice-routes';
+import contractRoutes from './routes/contract-routes';
+import addressRoutes from './routes/address-routes';
+import employeeRoutes from './routes/employee-routes';
+import estimationRoutes from './routes/estimation-routes';
+import planningRoutes from './routes/planning-routes';
+import tariffRoutes from './routes/tariff-routes';
+import supplierRoutes from './routes/supplier-routes';
 
 import * as MySQLConnector from './utils/mysql.connector';
 
@@ -38,8 +42,19 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 // create database pool
 MySQLConnector.init();
 
+
 /** Routes */
-router.use('/api/', customerRoutes, invoiceRoutes, contractRoutes, addressroutes, employeeRoutes);
+router.use('/api/',
+    customerRoutes,
+    invoiceRoutes,
+    contractRoutes,
+    addressRoutes,
+    employeeRoutes,
+    estimationRoutes,
+    planningRoutes,
+    tariffRoutes,
+    supplierRoutes
+);
 
 /** Error handling */
 router.use((req: Request, res: Response, next: NextFunction) => {

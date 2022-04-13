@@ -1,271 +1,140 @@
-import * as validator from '../classes/typeValidation';
-
 export class Invoice {
-    private InvoiceID: number = 0;
-    private ClientID: number = 0;
-    private SupplierID: number = 0;
-    private Date: Date = new Date;
-    private DueDate: Date = new Date;
-    private Type: string = '';
-    private Amount: number = 0;
-    private Price: number = 0;
-    private Tax: string = '';
-    private Status: number = 0;
+    private _invoiceId: number;
+    private _customerId: number;
+    private _supplierId: number;
+    private _date: Date;
+    private _dueDate: Date;
+    private _status: string;
+    private _gasAmount: number;
+    private _electricityType: string;
+    private _price: number;
+    private _tax: number;
+    private _startDate: Date;
+    private _endDate: Date;
 
-    constructor(clientID: number = 0, suppID: number = 0, date = new Date('1990-01-01'), dueDate = new Date('1990-01-01'),
-                type: string = 'default', amount: number = 0, price: number = 0, tax: string = 'default', status: number = 0, invID: number = 0) {
-        if (validator.isID(clientID) && validator.isID(invID) && validator.isID(suppID)
-            && validator.isDate(date) && validator.isDate(dueDate) && validator.isName(type)
-            && validator.isID(amount) && validator.isID(price) && validator.isName(tax) && validator.isID(status)) {
-            this.InvoiceID = invID;
-            this.ClientID = clientID;
-            this.SupplierID = suppID;
-            this.Date = date;
-            this.DueDate = dueDate;
-            this.Type = type;
-            this.Amount = amount;
-            this.Price = price;
-            this.Tax = tax;
-            this.Status = status;
-        } else {
-            console.log("Input not valid!");
-        }
+    constructor(invoiceId: any, customerId: number, supplierId: number, date: Date, dueDate: Date, status: string, gasAmount: number, electricityType: string, price: number, tax: number, startDate: Date, endDate: Date) {
+        this.invoiceId = invoiceId;
+        this.customerId= customerId;
+        this.supplierId = supplierId;
+        this.date = date;
+        this.dueDate = dueDate;
+        this.status = status;
+        this.gasAmount = gasAmount;
+        this.electricityType = electricityType;
+        this.price = price;
+        this.tax = tax;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    //getters
-    get getInvoiceID(): number {
-        return this.InvoiceID;
+    get invoiceId(): number {
+        return this._invoiceId;
     }
 
-    get getClientID(): number {
-        return this.ClientID;
+    set invoiceId(value: number) {
+        this._invoiceId = value;
     }
 
-    get getSupplierID(): number {
-        return this.SupplierID;
+    get customerId(): number {
+        return this._customerId;
     }
 
-    get getDate(): Date {
-        return this.Date;
+    set customerId(value: number) {
+        this._customerId = value;
     }
 
-    get getDueDate(): Date {
-        return this.DueDate;
+    get supplierId(): number {
+        return this._supplierId;
     }
 
-    get getType(): string {
-        return this.Type;
+    set supplierId(value: number) {
+        this._supplierId = value;
     }
 
-    get getAmount(): number {
-        return this.Amount;
+    get date(): Date {
+        return this._date;
     }
 
-    get getPrice(): number {
-        return this.Price;
+    set date(value: Date) {
+        this._date = value;
     }
 
-    get getTax(): string {
-        return this.Tax;
+    get dueDate(): Date {
+        return this._dueDate;
     }
 
-    get getStatus(): number {
-        return this.Status;
+    set dueDate(value: Date) {
+        this._dueDate = value;
     }
 
-    //setters
-    set setInvoiceID(id: number) {
-        if (validator.isID(id)) {
-            this.InvoiceID = id;
-        }
+    get status(): string {
+        return this._status;
     }
 
-    set setClientID(id: number) {
-        if (validator.isID(id)) {
-            this.ClientID = id;
-        }
+    set status(value: string) {
+        this._status = value;
     }
 
-    set setSupplierID(id: number) {
-        if (validator.isID(id)) {
-            this.SupplierID = id;
-        }
+    get gasAmount(): number {
+        return this._gasAmount;
     }
 
-    set setDate(date: Date) {
-        if (validator.isDate(date)) {
-            this.Date = date;
-        }
+    set gasAmount(value: number) {
+        this._gasAmount = value;
     }
 
-    set setDueDate(date: Date) {
-        if (validator.isDate(date)) {
-            this.DueDate = date;
-        }
+    get electricityType(): string {
+        return this._electricityType;
     }
 
-    set setType(type: string) {
-        if (validator.isName(type)) {
-            this.Type = type;
-        }
+    set electricityType(value: string) {
+        this._electricityType = value;
     }
 
-    set setAmount(amount: number) {
-        if (validator.isID(amount)) {
-            this.Amount = amount;
-        }
+    get price(): number {
+        return this._price;
     }
 
-    set setPrice(price: number) {
-        if (validator.isID(price)) {
-            this.Price = price;
-        }
+    set price(value: number) {
+        this._price = value;
     }
 
-    set setTax(tax: string) {
-        if (validator.isName(tax)) {
-            this.Tax = tax;
-        }
+    get tax(): number {
+        return this._tax;
     }
 
-    set setStatus(status: number) {
-        this.Status = status;
+    set tax(value: number) {
+        this._tax = value;
     }
 
-    /*
-    toJSON()
-    {
-        return {
-            InvoiceID: this.InvoiceID,
-            ClientID: this.ClientID,
-            SupplierID: this.SupplierID,
-            Date: this.Date,
-            DueDate: this.DueDate,
-            Type: this.Type,
-            Amount: this.Amount,
-            Price: this.Price,
-            Tax: this.Tax,
-            Status: this.Status
-        }
+    get startDate(): Date {
+        return this._startDate;
     }
 
-    async readAll(): Promise<Invoice[]>
-    {
-        let invoices: Invoice[] = [];
-        let db = new Database();
-        let conn = db.connect();
-
-        let query: string = "Select * FROM invoices";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, (err: Error, tmpInvoices: Invoice[]) => {
-                if (err) reject(err);
-                tmpInvoices.forEach(invoice => {
-                    invoices.push(invoice);
-                });
-                resolve(tmpInvoices);
-            });
-        }));
-
-        conn.destroy();
-        return invoices;
+    set startDate(value: Date) {
+        this._startDate = value;
     }
 
-    async readInvoice(id: number): Promise<Invoice>
-    {
-        let invoice = new Invoice();
-        let db = new Database();
-        let conn = db.connect();
-
-        let query: string = "Select * FROM invoices Where InvoiceID = ?";
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query, [id], (err: unknown, i: Invoice) => {
-                if (err) reject(err);
-                invoice = i;
-                resolve(i);
-            });
-        }));
-
-        conn.destroy();
-        return invoice;
+    get endDate(): Date {
+        return this._endDate;
     }
 
-    async insert(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `INSERT INTO invoices SET ?`;
-        await(new Promise((resolve, reject) => {
-            conn.query(query, this.toJSON() , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
+    set endDate(value: Date) {
+        this._endDate = value;
     }
 
-    async update(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `UPDATE invoices SET 
-        ClientID = ?,
-        SupplierID = ?,
-        Date = ?,
-        DueDate = ?,
-        Type = ?,
-        Amount = ?,
-        Price = ?,
-        Tax = ?,
-        Status = ? Where InvoiceID = ? `;
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query,
-            [
-                this.ClientID,
-                this.SupplierID,
-                this.Date,
-                this.DueDate,
-                this.Type,
-                this.Amount,
-                this.Price,
-                this.Tax,
-                this.Status,
-                this.InvoiceID
-            ]
-            , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }
-
-    async delete(id: number): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = "DELETE FROM invoices Where InvoiceID = ?";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, id ,(err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }µ
-
-     */
+    toJSON = () => ({
+        InvoiceID: this.invoiceId,
+        CustomerID: this.customerId,
+        SupplierID: this.supplierId,
+        Date: this.date,
+        DueDate: this.dueDate,
+        Status: this.status,
+        GasAmount: this.gasAmount,
+        Electricitytype: this.electricityType,
+        Price: this.price,
+        Tax: this.tax,
+        StartDate: this.startDate,
+        EndDate: this.endDate
+    });
 }

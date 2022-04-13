@@ -1,210 +1,96 @@
-import * as validatior from '../classes/typeValidation';
-
 export class Address {
-    private AdressID: number = 0;
-    private City: string = '';
-    private Street: string = '';
-    private HouseNumber: string = '';
-    private PostalCode: string = '';
-    private Country: string = '';
+    private _addressId: number;
+    private _city: string;
+    private _street: string;
+    private _houseNumber: string;
+    private _postalCode: string;
+    private _country: string;
+    private _startDate: Date;
+    private _endDate: Date;
 
-    constructor(city: string = 'default', street: string = 'default', hNumber: string = 'default', pCode: string = 'default', country: string = 'default', addID: number = 0) {
-        if (validatior.isString(city) && validatior.isString(street) && validatior.isString(hNumber) && validatior.isString(pCode) && validatior.isString(country) && validatior.isID(addID)) {
-            this.AdressID = addID;
-            this.City = city;
-            this.Street = street;
-            this.HouseNumber = hNumber;
-            this.PostalCode = pCode;
-            this.Country = country;
-        }
+    constructor(addressId: any, city: string, street: string, houseNumber: string, postalCode: string, country: string, startDate: Date, endDate: Date) {
+        this.addressId = addressId;
+        this.city = city;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.startDate = startDate;
+        this.endDate = endDate
     }
 
-    //getters
-    get getAddressID(): number {
-        return this.AdressID;
+    get addressId(): number {
+        return this._addressId;
     }
 
-    get getCity(): string {
-        return this.City;
+    set addressId(value: number) {
+        this._addressId = value;
     }
 
-    get getStreet(): string {
-        return this.Street;
+    get city(): string {
+        return this._city;
     }
 
-    get getHouseNumber(): string {
-        return this.HouseNumber;
+    set city(value: string) {
+        this._city = value;
     }
 
-    get getPostalCode(): string {
-        return this.PostalCode;
+    get street(): string {
+        return this._street;
     }
 
-    get getCountry(): string {
-        return this.Country;
+    set street(value: string) {
+        this._street = value;
     }
 
-    //setters
-    set setAdderssID(id: number) {
-        if (validatior.isID(id)) {
-            this.AdressID = id;
-        }
+    get houseNumber(): string {
+        return this._houseNumber;
     }
 
-    set setCity(city: string) {
-        if (validatior.isString(city)) {
-            this.City = city;
-        }
+    set houseNumber(value: string) {
+        this._houseNumber = value;
     }
 
-    set setStreet(street: string) {
-        if (validatior.isString(street)) {
-            this.Street = street;
-        }
+    get postalCode(): string {
+        return this._postalCode;
     }
 
-    set setHouseNumber(hNum: string) {
-        if (validatior.isString(hNum)) {
-            this.HouseNumber = hNum;
-        }
+    set postalCode(value: string) {
+        this._postalCode = value;
     }
 
-    set setPostalCode(pCode: string) {
-        if (validatior.isString(pCode)) {
-            this.PostalCode = pCode;
-        }
+    get country(): string {
+        return this._country;
     }
 
-    set setCountry(country: string) {
-        if (validatior.isString(country)) {
-            this.Country = country;
-        }
+    set country(value: string) {
+        this._country = value;
     }
 
-    /*
-
-    toJSON()
-    {
-        return {
-            AdressID: this.getAddressID,
-            City: this.getCity,
-            Street: this.getStreet,
-            HouseNumber: this.getHouseNumber,
-            PostalCode: this.getPostalCode,
-            Country: this.getCountry
-        }
+    get startDate(): Date {
+        return this._startDate;
     }
 
-    /*
-    async readAll(): Promise<Address[]>
-    {
-        let addresses: Address[] = [];
-        let db = new Database();
-        let conn = db.connect();
-
-        let query: string = "Select * FROM address";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, (err: Error, tmpAddresses: Address[]) => {
-                if (err) reject(err);
-                tmpAddresses.forEach(address => {
-                    addresses.push(address);
-                });
-                resolve(tmpAddresses);
-            });
-        }));
-
-        conn.destroy();
-        return addresses;
+    set startDate(value: Date) {
+        this._startDate = value;
     }
 
-    async readAddress(id: number): Promise<Address>
-    {
-        let address = new Address();
-        let db = new Database();
-        let conn = db.connect();
-
-        let query: string = "Select * FROM address Where AdressID = ?";
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query, [id], (err: unknown, a: Address) => {
-                if (err) reject(err);
-                address = a;
-                resolve(a);
-            });
-        }));
-
-        conn.destroy();
-        return address;
+    get endDate(): Date {
+        return this._endDate;
     }
 
-    async insert(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `INSERT INTO address SET ?`;
-        await(new Promise((resolve, reject) => {
-            conn.query(query, this.toJSON() , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
+    set endDate(value: Date) {
+        this._endDate = value;
     }
 
-    async update(): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `UPDATE address SET 
-        City = ?,
-        Street = ?,
-        HouseNumber = ?,
-        PostalCode = ?,
-        Country = ? Where AdressID = ? `;
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query,
-            [
-                this.City,
-                this.Street,
-                this.HouseNumber,
-                this.PostalCode,
-                this.Country,
-                this.AdressID
-            ]
-            , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }
-
-    async delete(id: number): Promise<boolean>
-    {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = "DELETE FROM address Where AdressID = ?";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, id ,(err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
-    }
-
-     */
+    toJSON = () => ({
+        AdressID: this.addressId, // typo
+        City: this.city,
+        Street: this.street,
+        HouseNumber: this.houseNumber,
+        PostalCode: this.postalCode,
+        Country: this.country,
+        StartDate: this.startDate,
+        EndDate: this.endDate
+    });
 }
