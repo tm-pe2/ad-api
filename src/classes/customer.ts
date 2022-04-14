@@ -1,8 +1,11 @@
 import { Database } from './database';
+import { Connection } from 'mysql';
 import * as validator from './typeValidation';
 
 export class Customer
 {
+    private db = new Database();
+    private conn = this.db.connect();
     private ClientID: number = 0;
     private Firstname: string = '';
     private Lastname: string = '';
@@ -13,8 +16,8 @@ export class Customer
     private Password: string = '';
 
     constructor(fName: string='default', lName: string = 'default', bDate = new Date('1990-01-01'), addID: number = 0, email: string = 'default', pNumber: string = 'default', password: string = 'default', id: number = 0)
-    {
-        if(fName == '' && lName == '' && bDate == new Date('1990-01-01'))
+    { 
+        if(validator.isName(fName) && validator.isName(lName) && validator.isDate(bDate) && validator.isID(addID) && validator.isEmail(email) && validator.isPhoneNumber(pNumber) && validator.isPassword(password) )
         {
             this.ClientID =id;
             this.Firstname = fName;
@@ -27,22 +30,8 @@ export class Customer
         }
         else
         {
-            if(validator.isName(fName) && validator.isName(lName) && validator.isDate(bDate) && validator.isID(addID) && validator.isEmail(email) && validator.isPhoneNumber(pNumber) && validator.isPassword(password) )
-            {
-                this.ClientID =id;
-                this.Firstname = fName;
-                this.Lastname = lName;
-                this.Birthdate = bDate;
-                this.AdressID = addID;
-                this.Email = email;
-                this.PhoneNumber = pNumber;
-                this.Password = password;
-            }
-            else
-            {
-                console.log("Input not valid!");
-            }
-        }
+            console.log("Input not valid!");
+        }  
     }
 
     // getters
@@ -123,7 +112,7 @@ export class Customer
 
     set setAdressID(id: number)
     {
-        if(validator.isID(id))
+        if(validator.isNumber(id))
         {
             this.AdressID = id;
         }
@@ -167,93 +156,37 @@ export class Customer
         }
     }
 
-    async readAll(): Promise<Customer[]>
+    async readAll(): Promise<string>
     {
-        let db = new Database();
-        let conn = db.connect();
         let query: string = "Select * FROM clients";
-        return validator.query(conn,query);
+        return validator.query(this.conn,query);
     }
 
     async readClient(id: number): Promise<Customer>
     {
-        let db = new Database();
-        let conn = db.connect();
         let query: string = "Select * FROM clients Where ClientID = ?";
-        return validator.query(conn,query,id);
+        return validator.query(this.conn,query,id);
     }
 
     async insert(): Promise<boolean>
     {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
         let query: string = `INSERT INTO clients SET ?`;
-        await(new Promise((resolve, reject) => {
-            conn.query(query, this.toJSON() , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;     
+        return validator.queryResult(this.conn,query,this.toJSON());     
     }
 
     async update(): Promise<boolean>
     {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
-        let query: string = `UPDATE clients SET 
-        FirstName = ?,
-        LastName = ?,
-        BirthDate = ?,
-        AdressID = ?,
-        Email = ?,
-        PhoneNumber = ?,
-        Password = ? Where ClientID = ? `;
-        await(new Promise((resolve, reject) => {
-            let res = conn.query(query,
-            [
-                this.getFirstName,
-                this.getLastName,
-                this.getBirthDate,
-                this.getAdressID,
-                this.getEmail,
-                this.getPhoneNumber,
-                this.getPassword,
-                this.getClientID
-            ]
-            , (err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-        return status;
+        let query: string = `UPDATE clients SET FirstName = ?, LastName = ?, BirthDate = ?, AdressID = ?, Email = ?,
+        PhoneNumber = ?, Password = ? Where ClientID = ? `;
+        return validator.queryResult(this.conn,query,[
+            this.getFirstName, this.getLastName, this.getBirthDate, this.getAdressID, 
+            this.getEmail, this.getPhoneNumber, this.getPassword, this.getClientID
+        ]);
     }
 
     async delete(id: number): Promise<boolean>
     {
-        let status: boolean = true;
-        let db = new Database();
-        let conn = db.connect();
         let query: string = "DELETE FROM clients Where ClientID = ?";
-
-        await(new Promise((resolve, reject) => {
-            conn.query(query, id ,(err: unknown) => {
-                if (err) reject(err);
-                status = true;
-                resolve(status);
-            });
-        }));
-
-        conn.destroy();
-
-        return status;
+        return validator.queryResult(this.conn,query,id);
     }
 }

@@ -134,4 +134,20 @@ function query<T>(conn: Connection, query: string, params?: unknown): Promise<T>
     }));
 }
 
-export { isID, isNumber, isDate, isName, isString, isPhoneNumber, isEmail, isPassword, query}
+function queryResult(conn: Connection, query: string, params?: unknown): Promise<boolean> {
+    let status: boolean;
+    return (new Promise((resolve, reject) => {
+        conn.query(query, params ,(err: unknown) => {
+            if (err) {
+                status = false;
+                reject(err);
+            }
+            else {
+                status = true;
+                resolve(status);
+            }
+        });
+    }));
+}
+
+export { isID, isNumber, isDate, isName, isString, isPhoneNumber, isEmail, isPassword, query, queryResult}

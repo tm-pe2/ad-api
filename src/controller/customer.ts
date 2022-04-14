@@ -17,14 +17,17 @@ const getClient = async (req: Request, res: Response, next: NextFunction) => {
 // update a client
 const updateClient = async (req: Request, res: Response, next: NextFunction) => {
     let client: Customer = new Customer(req.body.FirstName,req.body.LastName,new Date(req.body.BirthDate),Number(req.body.AdressID),req.body.Email,req.body.PhoneNumber,req.body.Password,Number(req.body.ClientID));
-    if(await client.update())
-    {
-        return res.status(200).json({"Status": "Customer updated sucessfully!"})
-    }
-    else
-    {
-        return res.status(500).json({"Status" : "Something went wrong!"});
-    }
+    // if(await client.update())
+    // {
+    //     return res.status(200).json({"Status": "Customer updated sucessfully!"})
+    // }
+    // else
+    // {
+    //     return res.status(500).json({"Status" : "Something went wrong!"});
+    // }
+    return res.status(200).json({
+         client
+    })
 };
 
 // delete a client
