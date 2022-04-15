@@ -1,3 +1,62 @@
+import { Client, Value } from 'ts-postgres';
+import { DATA_SOURCES } from '../config';
+
+const dataSource = DATA_SOURCES.DBDataSource;
+let client: Client;
+
+export function init() {
+    try {
+        client = new Client({
+            host: dataSource.DB_HOST,
+            user: dataSource.DB_USER, 
+            password: dataSource.DB_PASSWORD, 
+            database: dataSource.DB_DATABASE,
+            port: dataSource.DB_PORT,
+        });
+
+        client.connect();
+
+        console.debug('Connected to PostgreSQL');
+    } catch (error) {
+        console.error('Error connecting to PostgreSQL:', error);
+    }
+}
+
+export function end() {
+    try {
+        client.end();
+
+        console.debug('Disconnected from PostgreSQL');
+    } catch (error) {
+        console.error('Error disconnecting from PostgreSQL:', error);
+    }
+}
+
+/**
+ * executes SQL queries in MySQL db
+ *
+ * @param {string} query - provide a valid SQL query
+ * @param {string[] | Object} params - provide the parameterized values used
+ * in the query
+ */
+
+export async function execute<T>(query: string, params: Value[]) : Promise<T> {
+    try {
+        if (!client) throw new Error('Databse client not initialized');
+
+        const result : T = await client.query(query, params);
+
+        return new Promise<T>((resolve, reject) => {
+                reject(new Error('Query failed'));
+                resolve(result);
+        });
+        
+    } catch (error) {
+        console.error('Problem trying to execute the query: ', error);
+    }
+}
+
+/*
 import {createPool, Pool} from 'mysql';
 import {DATA_SOURCES} from '../config';
 
@@ -8,6 +67,8 @@ let pool: Pool;
 /**
  * generates pool connection to be used throughout the app
  */
+
+/*
 export const init = () => {
     try {
         pool = createPool({
@@ -35,6 +96,8 @@ export const end = () => {
     }
 }
 
+*/
+
 /**
  * executes SQL queries in MySQL db
  *
@@ -42,6 +105,8 @@ export const end = () => {
  * @param {string[] | Object} params - provide the parameterized values used
  * in the query
  */
+
+/*
 export const execute = <T>(query: string, params: string[] | Object): Promise<T> => {
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
@@ -58,3 +123,4 @@ export const execute = <T>(query: string, params: string[] | Object): Promise<T>
         throw new Error('failed to execute MySQL query');
     }
 }
+*/

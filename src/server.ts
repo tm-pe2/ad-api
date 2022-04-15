@@ -13,7 +13,7 @@ import planningRoutes from './routes/planning-routes';
 import tariffRoutes from './routes/tariff-routes';
 import supplierRoutes from './routes/supplier-routes';
 
-import * as MySQLConnector from './utils/mysql.connector';
+import * as DBConnector from './utils/mysql.connector';
 
 
 const router: Express = express();
@@ -40,7 +40,7 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // create database pool
-MySQLConnector.init();
+DBConnector.init();
 
 
 /** Routes */
