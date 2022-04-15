@@ -6,17 +6,17 @@ describe('Employee Endpoints', () => {
         const response = await request(router)
             .post('/api/employees')
             .send({
-                firstName: 'testFirstName',
-                lastName: 'testLastName',
-                birthDate: '1-1-2000',
-                addressId: 1,
-                email: 'testEmail@test.com',
-                phoneNumber: '0123 456789',
-                password: 'TestPw123',
-                department: "Human Resources",
-                permissions: 1,
-                hireDate: '2000-04-01',
-                gender: 1
+                FirstName: 'testFirstName',
+                LastName: 'testLastName',
+                BirthDate: '1-1-2000',
+                AdressID: 1,
+                Email: 'testEmail@test.com',
+                PhoneNumber: '0123 456789',
+                Password: 'TestPw123',
+                Departement: "Human Resources",
+                Permissions: 1,
+                HireDate: '2000-04-01',
+                Gender: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -41,18 +41,18 @@ describe('Employee Endpoints', () => {
         const response = await request(router)
             .put(`/api/employees/`)
             .send({
-                employeeId: 5,
-                firstName: 'updatedTestFirst',
-                lastName: 'UpdatedTestLast',
-                birthDate: '1-1-2010',
-                addressId: 1,
-                email: 'updatedTestEmail@test.com',
-                phoneNumber: '0123 456000',
-                password: 'TestPw12345',
-                department: "updatedDepartment",
-                permissions: "2",
-                hireDate: '2022-04-01',
-                gender: 0
+                EmployeeID: 5,
+                FirstName: 'updatedTestFirst',
+                LastName: 'UpdatedTestLast',
+                BirthDate: '1-1-2010',
+                AdressID: 1,
+                Email: 'updatedTestEmail@test.com',
+                PhoneNumber: '0123 456000',
+                Password: 'TestPw12345',
+                Departement: "updatedDepartment",
+                Permissions: "2",
+                HireDate: '2022-04-01',
+                Gender: 0
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

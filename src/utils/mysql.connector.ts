@@ -1,7 +1,11 @@
 import {createPool, Pool} from 'mysql';
-import {DATA_SOURCES} from '../config';
 
-const dataSource = DATA_SOURCES.mySqlDataSource;
+
+import dotenv from 'dotenv';
+
+
+    dotenv.config();
+
 
 let pool: Pool;
 
@@ -12,10 +16,11 @@ export const init = () => {
     try {
         pool = createPool({
             connectionLimit: 10,
-            host: dataSource.DB_HOST,
-            user: dataSource.DB_USER,
-            password: dataSource.DB_PASSWORD,
-            database: dataSource.DB_DATABASE,
+            host: process.env.DB_HOST ?? '',
+            //port: Number(process.env.DB_PORT),
+            user: process.env.DB_USER ?? '',
+            password: process.env.DB_PASSWORD ?? '',
+            database: process.env.DB_DATABASE ?? '',
         });
 
         console.debug('MySql Adapter Pool generated successfully');

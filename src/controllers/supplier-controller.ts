@@ -34,8 +34,7 @@ export const getSupplierById: RequestHandler = async (req: Request, res: Respons
 
 export const addSupplier: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let supplier: Supplier = new Supplier(null,obj.name, obj.supplyType, obj.companyName, obj.addressId);
+        let supplier: Supplier = req.body;
         const result = await supplierService.insertSupplier(supplier);
 
         res.status(200).json({
@@ -51,9 +50,7 @@ export const addSupplier: RequestHandler = async (req: Request, res: Response) =
 
 export const updateSupplier: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let supplier: Supplier = new Supplier(obj.supplierId, obj.name, obj.supplyType, obj.companyName, obj.addressId);
-
+        let supplier: Supplier = req.body;
         const result = await supplierService.updateSupplier(supplier);
 
         res.status(200).json({

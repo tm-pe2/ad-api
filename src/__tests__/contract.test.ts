@@ -6,14 +6,14 @@ describe('Contract Endpoints', () => {
         const response = await request(router)
             .post('/api/contracts')
             .send({
-                startDate: '2022-04-12',
-                endDate: '2023-04-12',
-                customerId: '1',
-                customerType: 'mastercard',
-                advancedPayment: '1000',
-                price: '999.99',
-                tariffId: 1,
-                estimatedId: 1
+                StartDate: '2022-04-12',
+                EndDate: '2023-04-12',
+                CustomerID: '1',
+                CustomerType: 'mastercard',
+                AdvancedPayement: '1000',
+                Price: '999.99',
+                TarifID: 1,
+                EstimatedID: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -39,15 +39,15 @@ describe('Contract Endpoints', () => {
         const response = await request(router)
             .put(`/api/contracts/`)
             .send({
-                contractId: 5,
-                startDate: '2022-04-12',
-                endDate: '2023-04-12',
-                customerId: '5',
-                customerType: 'mastercard',
-                advancedPayment: '1000',
-                price: '999.99',
-                tariffId: 2,
-                estimatedId: 1
+                ContractID: 5,
+                StartDate: '2022-04-12',
+                EndDate: '2023-04-12',
+                CustomerID: '5',
+                CustomerType: 'mastercard',
+                AdvancedPayement: '1000',
+                Price: '999.99',
+                TarifID: 2,
+                EstimatedID: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

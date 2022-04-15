@@ -5,7 +5,6 @@ import {Contract} from "../classes/contracts";
 export const getAllContracts: RequestHandler = async (req: Request, res: Response) => {
     try {
         const contracts = await contractService.getAllContracts();
-
         res.status(200).json({
             contracts
         });
@@ -34,8 +33,7 @@ export const getContractById: RequestHandler = async (req: Request, res: Respons
 
 export const addContract: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let obj = req.body
-        let contract: Contract = new Contract(null, obj.startDate, obj.endDate, obj.customerId, obj.customerType, obj.advancedPayment, obj.price, obj.tariffId, obj.estimatedId);
+        let contract: Contract = req.body;
         const result = await contractService.insertContract(contract);
 
         res.status(200).json({
@@ -51,9 +49,7 @@ export const addContract: RequestHandler = async (req: Request, res: Response, n
 
 export const updateContract: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let contract: Contract = new Contract(obj.contractId, obj.startDate, obj.endDate, obj.customerId, obj.customerType, obj.advancedPayment, obj.price, obj.tariffId, obj.estimatedId);
-
+        let contract: Contract = req.body;
         const result = await contractService.updateContract(contract);
 
         res.status(200).json({

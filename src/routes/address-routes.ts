@@ -1,4 +1,3 @@
-/** source/routes/address.ts */
 import express from 'express';
 import * as addressController from '../controllers/address-controller';
 

@@ -34,9 +34,7 @@ export const getEstimationById: RequestHandler = async (req: Request, res: Respo
 
 export const addEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let estimation: Estimation = new Estimation(null, obj.serviceType, obj.addressId, obj.buildingType, obj.familySize, obj.pastConsumption, obj.electricCar, obj.wellness, obj.heatingType);
-
+        let estimation: Estimation = req.body;
         const result = await estimationService.insertEstimation(estimation);
 
         res.status(200).json({
@@ -52,9 +50,7 @@ export const addEstimation: RequestHandler = async (req: Request, res: Response)
 
 export const updateEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let estimation: Estimation = new Estimation(obj.estimationId, obj.serviceType, obj.addressId, obj.buildingType, obj.familySize, obj.pastConsumption, obj.electricCar, obj.wellness, obj.heatingType);
-
+        let estimation: Estimation = req.body;
         const result = await estimationService.updateEstimation(estimation);
 
         res.status(200).json({

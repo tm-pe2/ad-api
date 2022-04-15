@@ -6,29 +6,29 @@ export const getAllPlannings = async () => {
     return execute<Planning[]>(planningQueries.getAllPlannings, []);
 };
 
-export const getPlanningById = async (id: Planning['planningId']) => {
+export const getPlanningById = async (id: Planning['PlanningID']) => {
     return execute<Planning>(planningQueries.getPlanningById, [id]);
 };
 
 export const insertPlanning = async (planning: Planning) => {
     const result = await execute<{ affectedRows: number }>(planningQueries.addPlanning, [
-        planning.toJSON()
+        planning
     ]);
     return result.affectedRows > 0;
 };
 
 export const updatePlanning = async (planning: Planning) => {
     const result = await execute<{ affectedRows: number }>(planningQueries.updatePlanning, [
-        planning.employeeId,
-        planning.customerId,
-        planning.date,
-        planning.status,
-        planning.planningId
+        planning.EmployeeID,
+        planning.CustomerID,
+        planning.Date,
+        planning.Status,
+        planning.PlanningID
     ]);
     return result.affectedRows > 0;
 };
 
-export const deletePlanningById = async (id: Planning['planningId']) => {
+export const deletePlanningById = async (id: Planning['PlanningID']) => {
     const result = await execute<{ affectedRows: number }>(planningQueries.deletePlanningById, [id]);
     return result.affectedRows > 0;
 };

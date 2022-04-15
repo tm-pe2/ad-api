@@ -34,9 +34,7 @@ export const getInvoiceById: RequestHandler = async (req: Request, res: Response
 
 export const addInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let invoice: Invoice = new Invoice(null, obj.customerId, obj.supplierId, obj.date, obj.dueDate, obj.status, obj.gasAmount, obj.electricityType, obj.price, obj.tax, obj.startDate, obj.endDate);
-
+        let invoice: Invoice = req.body;
         const result = await invoiceService.insertInvoice(invoice);
 
         res.status(200).json({
@@ -52,9 +50,7 @@ export const addInvoice: RequestHandler = async (req: Request, res: Response) =>
 
 export const updateInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let invoice: Invoice = new Invoice(obj.invoiceId, obj.customerId, obj.supplierId, obj.date, obj.dueDate, obj.status, obj.gasAmount, obj.electricityType, obj.price, obj.tax, obj.startDate, obj.endDate)
-
+        let invoice: Invoice = req.body;
         const result = await invoiceService.updateInvoice(invoice);
 
         res.status(200).json({

@@ -6,31 +6,31 @@ export const getAllTariffs = async () => {
     return execute<Tariff[]>(tariffQueries.getAllTariffs, []);
 };
 
-export const getTariffById = async (id: Tariff['tariffId']) => {
+export const getTariffById = async (id: Tariff['TarifID']) => {
     return execute<Tariff>(tariffQueries.getTariffById, [id]);
 };
 
 export const insertTariff = async (tariff: Tariff) => {
     const result = await execute<{ affectedRows: number }>(tariffQueries.addTariff, [
-        tariff.toJSON()
+        tariff
     ]);
     return result.affectedRows > 0;
 };
 
 export const updateTariff = async (tariff: Tariff) => {
     const result = await execute<{ affectedRows: number }>(tariffQueries.updateTariff, [
-        tariff.smallInd,
-        tariff.mediumInd,
-        tariff.bigInd,
-        tariff.smallComp,
-        tariff.mediumComp,
-        tariff.bigComp,
-        tariff.tariffId
+        tariff.SmallInd,
+        tariff.MediumInd,
+        tariff.BigInd,
+        tariff.SmallComp,
+        tariff.MediumComp,
+        tariff.BigComp,
+        tariff.TarifID
     ]);
     return result.affectedRows > 0;
 };
 
-export const deleteTariffById = async (id: Tariff['tariffId']) => {
+export const deleteTariffById = async (id: Tariff['TarifID']) => {
     const result = await execute<{ affectedRows: number }>(tariffQueries.deleteTariffById, [id]);
     return result.affectedRows > 0;
 };

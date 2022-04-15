@@ -6,17 +6,17 @@ describe('Invoice Endpoints', () => {
         const response = await request(router)
             .post('/api/invoices')
             .send({
-                customerId: 1,
-                supplierId: 1,
-                date: '2022-04-01',
-                dueDate: '2022-05-01',
-                status: 1,
-                gasAmount: 100.01,
-                electricityType: 1,
-                price: 991,
-                tax: 21,
-                startDate: '2022-01-01',
-                endDate: '2023-01-01'
+                CustomerID: 1,
+                SupplierID: 1,
+                Date: '2022-04-01',
+                DueDate: '2022-05-01',
+                Status: 1,
+                GasAmount: 100.01,
+                ElectricityType: 1,
+                Price: 991,
+                Tax: 21,
+                StartDate: '2022-01-01',
+                EndDate: '2023-01-01'
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -41,18 +41,18 @@ describe('Invoice Endpoints', () => {
         const response = await request(router)
             .put(`/api/invoices/`)
             .send({
-                invoiceId: 1,
-                customerId: 1,
-                supplierId: 1,
-                date: '2022-04-01',
-                dueDate: '2027-05-01',
-                status: 1,
-                gasAmount: 189.99,
-                electricityType: 1,
-                price: 1000.08,
-                tax: 17,
-                startDate: '2022-01-01',
-                endDate: '2024-01-01'
+                InvoiceID: 1,
+                CustomerID: 1,
+                SupplierID: 1,
+                Date: '2022-04-01',
+                DueDate: '2027-05-01',
+                Status: 1,
+                GasAmount: 189.99,
+                ElectricityType: 1,
+                Price: 1000.08,
+                Tax: 17,
+                StartDate: '2022-01-01',
+                EndDate: '2024-01-01'
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

@@ -34,9 +34,7 @@ export const getPlanningById: RequestHandler = async (req: Request, res: Respons
 
 export const addPlanning: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let planning: Planning = new Planning(null, obj.employeeId, obj.customerId, obj.date, obj.status);
-
+        let planning: Planning = req.body;
         const result = await planningService.insertPlanning(planning);
 
         res.status(200).json({
@@ -52,8 +50,7 @@ export const addPlanning: RequestHandler = async (req: Request, res: Response) =
 
 export const updatePlanning: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let planning: Planning = new Planning(obj.planningId, obj.employeeId, obj.customerId, obj.date, obj.status);
+        let planning: Planning = req.body;
 
         const result = await planningService.updatePlanning(planning);
 

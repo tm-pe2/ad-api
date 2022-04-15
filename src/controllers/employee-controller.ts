@@ -34,9 +34,7 @@ export const getEmployeeById: RequestHandler = async (req: Request, res: Respons
 
 export const addEmployee: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let obj = req.body
-        let employee: Employee = new Employee(null, obj.firstName, obj.lastName, obj.birthDate, obj.addressId, obj.email, obj.phoneNumber, obj.password, obj.department, obj.permissions, obj.hireDate, obj.gender);
-
+        let employee: Employee = req.body;
         const result = await employeeService.insertEmployee(employee);
 
         res.status(200).json({
@@ -53,9 +51,8 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response, n
 
 export const updateEmployee: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let employee: Employee = new Employee(obj.employeeId, obj.firstName, obj.lastName, obj.birthDate, obj.addressId, obj.email, obj.phoneNumber, obj.password, obj.department, obj.permissions, obj.hireDate, obj.gender);
 
+        let employee: Employee = req.body
         const result = await employeeService.updateEmployee(employee);
 
         res.status(200).json({

@@ -6,12 +6,12 @@ describe('Tariff Endpoints', () => {
         const response = await request(router)
             .post('/api/tariffs')
             .send({
-                smallInd: 1,
-                mediumInd: 1,
-                bigInd: 1,
-                smallComp: 1,
-                mediumComp: 1,
-                bigComp: 1
+                SmallInd: 1,
+                MediumInd: 1,
+                BigInd: 1,
+                SmallComp: 1,
+                MediumComp: 1,
+                BigComp: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -36,13 +36,13 @@ describe('Tariff Endpoints', () => {
         const response = await request(router)
             .put(`/api/tariffs/`)
             .send({
-                tariffId: 5,
-                smallInd: 3,
-                mediumInd: 3,
-                bigInd: 3,
-                smallComp: 3,
-                mediumComp: 3,
-                bigComp: 3
+                TarifID: 5,
+                SmallInd: 9,
+                MediumInd: 9,
+                BigInd: 9,
+                SmallComp: 9,
+                MediumComp: 9,
+                BigComp: 9
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

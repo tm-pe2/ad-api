@@ -34,8 +34,7 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
 
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let customer: Customer = new Customer(null, obj.firstName, obj.lastName, obj.birthDate, obj.addressId, obj.email, obj.phoneNumber, obj.password, obj.gasType, obj.electricityType);
+        let customer: Customer = req.body
 
         const result = await customerService.insertCustomer(customer);
 
@@ -52,9 +51,7 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let customer: Customer = new Customer(obj.customerId, obj.firstName, obj.lastName, obj.birthDate, obj.addressId, obj.email, obj.phoneNumber, obj.password, obj.gasType, obj.electricityType);
-
+        let customer: Customer = req.body
         const result = await customerService.UpdateCustomer(customer);
 
         res.status(200).json({

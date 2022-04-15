@@ -1,4 +1,3 @@
-/** source/routes/invoices.ts */
 import express from 'express';
 import * as invoiceController from '../controllers/invoice-controller';
 

@@ -6,10 +6,10 @@ describe('Supplier Endpoints', () => {
         const response = await request(router)
             .post('/api/suppliers')
             .send({
-                name: 'name1',
-                supplyType: 'type1',
-                companyName: 'companyName1',
-                addressId:  1
+                Name: 'name1',
+                SupplyType: 'type1',
+                CompanyName: 'companyName1',
+                AdressID:  1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -34,11 +34,11 @@ describe('Supplier Endpoints', () => {
         const response = await request(router)
             .put(`/api/suppliers/`)
             .send({
-                supplierId: 5,
-                name: 'name1',
-                supplyType: 'type1',
-                companyName: 'companyName1',
-                addressId:  1
+                SupplierID: 5,
+                Name: 'name1',
+                SupplyType: 'type1',
+                CompanyName: 'companyName1',
+                AdressID:  1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

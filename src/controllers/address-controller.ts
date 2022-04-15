@@ -34,9 +34,9 @@ export const getAddressById: RequestHandler = async (req: Request, res: Response
 
 export const addAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let address: Address = new Address(null, obj.city, obj.street, obj.houseNumber, obj.postalCode, obj.country, obj.startDate, obj.endDate);
-        const result = await addressService.insertAddress(address);
+        let address: Address = req.body;
+
+        const result = await addressService.insertAddress(req.body);
 
         res.status(200).json({
             result
@@ -51,8 +51,7 @@ export const addAddress: RequestHandler = async (req: Request, res: Response) =>
 
 export const updateAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let address: Address = new Address(obj.addressId, obj.city, obj.street, obj.houseNumber, obj.postalCode, obj.country, obj.startDate, obj.endDate);
+        let address: Address = req.body;
 
         const result = await addressService.updateAddress(address);
 
