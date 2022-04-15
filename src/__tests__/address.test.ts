@@ -6,13 +6,13 @@ describe('Address Endpoints', () => {
         const response = await request(router)
             .post('/api/addresses')
             .send({
-                city: 'testCity',
-                street: 'testStreet',
-                houseNumber: '9999',
-                postalCode: '7777',
-                country: 'testCountry',
-                startDate: '2012-01-01',
-                endDate: '2022-01-01'
+                City: 'testCity',
+                Street: 'testStreet',
+                HouseNumber: '9999',
+                PostalCode: '7777',
+                Country: 'testCountry',
+                StartDate: '2012-01-01',
+                EndDate: '2022-01-01'
             })
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -37,14 +37,14 @@ describe('Address Endpoints', () => {
         const response = await request(router)
             .put(`/api/addresses/`)
             .send({
-                addressId: 5,
-                city: 'testCityUpdate',
-                street: 'testStreettestCityUpdate',
-                houseNumber: '99990',
-                postalCode: 9999,
-                country: 'testCountryUpdate',
-                startDate: '2019-01-01',
-                endDate: '2029-01-01'
+                AdressID: 5,
+                City: 'testCityUpdate',
+                Street: 'testStreettestCityUpdate',
+                HouseNumber: '99990',
+                PostalCode: 9999,
+                Country: 'testCountryUpdate',
+                StartDate: '2019-01-01',
+                EndDate: '2029-01-01'
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

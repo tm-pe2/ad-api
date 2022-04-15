@@ -1,4 +1,3 @@
-/** source/server.ts */
 import http from 'http';
 import express, {Express} from 'express';
 import {Request, Response, NextFunction} from 'express';
@@ -12,6 +11,7 @@ import estimationRoutes from './routes/estimation-routes';
 import planningRoutes from './routes/planning-routes';
 import tariffRoutes from './routes/tariff-routes';
 import supplierRoutes from './routes/supplier-routes';
+import ticketRoutes from './routes/ticket-routes';
 
 import * as DBConnector from './utils/mysql.connector';
 
@@ -53,7 +53,8 @@ router.use('/api/',
     estimationRoutes,
     planningRoutes,
     tariffRoutes,
-    supplierRoutes
+    supplierRoutes,
+    ticketRoutes
 );
 
 /** Error handling */

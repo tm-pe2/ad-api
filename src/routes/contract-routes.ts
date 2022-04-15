@@ -1,4 +1,3 @@
-/** source/routes/contracts.ts */
 import express from 'express';
 import * as contractController from '../controllers/contract-controller';
 

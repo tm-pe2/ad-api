@@ -6,10 +6,10 @@ describe('Planning Endpoints', () => {
         const response = await request(router)
             .post('/api/plannings')
             .send({
-                employeeId: 1,
-                customerId: 1,
-                date: '2022-04-13',
-                status: 1
+                EmployeeID: 1,
+                CustomerID: 1,
+                Date: '2022-04-13',
+                Status: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -34,11 +34,11 @@ describe('Planning Endpoints', () => {
         const response = await request(router)
             .put(`/api/plannings/`)
             .send({
-                planningId: 5,
-                employeeId: 1,
-                customerId: 1,
-                date: '2024-05-14',
-                status: 0
+                PlanningID: 5,
+                EmployeeID: 1,
+                CustomerID: 1,
+                Date: '2024-05-14',
+                Status: 0
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

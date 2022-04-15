@@ -1,4 +1,3 @@
-/** source/routes/clients.ts */
 import express from 'express';
 import * as customerController from '../controllers/customer-controller';
 

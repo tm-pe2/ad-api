@@ -7,44 +7,26 @@ describe('Customer Endpoints', () => {
         const response = await request(router)
             .post('/api/customers')
             .send({
-                firstName: 'TestFirst',
-                lastName: 'TestLast',
-                birthDate: '2022-01-01',
-                addressId: 1,
-                email: 'test@test.com',
-                phoneNumber: '0123 456789',
-                password: 'Testpw123',
-                gasType: 1,
-                electricityType: 2
+                FirstName: 'TestFirst',
+                LastName: 'TestLast',
+                BirthDate: '2022-01-01',
+                AdressID: 1,
+                Email: 'test@test.com',
+                PhoneNumber: '0123 456789',
+                Password: 'Testpw123',
+                GasType: 1,
+                Electricitytype: 2
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });
 
-    it('should not create a new customer with invalid parameters', async () => {
-        const response = await request(router)
-            .post('/api/customers')
-            .send({
-                firstName: 'TestFirst',
-                lastName: 'TestLast',
-                birthDate: '2022-01-01',
-                addressId: 1,
-                email: 'testEmail.com',
-                phoneNumber: '0123 456789',
-                password: 'testpw123',
-                gasType: 0,
-                electricityType: 0
-            });
-        expect(response.statusCode).toEqual(500);
-    });
-
     it('should fetch a single customer', async () => {
-        const customerId = 1;
         const response = await request(router)
-            .get(`/api/customers/${customerId}`)
+            .get(`/api/customers/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.customer[0]).toHaveProperty('CustomerID', customerId);
+        expect(response.body.customer[0]).toHaveProperty('CustomerID', 1);
     });
 
     it('should fetch all customers', async () => {
@@ -58,18 +40,17 @@ describe('Customer Endpoints', () => {
         const response = await request(router)
             .put(`/api/customers/`)
             .send({
-                customerId: 1,
-                firstName: 'updatedFirst1',
-                lastName: 'updatedLast1',
-                birthDate: '2022-01-02',
-                addressId: 1,
-                email: 'updated1@updated.com',
-                phoneNumber: '987654 3211',
-                password: 'Updatedpw1231',
-                gasType: 3,
-                electricityType: 3
+                CustomerID: 1,
+                FirstName: 'UpdTestFirst',
+                LastName: 'UpdTestLast',
+                BirthDate: '2025-01-01',
+                AdressID: 1,
+                Email: 'updtest@test.com',
+                PhoneNumber: '0123 456999',
+                Password: 'Testpw12663',
+                GasType: 2,
+                Electricitytype: 3
             });
-
         expect(response?.statusCode).toEqual(200);
         expect(response?.body.result).toEqual(true);
     });

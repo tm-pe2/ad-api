@@ -34,8 +34,7 @@ export const getTariffById: RequestHandler = async (req: Request, res: Response)
 
 export const addTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let tariff: Tariff = new Tariff(null, obj.smallInd, obj.mediumInd, obj.bigInd, obj.smallComp, obj.mediumComp, obj.bigComp);
+        let tariff: Tariff = req.body;
         const result = await tariffService.insertTariff(tariff);
 
         res.status(200).json({
@@ -51,9 +50,7 @@ export const addTariff: RequestHandler = async (req: Request, res: Response) => 
 
 export const updateTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let obj = req.body
-        let tariff: Tariff = new Tariff(obj.tariffId, obj.smallInd, obj.mediumInd, obj.bigInd, obj.smallComp, obj.mediumComp, obj.bigComp);
-
+        let tariff: Tariff = req.body;
         const result = await tariffService.updateTariff(tariff);
 
         res.status(200).json({
