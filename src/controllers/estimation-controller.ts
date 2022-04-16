@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Estimation} from '../classes/estimation';
+import {Estimation, estimationSchema} from '../classes/estimation';
 import * as estimationService from '../services/estimation-service';
 
 export const getAllEstimations: RequestHandler = async (req: Request, res: Response) => {
@@ -34,7 +34,9 @@ export const getEstimationById: RequestHandler = async (req: Request, res: Respo
 
 export const addEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let estimation: Estimation = req.body;
+        //validate the request body
+        const validationResult = await estimationSchema.validateAsync(req.body);
+        let estimation: Estimation = validationResult;
         const result = await estimationService.insertEstimation(estimation);
 
         res.status(200).json({
@@ -50,7 +52,9 @@ export const addEstimation: RequestHandler = async (req: Request, res: Response)
 
 export const updateEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let estimation: Estimation = req.body;
+        //validate the request body
+        const validationResult = await estimationSchema.validateAsync(req.body);
+        let estimation: Estimation = validationResult;
         const result = await estimationService.updateEstimation(estimation);
 
         res.status(200).json({

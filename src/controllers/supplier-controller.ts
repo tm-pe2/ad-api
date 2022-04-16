@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Supplier} from '../classes/supplier';
+import {Supplier, supplierSchema} from '../classes/supplier';
 import * as supplierService from '../services/supplier-service';
 
 export const getAllSuppliers: RequestHandler = async (req: Request, res: Response) => {
@@ -34,7 +34,9 @@ export const getSupplierById: RequestHandler = async (req: Request, res: Respons
 
 export const addSupplier: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let supplier: Supplier = req.body;
+        //validate the request body
+        const validationResult = await supplierSchema.validateAsync(req.body);
+        let supplier: Supplier = validationResult;
         const result = await supplierService.insertSupplier(supplier);
 
         res.status(200).json({
@@ -50,7 +52,9 @@ export const addSupplier: RequestHandler = async (req: Request, res: Response) =
 
 export const updateSupplier: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let supplier: Supplier = req.body;
+        //validate the request body
+        const validationResult = await supplierSchema.validateAsync(req.body);
+        let supplier: Supplier = validationResult;
         const result = await supplierService.updateSupplier(supplier);
 
         res.status(200).json({

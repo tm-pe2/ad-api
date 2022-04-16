@@ -1,5 +1,5 @@
 import {NextFunction, Request, RequestHandler, Response} from 'express';
-import {Customer} from '../classes/customer';
+import {Customer, customerSchema} from '../classes/customer';
 import * as customerService from '../services/customer-service';
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {
@@ -34,8 +34,9 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
 
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let customer: Customer = req.body
-
+        //validate the request body
+        const validationResult = await customerSchema.validateAsync(req.body);
+        let customer: Customer = validationResult;
         const result = await customerService.insertCustomer(customer);
 
         res.status(200).json({
@@ -44,14 +45,16 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when adding new customer'
+            message: 'There was an error when adding new customer!'
         });
     }
 };
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let customer: Customer = req.body
+        //validate the request body
+        const validationResult = await customerSchema.validateAsync(req.body);
+        let customer: Customer = validationResult;
         const result = await customerService.UpdateCustomer(customer);
 
         res.status(200).json({

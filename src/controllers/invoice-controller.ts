@@ -1,5 +1,5 @@
 import {NextFunction, Request, RequestHandler, Response} from 'express';
-import {Invoice} from '../classes/invoice';
+import {Invoice, invoiceSchema} from '../classes/invoice';
 import * as invoiceService from '../services/invoice-service';
 
 export const getAllInvoices: RequestHandler = async (req: Request, res: Response) => {
@@ -34,7 +34,9 @@ export const getInvoiceById: RequestHandler = async (req: Request, res: Response
 
 export const addInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let invoice: Invoice = req.body;
+        //validate the request body
+        const validationResult = await invoiceSchema.validateAsync(req.body);
+        let invoice: Invoice = validationResult;
         const result = await invoiceService.insertInvoice(invoice);
 
         res.status(200).json({
@@ -50,7 +52,9 @@ export const addInvoice: RequestHandler = async (req: Request, res: Response) =>
 
 export const updateInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let invoice: Invoice = req.body;
+        //validate the request body
+        const validationResult = await invoiceSchema.validateAsync(req.body);
+        let invoice: Invoice = validationResult;
         const result = await invoiceService.updateInvoice(invoice);
 
         res.status(200).json({

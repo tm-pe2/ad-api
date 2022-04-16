@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Ticket} from '../classes/ticket';
+import {Ticket, ticketSchema} from '../classes/ticket';
 import * as ticketService from '../services/ticket-service';
 
 export const getAllTickets: RequestHandler = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const getAllTickets: RequestHandler = async (req: Request, res: Response)
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching tickets'
+            message: 'There was an error when fetching tickets!'
         });
     }
 };
@@ -34,7 +34,9 @@ export const getTicketById: RequestHandler = async (req: Request, res: Response)
 
 export const addTicket: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let ticket: Ticket = req.body;
+        //validate the request body
+        const validationResult = await ticketSchema.validateAsync(req.body);
+        let ticket: Ticket = validationResult;
         const result = await ticketService.insertTicket(ticket);
 
         res.status(200).json({
@@ -50,7 +52,9 @@ export const addTicket: RequestHandler = async (req: Request, res: Response) => 
 
 export const updateTicket: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let ticket: Ticket = req.body;
+        //validate the request body
+        const validationResult = await ticketSchema.validateAsync(req.body);
+        let ticket: Ticket = validationResult;
         const result = await ticketService.updateTicket(ticket);
 
         res.status(200).json({

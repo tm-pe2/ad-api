@@ -1,5 +1,5 @@
 import {NextFunction, Request, RequestHandler, Response} from 'express';
-import {Employee} from '../classes/employee';
+import {Employee, employeeSchema} from '../classes/employee';
 import * as employeeService from '../services/employee-service';
 
 export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
@@ -34,7 +34,9 @@ export const getEmployeeById: RequestHandler = async (req: Request, res: Respons
 
 export const addEmployee: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let employee: Employee = req.body;
+        //validate the request body
+        const validationResult = await employeeSchema.validateAsync(req.body);
+        let employee: Employee = validationResult;
         const result = await employeeService.insertEmployee(employee);
 
         res.status(200).json({
@@ -52,7 +54,9 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response, n
 export const updateEmployee: RequestHandler = async (req: Request, res: Response) => {
     try {
 
-        let employee: Employee = req.body
+        //validate the request body
+        const validationResult = await employeeSchema.validateAsync(req.body);
+        let employee: Employee = validationResult;
         const result = await employeeService.updateEmployee(employee);
 
         res.status(200).json({
