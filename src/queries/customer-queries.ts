@@ -6,6 +6,9 @@ export const customerQueries = {
     getCustomerById: `
         SELECT * FROM customers WHERE CustomerID = ?
     `,
+    getCustomerByEmail: `
+        SELECT * FROM customers WHERE Email = ? 
+    `,
 
     AddCustomer: `
         INSERT INTO customers SET ?

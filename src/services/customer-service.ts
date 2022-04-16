@@ -10,6 +10,10 @@ export const getCustomerById = async (id: Customer['CustomerID']) => {
     return execute<Customer>(customerQueries.getCustomerById, [id]);
 };
 
+export const getCustomerByEmail = async (email: Customer['Email']) => {
+    return execute<Customer>(customerQueries.getCustomerByEmail, [email]);
+};
+
 export const insertCustomer = async (customer: Customer) => {
     const result = await execute<{ affectedRows: number }>(customerQueries.AddCustomer, [
         customer

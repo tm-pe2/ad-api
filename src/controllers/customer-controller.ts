@@ -39,6 +39,15 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
         const validationResult = await customerSchema.validateAsync(req.body);
         let customer: Customer = validationResult;
 
+        //check if customer exists
+        const existCheck = await customerService.getCustomerByEmail(customer.Email);
+        if (existCheck)
+        {
+            return res.status(500).json({
+                message: 'Customer already exists!'
+            });
+        }
+
         //generate the salt to hash the password
         const salt = await bcrypt.genSalt(10);
         customer.Password = await bcrypt.hash(validationResult.Password,salt);

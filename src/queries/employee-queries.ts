@@ -6,7 +6,9 @@ export const employeeQueries = {
     getEmployeeById: `
         SELECT * FROM employees WHERE EmployeeID = ?
     `,
-
+    getEmployeeByEmail: `
+        SELECT * FROM employees WHERE Email = ?
+    `,
     addEmployee: `
         INSERT INTO employees SET ?
     `,

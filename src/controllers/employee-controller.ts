@@ -39,6 +39,15 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response, n
         const validationResult = await employeeSchema.validateAsync(req.body);
         let employee: Employee = validationResult;
 
+        //check if employee exists
+        const existCheck = await employeeService.getEmployeeByEmail(employee.Email);
+        if (existCheck)
+        {
+            return res.status(500).json({
+                message: 'Customer already exists!'
+            });
+        }
+
         //generate the salt to hash the password
         const salt = await bcrypt.genSalt(10);
         employee.Password = await bcrypt.hash(validationResult.Password,salt);
