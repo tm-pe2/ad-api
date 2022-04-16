@@ -21,10 +21,6 @@ export const init = () => {
             user: process.env.DB_USER ?? '',
             password: process.env.DB_PASSWORD ?? '',
             database: process.env.DB_DATABASE ?? '',
-            // host: "localhost",
-            // user: "root",
-            // password: "",
-            // database: "finaldb"
         });
 
         console.debug('MySql Adapter Pool generated successfully');

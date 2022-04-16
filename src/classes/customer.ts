@@ -22,6 +22,6 @@ export const customerSchema = Joi.object({
     Email:  Joi.string().email(),
     PhoneNumber: Joi.string().required(),
     Password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,50}$')).required(),
-    GasType: Joi.string().required(),
-    Electricitytype: Joi.string().required()
+    GasType: Joi.number().integer().required(),
+    Electricitytype: Joi.number().integer().required()
 });

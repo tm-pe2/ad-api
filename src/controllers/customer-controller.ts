@@ -1,6 +1,7 @@
 import {NextFunction, Request, RequestHandler, Response} from 'express';
 import {Customer, customerSchema} from '../classes/customer';
 import * as customerService from '../services/customer-service';
+import * as bcrypt from 'bcrypt';
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -37,6 +38,12 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
         //validate the request body
         const validationResult = await customerSchema.validateAsync(req.body);
         let customer: Customer = validationResult;
+
+        //generate the salt to hash the password
+        const salt = await bcrypt.genSalt(10);
+        customer.Password = await bcrypt.hash(validationResult.Password,salt);
+        
+        //insert the customer
         const result = await customerService.insertCustomer(customer);
 
         res.status(200).json({
@@ -55,6 +62,12 @@ export const updateCustomer: RequestHandler = async (req: Request, res: Response
         //validate the request body
         const validationResult = await customerSchema.validateAsync(req.body);
         let customer: Customer = validationResult;
+
+        //generate the salt to hash the password
+        const salt = await bcrypt.genSalt(10);
+        customer.Password = await bcrypt.hash(validationResult.Password,salt);
+
+        //update customer
         const result = await customerService.UpdateCustomer(customer);
 
         res.status(200).json({

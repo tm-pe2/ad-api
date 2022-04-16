@@ -1,6 +1,7 @@
 import {NextFunction, Request, RequestHandler, Response} from 'express';
 import {Employee, employeeSchema} from '../classes/employee';
 import * as employeeService from '../services/employee-service';
+import * as bcrypt from 'bcrypt';
 
 export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -37,6 +38,12 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response, n
         //validate the request body
         const validationResult = await employeeSchema.validateAsync(req.body);
         let employee: Employee = validationResult;
+
+        //generate the salt to hash the password
+        const salt = await bcrypt.genSalt(10);
+        employee.Password = await bcrypt.hash(validationResult.Password,salt);
+
+        //insert employee
         const result = await employeeService.insertEmployee(employee);
 
         res.status(200).json({
@@ -53,10 +60,15 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response, n
 
 export const updateEmployee: RequestHandler = async (req: Request, res: Response) => {
     try {
-
         //validate the request body
         const validationResult = await employeeSchema.validateAsync(req.body);
         let employee: Employee = validationResult;
+
+        //generate the salt to hash the password
+        const salt = await bcrypt.genSalt(10);
+        employee.Password = await bcrypt.hash(validationResult.Password,salt);
+
+        //update employee
         const result = await employeeService.updateEmployee(employee);
 
         res.status(200).json({
