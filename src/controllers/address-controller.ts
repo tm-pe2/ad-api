@@ -34,11 +34,14 @@ export const getAddressById: RequestHandler = async (req: Request, res: Response
 export const addAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await addressSchema.validateAsync(req.body);
-        let address: Address = validationResult;
-        const result = await addressService.insertAddress(address);
-        res.status(200).json({result});
+        const addAddressSchema = addressSchema.fork('AdressID', field => field.optional());
+        let address: Address = await addAddressSchema.validateAsync(req.body);
 
+        const result = await addressService.insertAddress(address);
+
+        res.status(200).json({
+            result
+        });
     } catch (errors) {
         console.log(errors);
         if(errors)
@@ -50,8 +53,8 @@ export const addAddress: RequestHandler = async (req: Request, res: Response) =>
 
 export const updateAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const validationResult = await addressSchema.validateAsync(req.body);
-        let address: Address = validationResult;
+        let address: Address = await addressSchema.validateAsync(req.body);
+
         const result = await addressService.updateAddress(address);
 
         res.status(200).json({

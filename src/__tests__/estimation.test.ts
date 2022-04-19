@@ -40,7 +40,7 @@ describe('Estimation Endpoints', () => {
             .send({
                 EstimatedID: 5,
                 ServiceType: 2,
-                AddressId: 1,
+                AdressID: 1,
                 BuildingType: 2,
                 FamilySize: 9,
                 PastConsumption: 1000,

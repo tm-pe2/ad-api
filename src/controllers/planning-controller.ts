@@ -36,8 +36,9 @@ export const addPlanning: RequestHandler = async (req: Request, res: Response) =
     try {
 
         //validate the request body
-        const validationResult = await planningSchema.validateAsync(req.body);
-        let planning: Planning = validationResult;
+        const addPlanningSchema = planningSchema.fork('PlanningID', field => field.optional());
+        let planning: Planning = await addPlanningSchema.validateAsync(req.body);
+
         const result = await planningService.insertPlanning(planning);
 
         res.status(200).json({
@@ -54,8 +55,8 @@ export const addPlanning: RequestHandler = async (req: Request, res: Response) =
 export const updatePlanning: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await planningSchema.validateAsync(req.body);
-        let planning: Planning = validationResult;
+        let planning: Planning = await planningSchema.validateAsync(req.body);
+
         const result = await planningService.updatePlanning(planning);
 
         res.status(200).json({

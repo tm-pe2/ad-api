@@ -1,4 +1,4 @@
-import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Request, RequestHandler, Response} from 'express';
 import {Employee, employeeSchema} from '../classes/employee';
 import * as employeeService from '../services/employee-service';
 import * as bcrypt from 'bcrypt';
@@ -33,19 +33,15 @@ export const getEmployeeById: RequestHandler = async (req: Request, res: Respons
     }
 };
 
-export const addEmployee: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const addEmployee: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await employeeSchema.validateAsync(req.body);
+        const addEmployeeSchema = employeeSchema.fork('EmployeeID', field => field.optional());
+        const validationResult = await addEmployeeSchema.validateAsync(req.body);
         let employee: Employee = validationResult;
 
-        //check if employee exists
-        const existCheck = await employeeService.getEmployeeByEmail(employee.Email);
-        if (existCheck)
-        {
-            return res.status(500).json({
-                message: 'Customer already exists!'
-            });
+        if (!((await employeeService.getEmployeeByEmail(employee.Email)).EmployeeID == undefined)) {
+            throw new Error("Customer already exists");
         }
 
         //generate the salt to hash the password
@@ -59,7 +55,6 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response, n
             result
         });
     } catch (error) {
-        next(error);
         console.log(error);
         res.status(500).json({
             message: 'There was an error when adding new employee'

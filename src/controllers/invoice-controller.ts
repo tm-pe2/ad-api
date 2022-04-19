@@ -1,4 +1,4 @@
-import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Request, RequestHandler, Response} from 'express';
 import {Invoice, invoiceSchema} from '../classes/invoice';
 import * as invoiceService from '../services/invoice-service';
 
@@ -35,8 +35,9 @@ export const getInvoiceById: RequestHandler = async (req: Request, res: Response
 export const addInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await invoiceSchema.validateAsync(req.body);
-        let invoice: Invoice = validationResult;
+        const addInvoiceSchema = invoiceSchema.fork('InvoiceID', field => field.optional());
+        let invoice: Invoice = await addInvoiceSchema.validateAsync(req.body);
+
         const result = await invoiceService.insertInvoice(invoice);
 
         res.status(200).json({
@@ -53,8 +54,7 @@ export const addInvoice: RequestHandler = async (req: Request, res: Response) =>
 export const updateInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await invoiceSchema.validateAsync(req.body);
-        let invoice: Invoice = validationResult;
+        let invoice: Invoice = await invoiceSchema.validateAsync(req.body);
         const result = await invoiceService.updateInvoice(invoice);
 
         res.status(200).json({

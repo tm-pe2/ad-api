@@ -25,7 +25,7 @@ export const employeeSchema = Joi.object({
     PhoneNumber: Joi.string().required(),
     Password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,50}$')).required(),
     Departement: Joi.string().required(),
-    Permissions: Joi.string().required(),
+    Permissions: Joi.number().required(),
     HireDate: Joi.date().min('1-1-1900').required(),
-    Gender: Joi.string().required()
+    Gender: Joi.number().required()
 });

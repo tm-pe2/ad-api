@@ -35,8 +35,9 @@ export const getTariffById: RequestHandler = async (req: Request, res: Response)
 export const addTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await tariffSchema.validateAsync(req.body);
-        let tariff: Tariff = validationResult;
+        const addTariffSchema = tariffSchema.fork('TarifID', field => field.optional());
+        let tariff: Tariff = await addTariffSchema.validateAsync(req.body);
+
         const result = await tariffService.insertTariff(tariff);
 
         res.status(200).json({
@@ -53,8 +54,8 @@ export const addTariff: RequestHandler = async (req: Request, res: Response) => 
 export const updateTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await tariffSchema.validateAsync(req.body);
-        let tariff: Tariff = validationResult;
+        let tariff: Tariff = await tariffSchema.validateAsync(req.body);
+
         const result = await tariffService.updateTariff(tariff);
 
         res.status(200).json({

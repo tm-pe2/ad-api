@@ -1,4 +1,4 @@
-import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Request, RequestHandler, Response} from 'express';
 import {Customer, customerSchema} from '../classes/customer';
 import * as customerService from '../services/customer-service';
 import * as bcrypt from 'bcrypt';
@@ -35,17 +35,12 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
 
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        //validate the request body
-        const validationResult = await customerSchema.validateAsync(req.body);
+        const addCustomerSchema = customerSchema.fork('CustomerID', field => field.optional());
+        const validationResult = await addCustomerSchema.validateAsync(req.body);
         let customer: Customer = validationResult;
 
-        //check if customer exists
-        const existCheck = await customerService.getCustomerByEmail(customer.Email);
-        if (existCheck)
-        {
-            return res.status(500).json({
-                message: 'Customer already exists!'
-            });
+        if (!((await customerService.getCustomerByEmail(customer.Email)).CustomerID == undefined)) {
+            throw new Error("Customer already exists");
         }
 
         //generate the salt to hash the password

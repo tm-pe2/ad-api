@@ -35,8 +35,9 @@ export const getEstimationById: RequestHandler = async (req: Request, res: Respo
 export const addEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await estimationSchema.validateAsync(req.body);
-        let estimation: Estimation = validationResult;
+        const addEstimationSchema = estimationSchema.fork('EstimatedID', field => field.optional());
+        let estimation: Estimation = await addEstimationSchema.validateAsync(req.body);
+
         const result = await estimationService.insertEstimation(estimation);
 
         res.status(200).json({
@@ -53,8 +54,8 @@ export const addEstimation: RequestHandler = async (req: Request, res: Response)
 export const updateEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await estimationSchema.validateAsync(req.body);
-        let estimation: Estimation = validationResult;
+        let estimation: Estimation = await estimationSchema.validateAsync(req.body);
+
         const result = await estimationService.updateEstimation(estimation);
 
         res.status(200).json({

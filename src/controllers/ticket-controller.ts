@@ -35,8 +35,9 @@ export const getTicketById: RequestHandler = async (req: Request, res: Response)
 export const addTicket: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await ticketSchema.validateAsync(req.body);
-        let ticket: Ticket = validationResult;
+        const addTicketSchema = ticketSchema.fork('TicketID', field => field.optional());
+        let ticket: Ticket = await addTicketSchema.validateAsync(req.body);
+
         const result = await ticketService.insertTicket(ticket);
 
         res.status(200).json({
@@ -53,8 +54,8 @@ export const addTicket: RequestHandler = async (req: Request, res: Response) => 
 export const updateTicket: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const validationResult = await ticketSchema.validateAsync(req.body);
-        let ticket: Ticket = validationResult;
+        let ticket: Ticket = await ticketSchema.validateAsync(req.body);
+
         const result = await ticketService.updateTicket(ticket);
 
         res.status(200).json({
