@@ -12,11 +12,32 @@ import planningRoutes from './routes/planning-routes';
 import tariffRoutes from './routes/tariff-routes';
 import supplierRoutes from './routes/supplier-routes';
 import ticketRoutes from './routes/ticket-routes';
-
 import * as MySQLConnector from './utils/mysql.connector';
+import authRoutes from './routes/auth-routes';
+import testRoutes from './routes/test-routes';
+import bodyParser from 'body-parser';
+
+import cors from 'cors';
+
+import dotenv from 'dotenv';
+import { Env } from './utils/env';
+
+if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
+    dotenv.config();
+}
+
+try {
+    Env.validateMandatoryKeys();
+} catch (err) {
+    console.error('.env not properly configured: ', err);
+    process.exit(-1);
+}
 
 
 const router: Express = express();
+
+/** Middleware for CORS */
+router.use(cors());
 
 /** Logging */
 router.use(morgan('dev'));
@@ -24,6 +45,8 @@ router.use(morgan('dev'));
 router.use(express.urlencoded({extended: false}));
 /** Takes care of JSON data */
 router.use(express.json());
+
+router.use(bodyParser.json());
 
 /** RULES OF OUR API */
 router.use((req: Request, res: Response, next: NextFunction) => {
@@ -45,6 +68,8 @@ MySQLConnector.init();
 
 /** Routes */
 router.use('/api/',
+    authRoutes,
+    testRoutes,
     customerRoutes,
     invoiceRoutes,
     contractRoutes,
