@@ -1,5 +1,5 @@
-/** source/controllers/clients.ts */
 import { Request, Response, NextFunction } from 'express';
+import * as employeeService from '../services/employee-service';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 
@@ -7,20 +7,20 @@ const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days
 
 // get all clients
-const dummyUsers = [
-    {
-        'id': '1',
-        'email': 'example',
-        'pass': 'nohash',
-        'role': 'admin'
-    },
-    {
-        'id': '2',
-        'email': 'user',
-        'pass': 'pass',
-        'role': 'normal'
-    }
-]
+// const dummyUsers = [
+//     {
+//         'id': '1',
+//         'email': 'example',
+//         'pass': 'nohash',
+//         'role': 'admin'
+//     },
+//     {
+//         'id': '2',
+//         'email': 'user',
+//         'pass': 'pass',
+//         'role': 'normal'
+//     }
+// ]
 
 // dummy, store in db later
 let refreshTokens: RefreshTokenData[] = [];
@@ -33,14 +33,16 @@ async function login(req: Request, res: Response, next: NextFunction) {
     const email = req.body.email;
     const password = req.body.password;
 
-    const user = dummyUsers.find(u => {
-        return u.email == email && u.pass == password;
-    })
+    // const user = dummyUsers.find(u => {
+    //     return u.email == email && u.pass == password;
+    // })
+
+    const user = await employeeService.getEmployeeByEmail(email);
 
     if (user) {
-        const tokenData = {'id': user.id, 'role': user.role}
+        const tokenData = {'id': user.EmployeeID.toString(), 'role': user.Departement}
         const accessToken = createAccessToken(tokenData);
-        const refreshToken = createRefreshToken(user.id);
+        const refreshToken = createRefreshToken(user.EmployeeID.toString());
 
         res.json({accessToken, refreshToken});
     }
@@ -70,12 +72,13 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
     }
     // 403 => Front-end needs to ask for login again
 
-    const user = dummyUsers.find((u) => u.id == rt?.userid);
+    //const user = dummyUsers.find((u) => u.id == rt?.userid);
+    const user = await employeeService.getEmployeeById(Number(rt.userid));
     if (user === undefined) {
         return res.sendStatus((500));
     }
 
-    const accessToken = createAccessToken({id: user.id, role: user.role})
+    const accessToken = createAccessToken({id: user.EmployeeID.toString(), role: user.Departement})
 
     res.json({accessToken});
 };
