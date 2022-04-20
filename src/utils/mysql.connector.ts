@@ -1,17 +1,17 @@
 import { Client, Value } from 'ts-postgres';
-import { DATA_SOURCES } from '../config';
 
-const dataSource = DATA_SOURCES.DBDataSource;
+
 let client: Client;
 
 export function init() {
     try {
+        //TODO: fill out host, user...
         client = new Client({
-            host: dataSource.DB_HOST,
-            user: dataSource.DB_USER, 
-            password: dataSource.DB_PASSWORD, 
-            database: dataSource.DB_DATABASE,
-            port: dataSource.DB_PORT,
+            host: 'localhost',
+            user: 'postgres', 
+            password: 'postgres', 
+            database: 'postgres',
+            port: 5432,
         });
 
         client.connect();
