@@ -64,10 +64,10 @@ export class MailService {
 
     public sendInvoice(invoice: Invoice): SentMessageInfo {
         //info from db
-        //const invoice = {id: "I-0009", total: 1000.99, dueDate: new Date()}
+        //TODO Get customer data from db
         const title = `Dear ${this.customer.firstName} ${this.customer.lastName}`;
         const body = [
-            `your invoice ${invoice.getInvoiceID} of ${invoice.getAmount} is due at ${invoice.getDueDate.toDateString()} Please pay this as soon as possible.`,
+            `your invoice ${invoice.getInvoiceID} of ${invoice.getPrice} is due at ${invoice.getDueDate.toDateString()} Please pay this as soon as possible.`,
             "if you wish to see more details and/or pay please visit <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
         ];
 

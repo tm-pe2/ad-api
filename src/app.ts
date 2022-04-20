@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { Invoice } from './classes/invoice';
 import { httpServer } from './server'
 import { MailService } from './services/mailService'
 import { Logger } from './utils/logger';
@@ -15,7 +16,7 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
     httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
     try {
         const ms = new MailService();
-       console.log(await ms.sendInvoice());
+       console.log(await ms.sendInvoice(new Invoice(1,1,new Date,new Date,"gas", 50 )));
         ms.sendWorkOrder();
     } catch (e) {
         console.error(e);
