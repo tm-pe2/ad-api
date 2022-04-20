@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/tm-pe2/ad-api#readme",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/jsonwebtoken": "^8.5.8",

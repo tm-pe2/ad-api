@@ -12,6 +12,7 @@ import planningRoutes from './routes/planning-routes';
 import tariffRoutes from './routes/tariff-routes';
 import supplierRoutes from './routes/supplier-routes';
 import ticketRoutes from './routes/ticket-routes';
+//import userRoutes from './routes/user-routes';
 import * as MySQLConnector from './utils/mysql.connector';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
@@ -20,7 +21,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import dotenv from 'dotenv';
-import { Env } from './utils/env';
+import { Env } from './util/env';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -68,6 +69,7 @@ MySQLConnector.init();
 
 /** Routes */
 router.use('/api/',
+    //userRoutes,
     authRoutes,
     testRoutes,
     customerRoutes,

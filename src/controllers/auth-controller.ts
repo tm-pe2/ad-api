@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import * as employeeService from '../services/employee-service';
+import * as userService from '../services/user-service';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 
@@ -37,12 +37,12 @@ async function login(req: Request, res: Response, next: NextFunction) {
     //     return u.email == email && u.pass == password;
     // })
 
-    const user = await employeeService.getEmployeeByEmail(email);
+    const user = await userService.getUserByEmail(email);
 
     if (user) {
-        const tokenData = {'id': user.EmployeeID.toString(), 'role': user.Departement}
+        const tokenData = {'id': user.UserID.toString(), 'role': user.RoleID.toString()}
         const accessToken = createAccessToken(tokenData);
-        const refreshToken = createRefreshToken(user.EmployeeID.toString());
+        const refreshToken = createRefreshToken(user.UserID.toString());
 
         res.json({accessToken, refreshToken});
     }
@@ -73,12 +73,12 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
     // 403 => Front-end needs to ask for login again
 
     //const user = dummyUsers.find((u) => u.id == rt?.userid);
-    const user = await employeeService.getEmployeeById(Number(rt.userid));
+    const user = await userService.getUserById(Number(rt.userid));
     if (user === undefined) {
         return res.sendStatus((500));
     }
 
-    const accessToken = createAccessToken({id: user.EmployeeID.toString(), role: user.Departement})
+    const accessToken = createAccessToken({id: user.UserID.toString(), role: user.RoleID.toString()})
 
     res.json({accessToken});
 };

@@ -10,10 +10,6 @@ export const getCustomerById = async (id: Customer['CustomerID']) => {
     return execute<Customer>(customerQueries.getCustomerById, [id]);
 };
 
-export const getCustomerByEmail = async (email: Customer['Email']) => {
-    return execute<Customer>(customerQueries.getCustomerByEmail, [email]);
-};
-
 export const insertCustomer = async (customer: Customer) => {
     const result = await execute<{ affectedRows: number }>(customerQueries.AddCustomer, [
         customer
@@ -23,13 +19,6 @@ export const insertCustomer = async (customer: Customer) => {
 
 export const UpdateCustomer = async (customer: Customer) => {
     const result = await execute<{ affectedRows: number }>(customerQueries.UpdateCustomer, [
-        customer.FirstName,
-        customer.LastName,
-        customer.BirthDate,
-        customer.AdressID,
-        customer.Email,
-        customer.PhoneNumber,
-        customer.Password,
         customer.GasType,
         customer.Electricitytype,
         customer.CustomerID
