@@ -5,7 +5,7 @@ const router = express.Router();
 
 import * as auth from "../middleware/auth"
 
-router.get('/test', auth.authenticate('admin'), async (req, res, next) => {
+router.get('/test', auth.authenticate(['admin']), async (req, res, next) => {
     res.send({data:'protected'});
 })
 
