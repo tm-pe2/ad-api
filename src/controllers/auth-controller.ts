@@ -30,8 +30,8 @@ async function login(req: Request, res: Response, next: NextFunction) {
         throw new Error('JWTSECRET undefined');
     }
 
-    const email = req.body.email;
-    const password = req.body.password;
+    const email = req.body.email;   //validation ?
+    const password = req.body.password;     //validation
 
     // const user = dummyUsers.find(u => {
     //     return u.email == email && u.pass == password;
@@ -57,7 +57,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
         throw new Error('JWTSECRET undefined');
     }
     
-    const token = req.body.refreshToken;
+    const token = req.body.refreshToken;    // validation ?
 
     if (!token)
         return res.status(401).send('Refresh token required.'); // unauthorized
@@ -84,7 +84,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
 };
 
 async function logout(req: Request, res: Response, next: NextFunction) {
-    const rt = req.body.refreshToken;
+    const rt = req.body.refreshToken;   //validation ?
     refreshTokens = refreshTokens.filter(t => t !== rt);
     res.sendStatus(200);
 };
