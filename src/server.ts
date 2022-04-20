@@ -3,10 +3,12 @@ import http from 'http';
 import express, { Express } from 'express';
 import { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
-import routesClients from './routes/customer';
-import routesInvoices from './routes/invoice';
-import routesContracts from './routes/contracts';
-import routesAddresses from './routes/address';
+import routesClients from './routes/customerRoutes';
+import routesInvoices from './routes/invoiceRoutes';
+import routesContracts from './routes/contractRoutes';
+import routesAddresses from './routes/adressRoutes';
+import * as MySQLConnector from './utils/mysql.connector';
+
 
 const router: Express = express();
 
@@ -31,14 +33,17 @@ router.use((req: Request, res: Response, next: NextFunction) => {
     next();
 });
 
+// create database pool
+MySQLConnector.init();
+
 /** Routes */
-router.use('/', routesClients);
-router.use('/', routesInvoices);
-router.use('/', routesContracts);
-router.use('/', routesAddresses);
+router.use('/api/', routesClients);
+router.use('/api/', routesInvoices);
+router.use('/api/', routesContracts);
+router.use('/api/', routesAddresses);
 
 /** Error handling */
-router.use((req: Request, res: Response, next: NextFunction) => 
+router.use((req: Request, res: Response, next: NextFunction) =>
 {
     const error = new Error('not found');
     return res.status(404).json({

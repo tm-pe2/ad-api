@@ -1,5 +1,4 @@
 import * as validator from '../classes/typeValidation'
-import { Database } from '../classes/database';
 
 export class Contract {
     private ContractID: number = 0;
@@ -117,7 +116,7 @@ export class Contract {
         }
     }
 
-    //methods
+    /*
     toJSON()
     {
         return {
@@ -130,6 +129,7 @@ export class Contract {
         }
     }
 
+    /*
     async readAll(): Promise<Contract[]>
     {
         let contracts: Contract[] = [];
@@ -242,4 +242,5 @@ export class Contract {
         conn.destroy();
         return status;
     }
+     */
 }

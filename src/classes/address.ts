@@ -1,5 +1,4 @@
 import * as validatior from '../classes/typeValidation';
-import { Database } from '../classes/database';
 
 export class Address {
     private AdressID: number = 0;
@@ -102,7 +101,7 @@ export class Address {
         }
     }
 
-    //methods
+    /*
 
     toJSON()
     {
@@ -116,6 +115,7 @@ export class Address {
         }
     }
 
+    /*
     async readAll(): Promise<Address[]>
     {
         let addresses: Address[] = [];
@@ -225,4 +225,6 @@ export class Address {
         conn.destroy();
         return status;
     }
+
+     */
 }
