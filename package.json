@@ -6,7 +6,7 @@
   "main": "src/app.ts",
   "scripts": {
     "test": "jest",
-    "serve": "nodemon --config src/nodemon.json src/server.ts",
+    "serve": "nodemon --config nodemon.json",
     "tsc": "tsc",
     "eslint": "eslint"
   },

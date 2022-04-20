@@ -4,7 +4,6 @@ import { MailService } from './services/mailService'
 import { Env } from './util/env';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
-    console.log(process.env.JWTSECRET)
   dotenv.config();
 }
 
@@ -16,10 +15,8 @@ try {
 }
 
 (async () => {
-  console.log("run");
-
   const PORT: any = process.env.PORT ?? 6060;
-  httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+  httpServer.listen(PORT, () => console.log(`The server is running on http://localhost:${PORT}`));
   /*try{
   const ms = new MailService();
   ms.testEmail()
