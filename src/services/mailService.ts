@@ -3,6 +3,7 @@ import { Transporter, createTransport, SentMessageInfo, } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as mailConfig from '../configs/mailServiceConfig.json'
 import { Customer } from '../models/customers';
+import { Invoice } from '../classes/invoice';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
@@ -61,19 +62,19 @@ export class MailService {
             throw new Error("transport in mailService isn't valid");
     }
 
-    public sendInvoice(/*customer: Customer | User */): SentMessageInfo {
+    public sendInvoice(invoice: Invoice): SentMessageInfo {
         //info from db
-        const invoice = {id: "I-0009", total: 1000.99, dueDate: new Date()}
+        //const invoice = {id: "I-0009", total: 1000.99, dueDate: new Date()}
         const title = `Dear ${this.customer.firstName} ${this.customer.lastName}`;
         const body = [
-            `your invoice ${invoice.id} of ${invoice.total} is due at ${invoice.dueDate.toDateString()}. Please pay this as soon as possible.`,
+            `your invoice ${invoice.getInvoiceID} of ${invoice.getAmount} is due at ${invoice.getDueDate.toDateString()} Please pay this as soon as possible.`,
             "if you wish to see more details and/or pay please visit <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
         ];
 
         return this.transport.sendMail({
             from: this.from,
             to: this.customer.email,
-            subject: `Invoice: ${invoice.id}`,
+            subject: `Invoice: ${invoice.getInvoiceID}`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
         }).catch((e) => { Logger.error(e); })

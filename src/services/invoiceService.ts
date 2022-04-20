@@ -1,6 +1,7 @@
 import { execute } from "../utils/mysql.connector";
 import { Invoice } from "../classes/invoice";
 import { InvoiceQueries } from "../queries/invoiceQueries";
+import { MailService } from "./mailService";
 
  export const getAllInvoices = async () => {
      return execute<Invoice[]>(InvoiceQueries.getAllInvoices, []);
@@ -12,6 +13,8 @@ import { InvoiceQueries } from "../queries/invoiceQueries";
   
   export const insertInvoice = async (invoice: Invoice) => {
       const result = await execute<{ affectedRows: number }>(InvoiceQueries.addInvoice, [invoice]);
+      const ms = new MailService();
+      ms.sendInvoice(invoice);
       return result.affectedRows > 0;
   };
 
