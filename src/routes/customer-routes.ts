@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/customers', customerController.getAllCustomers);
 router.get('/customers/:id', customerController.getCustomerById);
+router.get('/customers/contracts', customerController.getCustomersContracts);
 router.put('/customers', customerController.updateCustomer);
 router.delete('/customers/:id', customerController.DeleteCustomerById);
 router.post('/customers', customerController.addCustomer);

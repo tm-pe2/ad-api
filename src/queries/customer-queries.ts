@@ -7,6 +7,10 @@ export const customerQueries = {
     SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID AND u.UserID = ?
     `,
 
+    getCustomersContracts:`
+        SELECT u.UserID, u.FirstName, u.LastName, u.RoleID, c.ContractID FROM users as u LEFT JOIN customercontracts as c ON u.UserID = c.CustomerID
+    `,
+
     AddCustomer: `
         INSERT INTO customers SET ?
     `,

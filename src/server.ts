@@ -21,7 +21,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import dotenv from 'dotenv';
-import { Env } from './util/env';
+import { Env } from './utils/env';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();

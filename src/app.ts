@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { httpServer } from './server'
 import { MailService } from './services/mail-service'
-import { Env } from './util/env';
+import { Env } from './utils/env';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
     console.log(process.env.JWTSECRET)

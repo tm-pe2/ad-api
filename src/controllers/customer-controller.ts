@@ -35,6 +35,21 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
     }
 };
 
+export const getCustomersContracts: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const customers = await customerService.getCustomersContracts();
+
+        res.status(200).json({
+            customers
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching customers contracts'
+        });
+    }
+};
+
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
         const usr = {
@@ -61,14 +76,9 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
         
         //insert the user
         const insertResult = await userService.insertUser(user);
-
-        if(insertResult !== true)
-        {
-            throw new Error("Customer already exists");
-        }
-
         const resul = await userService.getLastUserID();
         const val = JSON.parse(JSON.stringify(resul));
+        
         const cus = {
             "CustomerID": Number(val[0].UserID),
             "GasType": req.body.GasType,
