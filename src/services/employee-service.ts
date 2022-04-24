@@ -19,13 +19,6 @@ export const insertEmployee = async (employee: Employee) => {
 
 export const updateEmployee = async (employee: Employee) => {
     const result = await execute<{ affectedRows: number }>(employeeQueries.updateEmployees, [
-        employee.FirstName,
-        employee.LastName,
-        employee.BirthDate,
-        employee.AdressID,
-        employee.Email,
-        employee.PhoneNumber,
-        employee.Password,
         employee.Departement,
         employee.Permissions,
         employee.HireDate,

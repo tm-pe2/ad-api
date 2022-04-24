@@ -1,6 +1,6 @@
-import {NextFunction, Request, RequestHandler, Response} from 'express';
+import {Request, RequestHandler, Response} from 'express';
 import * as contractService from '../services/contract-service';
-import {Contract} from "../classes/contracts";
+import {Contract, contractSchema } from "../classes/contracts";
 
 export const getAllContracts: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -31,9 +31,11 @@ export const getContractById: RequestHandler = async (req: Request, res: Respons
     }
 };
 
-export const addContract: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const addContract: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let contract: Contract = req.body;
+        //validate the request body
+        const addContractSchema = contractSchema.fork('ContractID', field => field.optional());
+        let contract: Contract = await addContractSchema.validateAsync(req.body);
         const result = await contractService.insertContract(contract);
 
         res.status(200).json({
@@ -49,7 +51,9 @@ export const addContract: RequestHandler = async (req: Request, res: Response, n
 
 export const updateContract: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let contract: Contract = req.body;
+        //validate the request body
+        let contract: Contract = await contractSchema.validateAsync(req.body);
+
         const result = await contractService.updateContract(contract);
 
         res.status(200).json({

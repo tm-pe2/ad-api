@@ -1,10 +1,14 @@
 export const customerQueries = {
     getAllCustomers: `
-        SELECT * FROM customers
+        SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID
     `,
 
     getCustomerById: `
-        SELECT * FROM customers WHERE CustomerID = ?
+    SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID AND u.UserID = ?
+    `,
+
+    getCustomersContracts:`
+        SELECT u.UserID, u.FirstName, u.LastName, u.RoleID, c.ContractID FROM users as u LEFT JOIN customercontracts as c ON u.UserID = c.CustomerID
     `,
 
     AddCustomer: `
@@ -14,13 +18,6 @@ export const customerQueries = {
     UpdateCustomer: `
         UPDATE customers 
         SET 
-            FirstName = ?,
-            LastName = ?,
-            BirthDate = ?,
-            AdressID = ?,
-            Email = ?,
-            PhoneNumber = ?,
-            Password = ?,
             GasType = ?,
             Electricitytype = ?
         WHERE CustomerID = ?

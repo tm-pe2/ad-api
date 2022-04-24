@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Planning} from '../classes/planning';
+import {Planning, planningSchema} from '../classes/planning';
 import * as planningService from '../services/planning-service';
 
 export const getAllPlannings: RequestHandler = async (req: Request, res: Response) => {
@@ -34,7 +34,11 @@ export const getPlanningById: RequestHandler = async (req: Request, res: Respons
 
 export const addPlanning: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let planning: Planning = req.body;
+
+        //validate the request body
+        const addPlanningSchema = planningSchema.fork('PlanningID', field => field.optional());
+        let planning: Planning = await addPlanningSchema.validateAsync(req.body);
+
         const result = await planningService.insertPlanning(planning);
 
         res.status(200).json({
@@ -43,14 +47,15 @@ export const addPlanning: RequestHandler = async (req: Request, res: Response) =
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when adding new planning'
+            message: 'There was an error when adding new planning!'
         });
     }
 };
 
 export const updatePlanning: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let planning: Planning = req.body;
+        //validate the request body
+        let planning: Planning = await planningSchema.validateAsync(req.body);
 
         const result = await planningService.updatePlanning(planning);
 
@@ -60,7 +65,7 @@ export const updatePlanning: RequestHandler = async (req: Request, res: Response
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when updating planning'
+            message: 'There was an error when updating planning!'
         });
     }
 };

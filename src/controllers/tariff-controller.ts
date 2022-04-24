@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Tariff} from '../classes/tariff';
+import {Tariff, tariffSchema} from '../classes/tariff';
 import * as tariffService from '../services/tariff-service';
 
 export const getAllTariffs: RequestHandler = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const getAllTariffs: RequestHandler = async (req: Request, res: Response)
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching tariffs'
+            message: 'There was an error when fetching tariffs!'
         });
     }
 };
@@ -27,14 +27,17 @@ export const getTariffById: RequestHandler = async (req: Request, res: Response)
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching tariff'
+            message: 'There was an error when fetching tariff!'
         });
     }
 };
 
 export const addTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let tariff: Tariff = req.body;
+        //validate the request body
+        const addTariffSchema = tariffSchema.fork('TarifID', field => field.optional());
+        let tariff: Tariff = await addTariffSchema.validateAsync(req.body);
+
         const result = await tariffService.insertTariff(tariff);
 
         res.status(200).json({
@@ -43,14 +46,16 @@ export const addTariff: RequestHandler = async (req: Request, res: Response) => 
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when adding new tariff'
+            message: 'There was an error when adding new tariff!'
         });
     }
 };
 
 export const updateTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let tariff: Tariff = req.body;
+        //validate the request body
+        let tariff: Tariff = await tariffSchema.validateAsync(req.body);
+
         const result = await tariffService.updateTariff(tariff);
 
         res.status(200).json({
@@ -59,7 +64,7 @@ export const updateTariff: RequestHandler = async (req: Request, res: Response) 
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when updating tariff'
+            message: 'There was an error when updating tariff!'
         });
     }
 };

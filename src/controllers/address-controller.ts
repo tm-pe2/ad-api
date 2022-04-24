@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Address} from '../classes/address';
+import {Address, addressSchema} from '../classes/address';
 import * as addressService from '../services/address-service';
 
 export const getAllAddresses: RequestHandler = async (req: Request, res: Response) => {
@@ -20,7 +20,6 @@ export const getAllAddresses: RequestHandler = async (req: Request, res: Respons
 export const getAddressById: RequestHandler = async (req: Request, res: Response) => {
     try {
         const address = await addressService.getAddressById(Number(req.params.id));
-
         res.status(200).json({
             address
         });
@@ -34,24 +33,27 @@ export const getAddressById: RequestHandler = async (req: Request, res: Response
 
 export const addAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let address: Address = req.body;
+        //validate the request body
+        const addAddressSchema = addressSchema.fork('AdressID', field => field.optional());
+        let address: Address = await addAddressSchema.validateAsync(req.body);
 
-        const result = await addressService.insertAddress(req.body);
+        const result = await addressService.insertAddress(address);
 
         res.status(200).json({
             result
         });
-    } catch (error) {
-        console.log(error);
+    } catch (errors) {
+        console.log(errors);
+        if(errors)
         res.status(500).json({
-            message: 'There was an error when adding new address'
+            message: 'There was an error when updating address!'
         });
     }
 };
 
 export const updateAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
-        let address: Address = req.body;
+        let address: Address = await addressSchema.validateAsync(req.body);
 
         const result = await addressService.updateAddress(address);
 
@@ -61,7 +63,7 @@ export const updateAddress: RequestHandler = async (req: Request, res: Response)
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when updating address'
+            message: 'There was an error when updating address!'
         });
     }
 };

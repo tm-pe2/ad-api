@@ -41,7 +41,7 @@ describe('Address Endpoints', () => {
                 City: 'testCityUpdate',
                 Street: 'testStreettestCityUpdate',
                 HouseNumber: '99990',
-                PostalCode: 9999,
+                PostalCode: '9999',
                 Country: 'testCountryUpdate',
                 StartDate: '2019-01-01',
                 EndDate: '2029-01-01'
