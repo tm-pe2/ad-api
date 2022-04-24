@@ -1,3 +1,81 @@
+import { Pool } from "mysql";
+
+const { Pool } = require("pg");
+
+const credentials = {
+  user: "postgres",
+  host: "localhost",
+  database: "nodedemo",
+  password: "yourpassword",
+  port: 5432,
+};
+
+let pool : Pool;
+
+// Connect with a connection pool.
+
+async function poolDemo() {
+  const pool = new Pool(credentials);
+  const now = await pool.query("SELECT NOW()");
+  await pool.end();
+
+  return now;
+}
+
+export function init() {
+    try {
+        const credentials = {
+            user: "postgres",
+            host: "localhost",
+            database: "nodedemo",
+            password: "yourpassword",
+            port: 5432,
+        };
+
+        pool = new Pool(credentials);
+        console.log("Connection established succesfully");
+    } catch (error) {
+        console.error("Error trying to connect: ", error);
+    }
+}
+
+export function end() {
+    try {
+        pool.end()
+
+        console.log("Connection closed succesfully");
+    } catch (error) {
+        console.error("Error trying to end connection: ", error);
+    }
+}
+
+export const execute = <T>(query: string, params: string[] | Object): Promise<T> => {
+    try {
+        if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
+
+        return new Promise<T>((resolve, reject) => {
+            pool.query(query, params, (error, results) => {
+                if (error) reject(error);
+                else resolve(results);
+            });
+        });
+
+    } catch (error) {
+        console.error('[mysql.connector][execute][Error]: ', error);
+        throw new Error('failed to execute MySQL query');
+    }
+}
+// Use a self-calling function so we can use async / await.
+
+(async () => {
+  const poolResult = await poolDemo();
+  console.log("Time with pool: " + poolResult.rows[0]["now"]);
+
+  const clientResult = await clientDemo();
+  console.log("Time with client: " + clientResult.rows[0]["now"]);
+})();
+
+/*
 import { Client, Value } from 'ts-postgres';
 
 
@@ -40,6 +118,8 @@ export function end() {
  * in the query
  */
 
+/*
+
 export async function execute<T>(query: string, params: Value[]) : Promise<T> {
     try {
         if (!client) throw new Error('Databse client not initialized');
@@ -54,7 +134,7 @@ export async function execute<T>(query: string, params: Value[]) : Promise<T> {
     } catch (error) {
         console.error('Problem trying to execute the query: ', error);
     }
-}
+} */
 
 /*
 import {createPool, Pool} from 'mysql';

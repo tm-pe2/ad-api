@@ -40,7 +40,7 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "nodemailer": "^6.7.2",
-    "ts-postgres": "^1.2.1",
+    "pg": "^8.7.3",
     "types": "^0.1.1",
     "utf-8-validate": "^5.0.3",
     "uuid": "^8.3.2"
