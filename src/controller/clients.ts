@@ -1,80 +1,80 @@
-/** source/controllers/clients.ts */
-import { Request, Response, NextFunction } from 'express';
-var mysql = require('mysql');
+// /** source/controllers/clients.ts */
+// import { Request, Response, NextFunction } from 'express';
+// import { Database } from '../classes/database'
 
-var conn = mysql.createConnection({
-        host: "localhost",
-        user: "Webuser",
-        password: "Lab2021",
-        database: "webshop"
-    });
+// let db = new Database();
+// let conn = db.connect();
 
-interface Address {
-    street: String;
-    hNumber: Number;
-    postCode: String;
-    country: String;
-}
+// // get all clients
+// const getClients = async (req: Request, res: Response, next: NextFunction) => {
+//     let query: string = "Select * FROM users";
+//     conn.query(query, function (err: Error, clients: string)
+//     {
+//         if (err) throw err;
+//         return res.status(200).json({
+//         clients
+//         });
+//     });
+// };
 
-interface Client {
-    id: Number;
-    name: String;
-    lastname: String;
-    birthday: Date;
-    address: Address;
-}
 
-// get all clients
-const getClients = async (req: Request, res: Response, next: NextFunction) => {
-    conn.connect(function (err:Error) {
-        if(err){
-            console.log("error occured while connecting");
-        }
-        else{
-            console.log("connection created with Mysql successfully");
-        }});
+// // get one client
+// const getClient = async (req: Request, res: Response, next: NextFunction) => {
+//     let query: string = "Select * FROM users Where UID = ?";
+//     conn.query(query, [req.params.id], (err, client) =>
+//     {
+//         if (err) throw err;
+//         return res.status(200).json({
+//         client
+//         });
+//     });
+// };
 
-    return res.status(200).json({
-        message: "This is get all clients route"
-    });
-};
+// // update a client
+// const updateClient = async (req: Request, res: Response, next: NextFunction) => {
+//     let query: string = `UPDATE users SET name = ?, lastname = ?, imagePath = ?, type = ?, username = ?, password = ? Where UID = ? `;
+//     conn.query(query,
+//     [
+//         req.body.name,
+//         req.body.lastname,
+//         req.body.imagePath,
+//         req.body.type,
+//         req.body.username,
+//         req.body.password,
+//         req.params.id
+//     ]
+//     //req.body
+//     , (err, client) => {
+//         if (err) throw err;
+//         return res.status(200).json({
+//             "request id" : req.body.id,
+//             client
+//         });
+//     });
+// };
 
-// get one client
-const getClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the client id from the req
-    let id: string = req.params.id;
-    return res.status(200).json({
-        message: "This is get one client route"
-    });
-};
+// // delete a client
+// const deleteClient = async (req: Request, res: Response, next: NextFunction) => {
+//     let query: string = "DELETE FROM users Where UID= ?";
+//     conn.query(query, [req.params.id], (err, client) =>
+//     {
+//         if (err) throw err;
+//         return res.status(200).json({
+//         client
+//         });
+//     });
+// };
 
-// update a client
-const updateClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the client id from the req.params
-    let id: string = req.params.id;
-    // get the data from req.body
-    //let name: string = req.body.name ?? null;
-    return res.status(200).json({
-        message: "This is update client route"
-    });
-};
+// // add a client
+// const addClient = async (req: Request, res: Response, next: NextFunction) => {
+//     let query: string = `INSERT INTO users SET ?`;
+//     conn.query(query, req.body, (err, client) =>
+//     {
+//         if (err) throw err;
+//         return res.status(200).json({
+//         client
+//         });
+//     });
+// };
 
-// delete a client
-const deleteClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the client id from req.params
-    let id: string = req.params.id;
-    return res.status(200).json({
-        message: "This is delete client route"
-    });
-};
-
-// add a client
-const addClient = async (req: Request, res: Response, next: NextFunction) => {
-    // get the data from req.body
-    //let name: string = req.body.name ?? null;
-    return res.status(200).json({
-        message: "This is add client route"
-    });
-};
-
-export default { getClients, getClient, updateClient, deleteClient, addClient };
+// export default { getClients, getClient, updateClient, deleteClient, addClient };
