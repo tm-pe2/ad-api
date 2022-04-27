@@ -90,6 +90,25 @@ export class MailService {
         ];
         
         return this.transport.sendMail({
+            from: this.from,
+            to: this.customer.email,
+            subject: `Work order`,
+            text: this.textFormat(title, body),
+            html: this.htmlFormat(title, body),
+        }).catch((e) => { Logger.error(e); });
+    }
+
+    public sendAppointment(/*appointment: Appointment*/): SentMessageInfo{
+        const Customer = this.customer;
+        //info from db
+        const title = `Dear ${Customer.firstName} ${Customer.lastName}`;
+        const body = [
+            "there has been set an appointment",
+            `your appointment has been set on ${new Date().toDateString()}.`
+        ];
+        
+        return this.transport.sendMail({
+            from: this.from,
             to: this.customer.email,
             subject: `Work order`,
             text: this.textFormat(title, body),
