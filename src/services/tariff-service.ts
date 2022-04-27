@@ -11,14 +11,14 @@ export const getTariffById = async (id: Tariff['TarifID']) => {
 };
 
 export const insertTariff = async (tariff: Tariff) => {
-    const result = await execute<{ affectedRows: number }>(tariffQueries.addTariff, [
+    const result = await execute<{ rowCount: number }>(tariffQueries.addTariff, [
         tariff
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updateTariff = async (tariff: Tariff) => {
-    const result = await execute<{ affectedRows: number }>(tariffQueries.updateTariff, [
+    const result = await execute<{ rowCount: number }>(tariffQueries.updateTariff, [
         tariff.SmallInd,
         tariff.MediumInd,
         tariff.BigInd,
@@ -27,10 +27,10 @@ export const updateTariff = async (tariff: Tariff) => {
         tariff.BigComp,
         tariff.TarifID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteTariffById = async (id: Tariff['TarifID']) => {
-    const result = await execute<{ affectedRows: number }>(tariffQueries.deleteTariffById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(tariffQueries.deleteTariffById, [id]);
+    return result.rowCount > 0;
 };

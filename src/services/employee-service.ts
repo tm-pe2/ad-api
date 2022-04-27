@@ -11,24 +11,24 @@ export const getEmployeeById = async (id: Employee['EmployeeID']) => {
 };
 
 export const insertEmployee = async (employee: Employee) => {
-    const result = await execute<{ affectedRows: number }>(employeeQueries.addEmployee, [
+    const result = await execute<{ rowCount: number }>(employeeQueries.addEmployee, [
         employee
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updateEmployee = async (employee: Employee) => {
-    const result = await execute<{ affectedRows: number }>(employeeQueries.updateEmployees, [
+    const result = await execute<{ rowCount: number }>(employeeQueries.updateEmployees, [
         employee.Departement,
         employee.Permissions,
         employee.HireDate,
         employee.Gender,
         employee.EmployeeID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteEmployeeById = async (id: Employee['EmployeeID']) => {
-    const result = await execute<{ affectedRows: number }>(employeeQueries.deleteEmployeeById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(employeeQueries.deleteEmployeeById, [id]);
+    return result.rowCount > 0;
 };

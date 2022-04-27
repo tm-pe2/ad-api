@@ -11,14 +11,14 @@ export const getContractById = async (id: Contract['ContractID']) => {
 };
 
 export const insertContract = async (contract: Contract) => {
-    const result = await execute<{ affectedRows: number }>(contractQueries.addContract, [
+    const result = await execute<{ rowCount: number }>(contractQueries.addContract, [
         contract
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updateContract = async (contract: Contract) => {
-    const result = await execute<{ affectedRows: number }>(contractQueries.updateContract, [
+    const result = await execute<{ rowCount: number }>(contractQueries.updateContract, [
         contract.StartDate,
         contract.EndDate,
         contract.CustomerID,
@@ -29,10 +29,10 @@ export const updateContract = async (contract: Contract) => {
         contract.EstimatedID,
         contract.ContractID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteContract = async (id: Contract['ContractID']) => {
-    const result = await execute<{ affectedRows: number }>(contractQueries.deleteContractById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(contractQueries.deleteContractById, [id]);
+    return result.rowCount > 0;
 };

@@ -19,12 +19,12 @@ export const getLastUserID = async () => {
 };
 
 export const insertUser = async (user: User) => {
-    const result = await execute<{ affectedRows: number }>(userQueries.AddUser, [user]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(userQueries.AddUser, [user]);
+    return result.rowCount > 0;
 };
 
 export const UpdateUser = async (user: User) => {
-    const result = await execute<{ affectedRows: number }>(userQueries.UpdateUser, [
+    const result = await execute<{ rowCount: number }>(userQueries.UpdateUser, [
         user.RoleID,
         user.FirstName,
         user.LastName,
@@ -35,10 +35,10 @@ export const UpdateUser = async (user: User) => {
         user.Password,
         user.UserID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteUser = async (id: User['UserID']) => {
-    const result = await execute<{ affectedRows: number }>(userQueries.DeleteUserById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(userQueries.DeleteUserById, [id]);
+    return result.rowCount > 0;
 };

@@ -15,24 +15,24 @@ export const getCustomersContracts = async () => {
 };
 
 export const insertCustomer = async (customer: Customer) => {
-    const result = await execute<{ affectedRows: number }>(customerQueries.AddCustomer, [
+    const result = await execute<{ rowCount: number }>(customerQueries.AddCustomer, [
         customer
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const UpdateCustomer = async (customer: Customer) => {
-    const result = await execute<{ affectedRows: number }>(customerQueries.UpdateCustomer, [
+    const result = await execute<{ rowCount: number }>(customerQueries.UpdateCustomer, [
         customer.GasType,
         customer.Electricitytype,
         customer.CustomerID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteCustomer = async (id: Customer['CustomerID']) => {
-    const result = await execute<{ affectedRows: number }>(customerQueries.DeleteCustomerById, [
+    const result = await execute<{ rowCount: number }>(customerQueries.DeleteCustomerById, [
         id
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };

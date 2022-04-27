@@ -11,14 +11,14 @@ export const getTicketById = async (id: Ticket['TicketID']) => {
 };
 
 export const insertTicket = async (ticket: Ticket) => {
-    const result = await execute<{ affectedRows: number }>(ticketQueries.addTicket, [
+    const result = await execute<{ rowCount: number }>(ticketQueries.addTicket, [
         ticket
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updateTicket = async (ticket: Ticket) => {
-    const result = await execute<{ affectedRows: number }>(ticketQueries.updateTicket, [
+    const result = await execute<{ rowCount: number }>(ticketQueries.updateTicket, [
         ticket.IssueID,
         ticket.AssignedTech,
         ticket.Title,
@@ -28,10 +28,10 @@ export const updateTicket = async (ticket: Ticket) => {
         ticket.Employee,
         ticket.TicketID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteTicketById = async (id: Ticket['TicketID']) => {
-    const result = await execute<{ affectedRows: number }>(ticketQueries.deleteTicketById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(ticketQueries.deleteTicketById, [id]);
+    return result.rowCount > 0;
 };

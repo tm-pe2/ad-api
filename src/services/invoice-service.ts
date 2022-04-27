@@ -11,14 +11,14 @@ export const getInvoiceById = async (id: Invoice['InvoiceID']) => {
 };
 
 export const insertInvoice = async (invoice: Invoice) => {
-    const result = await execute<{ affectedRows: number }>(invoiceQueries.addInvoice, [
+    const result = await execute<{ rowCount: number }>(invoiceQueries.addInvoice, [
         invoice
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updateInvoice = async (invoice: Invoice) => {
-    const result = await execute<{ affectedRows: number }>(invoiceQueries.updateInvoice, [
+    const result = await execute<{ rowCount: number }>(invoiceQueries.updateInvoice, [
         invoice.CustomerID,
         invoice.SupplierID,
         invoice.Date,
@@ -32,10 +32,10 @@ export const updateInvoice = async (invoice: Invoice) => {
         invoice.EndDate,
         invoice.InvoiceID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteInvoiceById = async (id: Invoice['InvoiceID']) => {
-    const result = await execute<{ affectedRows: number }>(invoiceQueries.deleteInvoiceById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(invoiceQueries.deleteInvoiceById, [id]);
+    return result.rowCount > 0;
 };

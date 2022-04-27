@@ -11,24 +11,24 @@ export const getPlanningById = async (id: Planning['PlanningID']) => {
 };
 
 export const insertPlanning = async (planning: Planning) => {
-    const result = await execute<{ affectedRows: number }>(planningQueries.addPlanning, [
+    const result = await execute<{ rowCount: number }>(planningQueries.addPlanning, [
         planning
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updatePlanning = async (planning: Planning) => {
-    const result = await execute<{ affectedRows: number }>(planningQueries.updatePlanning, [
+    const result = await execute<{ rowCount: number }>(planningQueries.updatePlanning, [
         planning.EmployeeID,
         planning.CustomerID,
         planning.Date,
         planning.Status,
         planning.PlanningID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deletePlanningById = async (id: Planning['PlanningID']) => {
-    const result = await execute<{ affectedRows: number }>(planningQueries.deletePlanningById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(planningQueries.deletePlanningById, [id]);
+    return result.rowCount > 0;
 };

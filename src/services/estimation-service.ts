@@ -11,14 +11,14 @@ export const getEstimationById = async (id: Estimation['EstimatedID']) => {
 };
 
 export const insertEstimation = async (estimation: Estimation) => {
-    const result = await execute<{ affectedRows: number }>(estimationQueries.addEstimation, [
+    const result = await execute<{ rowCount: number }>(estimationQueries.addEstimation, [
         estimation
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const updateEstimation = async (estimation: Estimation) => {
-    const result = await execute<{ affectedRows: number }>(estimationQueries.updateEstimation, [
+    const result = await execute<{ rowCount: number }>(estimationQueries.updateEstimation, [
         estimation.ServiceType,
         estimation.AdressID,
         estimation.BuildingType,
@@ -29,10 +29,10 @@ export const updateEstimation = async (estimation: Estimation) => {
         estimation.HeatingType,
         estimation.EstimatedID
     ]);
-    return result.affectedRows > 0;
+    return result.rowCount > 0;
 };
 
 export const deleteEstimationById = async (id: Estimation['EstimatedID']) => {
-    const result = await execute<{ affectedRows: number }>(estimationQueries.deleteEstimationById, [id]);
-    return result.affectedRows > 0;
+    const result = await execute<{ rowCount: number }>(estimationQueries.deleteEstimationById, [id]);
+    return result.rowCount > 0;
 };
