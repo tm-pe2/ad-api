@@ -4,26 +4,26 @@ export const tariffQueries = {
     `,
 
     getTariffById: `
-        SELECT * FROM tarifs WHERE TarifID = ?
+        SELECT * FROM tarifs WHERE TarifID = $1
     `,
 
     addTariff: `
-        INSERT INTO tarifs SET ?
+        INSERT INTO tarifs SET $1
     `,
 
     updateTariff: `
         UPDATE tarifs 
         SET
-            SmallInd = ?,
-            MediumInd = ?,
-            BigInd = ?,
-            SmallComp = ?,
-            MediumComp = ?,
-            BigComp = ?
-        WHERE TarifID = ?
+            SmallInd = $1,
+            MediumInd = $2,
+            BigInd = $3,
+            SmallComp = $4,
+            MediumComp = $5,
+            BigComp = $6
+        WHERE TarifID = $7
     `,
 
     deleteTariffById: `
-        DELETE FROM tarifs WHERE TarifID = ?
+        DELETE FROM tarifs WHERE TarifID = $1
     `
 };
