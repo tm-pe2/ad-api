@@ -19,6 +19,18 @@ const dummyUsers = [
         'email': 'user',
         'pass': 'pass',
         'role': 'normal'
+    },
+    {
+        'id': '3',
+        'email': 'employee',
+        'pass': 'whereismyraise',
+        'role': 'employee'
+    },
+    {
+        'id': '4',
+        'email': 'employeeManager',
+        'pass': 'noraiseforyou',
+        'role': 'employeeManager'
     }
 ]
 
