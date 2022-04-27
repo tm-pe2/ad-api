@@ -1,50 +1,50 @@
-import { createPool, Pool} from 'mysql';
-import { DATA_SOURCES } from '../config';
-const dataSource = DATA_SOURCES.mySqlDataSource;
+import { Pool } from 'pg';
 
-let pool: Pool;
+let pool : Pool;
 
-/**
- * generates pool connection to be used throughout the app
- */
-export const init = () => {
-  try {
-    pool = createPool({
-      connectionLimit: 10,
-      host: dataSource.DB_HOST,
-      user: dataSource.DB_USER,
-      password: dataSource.DB_PASSWORD,
-      database: dataSource.DB_DATABASE,
-      port: dataSource.DB_PORT
-    });
+export function init() {
+    try {
+        const credentials = {
+            user: "ad",
+            host: "10.97.0.10",
+            database: "ADWEBSITE",
+            password: "Ad2022%",
+            port: 5432,
+        };
 
-    console.debug('MySql Adapter Pool generated successfully');
-  } catch (error) {
-        console.error('[mysql.connector][init][Error]: ', error);
-        throw new Error('failed to initialized pool');
-  }
-};
+        pool = new Pool(credentials);
+        console.log("Connection established succesfully");
+    } catch (error) {
+        console.error("Error trying to connect: ", error);
+    }
+}
 
-/**
- * executes SQL queries in MySQL db
- *
- * @param {string} query - provide a valid SQL query
- * @param {string[] | Object} params - provide the parameterized values used
- * in the query
- */
-export const execute = <T>(query: string, params: string[] | Object): Promise<T> => {
-  try {
-    if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
+export function end() {
+    try {
+        pool.end()
 
-    return new Promise<T>((resolve, reject) => {
-      pool.query(query, params, (error, results) => {
-        if (error) reject(error);
-        else resolve(results);
-      });
-    });
+        console.log("Connection closed succesfully");
+    } catch (error) {
+        console.error("Error trying to end connection: ", error);
+    }
+}
 
-  } catch (error) {
-    console.error('[mysql.connector][execute][Error]: ', error);
-    throw new Error('failed to execute MySQL query');
-  }
+
+export const execute = <T>(query: string, params: any[]): Promise<T> => {
+    try {
+        if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
+
+        return new Promise((resolve, reject) => {
+            pool.query(query, params, (error, results: any) => {
+                if (error)
+                    reject(error);
+                else
+                    resolve(results);
+            });
+        });
+
+    } catch (error) {
+        console.error('[mysql.connector][execute][Error]: ', error);
+        throw new Error('failed to execute MySQL query');
+    }
 }
