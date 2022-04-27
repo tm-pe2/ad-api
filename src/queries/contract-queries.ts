@@ -4,28 +4,28 @@ export const contractQueries = {
     `,
 
     getContractById: `
-        SELECT * FROM customercontracts WHERE ContractID = ?
+        SELECT * FROM customercontracts WHERE ContractID = $1
     `,
 
     addContract: `
-        INSERT INTO customercontracts SET ?
+        INSERT INTO customercontracts SET $1
     `,
 
     updateContract: `
         UPDATE customercontracts 
         SET
-            StartDate = ?,
-            EndDate = ?,
-            CustomerID = ?,
-            CustomerType = ?,
-            AdvancedPayement = ?,
-            Price = ?,
-            TarifID = ?,
-            EstimatedID = ?
-        WHERE ContractID = ?
+            StartDate = $1,
+            EndDate = $2,
+            CustomerID = $3,
+            CustomerType = $4,
+            AdvancedPayement = $5,
+            Price = $6,
+            TarifID = $7,
+            EstimatedID = $8
+        WHERE ContractID = $9
     `,
 
     deleteContractById: `
-        DELETE FROM customercontracts WHERE ContractID = ?
+        DELETE FROM customercontracts WHERE ContractID = $1
     `
 };

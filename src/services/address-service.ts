@@ -3,7 +3,9 @@ import {Address} from "../classes/address";
 import {addressQueries} from "../queries/address-queries";
 
 export const getAllAddresses = async () => {
-    return execute<Address[]>(addressQueries.getAllAddresses, []);
+    let addresses =  execute<Address[]>(addressQueries.getAllAddresses, []);
+    console.log(addresses);
+    return addresses;
 };
 
 export const getAddressById = async (id: Address['AdressID']) => {
