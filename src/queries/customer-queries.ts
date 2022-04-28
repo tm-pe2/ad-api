@@ -1,14 +1,18 @@
 export const customerQueries = {
     getAllCustomers: `
-        SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID
+        SELECT * FROM users as u 
+        INNER JOIN customers c ON u.UserID = c.CustomerID
     `,
 
     getCustomerById: `
-    SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID AND u.UserID = ?
+    SELECT * FROM users as u 
+    INNER JOIN customers c ON u.UserID = c.CustomerID 
+    WHERE u.UserID = ?
     `,
 
     getCustomersContracts:`
-        SELECT u.UserID, u.FirstName, u.LastName, u.RoleID, c.ContractID FROM users as u LEFT JOIN customercontracts as c ON u.UserID = c.CustomerID
+        SELECT u.UserID, u.FirstName, u.LastName, u.RoleID, c.ContractID FROM users as u 
+        LEFT JOIN customercontracts as c ON u.UserID = c.CustomerID
     `,
 
     AddCustomer: `

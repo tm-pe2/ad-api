@@ -1,10 +1,13 @@
 export const employeeQueries = {
     getAllEmployees: `
-        SELECT * FROM users as u INNER JOIN employees e WHERE u.UserID = e.EmployeeID
+        SELECT * FROM users as u 
+        INNER JOIN employees e ON u.UserID = e.EmployeeID
     `,
 
     getEmployeeById: `
-        SELECT * FROM users as u INNER JOIN employees e WHERE u.UserID = e.EmployeeID AND u.UserID = ?
+        SELECT * FROM users as u 
+        INNER JOIN employees e ON u.UserID = e.EmployeeID 
+        Where u.UserID = ?
     `,
     addEmployee: `
         INSERT INTO employees SET ?
