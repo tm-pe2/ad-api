@@ -4,7 +4,7 @@ export const invoiceQueries = {
     `,
 
     getInvoiceById: `
-        SELECT * FROM invoices WHERE InvoiceID = $1
+        SELECT * FROM invoices WHERE invoice_id = $1
     `,
 
     addInvoice: `
@@ -13,21 +13,21 @@ export const invoiceQueries = {
 
     updateInvoice: `
         UPDATE invoices SET
-            CustomerID = $1,
-            SupplierID = $2,
-            Date = $3,
-            DueDate = $4,
-            Status = $5,
-            GasAmount = $6,
-            ElectricityType = $7,
-            Price = $8,
-            Tax = $9,
-            StartDate = $10,
-            EndDate = $11
-        WHERE InvoiceID = $12
+            customer_id = $1,
+            supplier_id = $2,
+            date = $3,
+            due_date = $4,
+            status = $5,
+            gas_amount = $6,
+            electricity_type = $7,
+            price = $8,
+            tax = $9,
+            start_date = $10,
+            end_date = $11
+        WHERE invoice_id = $12
     `,
 
     deleteInvoiceById: `
-        DELETE FROM invoices WHERE InvoiceID = $1
+        DELETE FROM invoices WHERE invoice_id = $1
     `
 };

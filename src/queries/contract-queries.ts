@@ -4,7 +4,7 @@ export const contractQueries = {
     `,
 
     getContractById: `
-        SELECT * FROM customercontracts WHERE ContractID = $1
+        SELECT * FROM customercontracts WHERE contract_id = $1
     `,
 
     addContract: `
@@ -14,18 +14,18 @@ export const contractQueries = {
     updateContract: `
         UPDATE customercontracts 
         SET
-            StartDate = $1,
-            EndDate = $2,
-            CustomerID = $3,
-            CustomerType = $4,
-            AdvancedPayement = $5,
-            Price = $6,
-            TarifID = $7,
-            EstimatedID = $8
-        WHERE ContractID = $9
+            start_date = $1,
+            end_date = $2,
+            customer_id = $3,
+            customer_type = $4,
+            advanced_payement = $5,
+            price = $6,
+            tariff_id = $7,
+            estimated_id = $8
+        WHERE contract_id = $9
     `,
 
     deleteContractById: `
-        DELETE FROM customercontracts WHERE ContractID = $1
+        DELETE FROM customercontracts WHERE contract_id = $1
     `
 };

@@ -4,7 +4,7 @@ export const estimationQueries = {
     `,
 
     getEstimationById: `
-        SELECT * FROM estimations WHERE EstimatedID = $1
+        SELECT * FROM estimations WHERE estimated_id = $1
     `,
 
     addEstimation: `
@@ -14,18 +14,18 @@ export const estimationQueries = {
     updateEstimation: `
         UPDATE estimations 
         SET
-            ServiceType = $1,
-            AdressID = $2,
-            BuildingType = $3,
-            FamilySize = $4,
-            PastConsumption = $5,
-            ElectricCar = $6,
-            Welness = $7,
-            HeatingType = $8
-        WHERE EstimatedID = $9
+            service_type = $1,
+            adress_id = $2,
+            building_type = $3,
+            family_size = $4,
+            past_consumption = $5,
+            electric_car = $6,
+            welness = $7,
+            heating_type = $8
+        WHERE estimated_id = $9
     `,
 
     deleteEstimationById: `
-        DELETE FROM estimations WHERE EstimatedID = $1
+        DELETE FROM estimations WHERE estimated_id = $1
     `
 };

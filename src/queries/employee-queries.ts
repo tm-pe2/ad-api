@@ -1,10 +1,10 @@
 export const employeeQueries = {
     getAllEmployees: `
-        SELECT * FROM users as u INNER JOIN employees e WHERE u.UserID = e.EmployeeID
+        SELECT * FROM users AS u INNER JOIN employees AS e ON u.user_id = e.employee_id
     `,
 
     getEmployeeById: `
-        SELECT * FROM users as u INNER JOIN employees e WHERE u.UserID = e.EmployeeID AND u.UserID = $1
+        SELECT * FROM users as u INNER JOIN employees e ON u.user_id = e.employee_id AND u.user_id = $1
     `,
     addEmployee: `
         INSERT INTO employees SET $1
@@ -13,14 +13,15 @@ export const employeeQueries = {
     updateEmployees: `
         UPDATE employees 
         SET 
-            Departement = $1,
-            Permissions = $2,
-            HireDate = $3,
-            Gender = $4
-        WHERE EmployeeID = $5
+            departement = $1,
+            permissions = $2,
+            hire_date = $3,
+            gender = $4,
+            salary = $6
+        WHERE employee_id = $5
     `,
 
     deleteEmployeeById: `
-        DELETE FROM employees WHERE EmployeeID = $1
+        DELETE FROM employees WHERE employee_id = $1
     `
 };

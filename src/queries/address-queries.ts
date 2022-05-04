@@ -1,30 +1,30 @@
 export const addressQueries = {
     getAllAddresses: `
-        SELECT * FROM adress
+        SELECT * FROM address
     `,
 
     getAddressById: `
-        SELECT * FROM adress WHERE adress.adressid = $1
+        SELECT * FROM address WHERE address.address_id = $1
     `,
 
     addAddress: `
-        INSERT INTO adress SET $1
+        INSERT INTO adsress SET $1
     `,
 
     updateAddress: `
-        UPDATE adress 
+        UPDATE adsress 
         SET 
-            City = $1,
-            Street = $2,
-            HouseNumber = $3,
-            PostalCode = $4,
-            Country = $5,
-            StartDate = $6,
-            EndDate = $7
-        WHERE adressid = $8
+            city = $1,
+            street = $2,
+            house_number = $3,
+            postal_code = $4,
+            country = $5,
+            start_date = $6,
+            end_date = $7
+        WHERE address_id = $8
     `,
 
     deleteAddressById: `
-        DELETE FROM adress WHERE adressid = $1
+        DELETE FROM address WHERE address_id = $1
     `
 };
