@@ -3,11 +3,15 @@ import {Tariff} from "../classes/tariff";
 import {tariffQueries} from "../queries/tariff-queries";
 
 export const getAllTariffs = async () => {
-    return execute<Tariff[]>(tariffQueries.getAllTariffs, []);
+    let tariffs = execute<{rows: Tariff[]}>(tariffQueries.getAllTariffs, []);
+    console.log(tariffs);
+    return (await tariffs).rows;
 };
 
 export const getTariffById = async (id: Tariff['TarifID']) => {
-    return execute<Tariff>(tariffQueries.getTariffById, [id]);
+    let tariff = execute<{rows: Tariff}>(tariffQueries.getTariffById, [id]);
+    console.log(tariff);
+    return (await tariff).rows;
 };
 
 export const insertTariff = async (tariff: Tariff) => {

@@ -3,11 +3,15 @@ import {Invoice} from "../classes/invoice";
 import {invoiceQueries} from "../queries/invoice-queries";
 
 export const getAllInvoices = async () => {
-    return execute<Invoice[]>(invoiceQueries.getAllInvoices, []);
+    let invoices = execute<{rows: Invoice[]}>(invoiceQueries.getAllInvoices, []);
+    console.log(invoices);
+    return (await invoices).rows;
 };
 
 export const getInvoiceById = async (id: Invoice['InvoiceID']) => {
-    return execute<Invoice>(invoiceQueries.getInvoiceById, [id]);
+    let invoice = execute<{rows: Invoice}>(invoiceQueries.getInvoiceById, [id]);
+    console.log(invoice);
+    return (await invoice).rows;
 };
 
 export const insertInvoice = async (invoice: Invoice) => {
