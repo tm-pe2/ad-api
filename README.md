@@ -11,6 +11,11 @@
 npm install
 ```
 
+Create a file `.env` in the project root:
+```
+JWTSECRET=SomethingYouCanPickYourselfButSecure:)
+```
+
 ## Running
 
 ```sh
