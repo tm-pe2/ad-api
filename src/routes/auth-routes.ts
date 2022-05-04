@@ -1,6 +1,6 @@
 /** source/routes/clients.ts */
 import express from 'express';
-import controller from '../controller/auth';
+import controller from '../controllers/auth-controller';
 const router = express.Router();
 
 router.post('/login', controller.login);
