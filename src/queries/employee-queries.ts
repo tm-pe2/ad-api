@@ -4,7 +4,7 @@ export const employeeQueries = {
     `,
 
     getEmployeeById: `
-        SELECT * FROM users as u INNER JOIN employees e ON u.user_id = e.employee_id AND u.user_id = $1
+        SELECT * FROM users as u INNER JOIN employees e ON u.user_id = e.employee_id WHERE u.user_id = $1
     `,
     addEmployee: `
         INSERT INTO employees SET $1
