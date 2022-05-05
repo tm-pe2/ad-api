@@ -1,8 +1,9 @@
 import {Request, RequestHandler, Response} from 'express';
-import {customerSchema} from '../classes/customer';
+import {Customer, customerSchema} from '../classes/customer';
 import * as customerService from '../services/customer-service';
 import * as userService from '../services/user-service';
 import * as bcrypt from 'bcrypt';
+import * as employeeService from "../services/employee-service";
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -87,9 +88,10 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
+        const customer: Customer = await customerSchema.validateAsync(req.body);
 
+        const result = await customerService.updateCustomer(customer);
 
-        const result = "hoi";
         res.status(200).json({
             result
         });

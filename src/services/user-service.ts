@@ -19,7 +19,7 @@ export const getUserByEmail = async (email: User['email']) => {
 };
 
 export const insertUser = async (user: User) => {
-    const newUser = await execute<User>(userQueries.AddUser, [
+    const newUser = await execute<User[]>(userQueries.AddUser, [
         user.role_id,
         user.first_name,
         user.last_name,
@@ -31,7 +31,7 @@ export const insertUser = async (user: User) => {
         user.national_registry_number
     ], "rows");
 
-    return newUser.user_id;
+    return newUser[0].user_id;
 };
 
 export const updateUser = async (user: User) => {

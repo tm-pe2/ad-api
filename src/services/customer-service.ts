@@ -30,7 +30,7 @@ export const insertCustomer = async (customer: Customer) => {
     return rowCount > 0;
 };
 
-export const UpdateCustomer = async (customer: Customer) => {
+export const updateCustomer = async (customer: Customer) => {
     const rowCount = await execute<number>(customerQueries.UpdateCustomer, [
         customer.gas_type,
         customer.electricity_type,
