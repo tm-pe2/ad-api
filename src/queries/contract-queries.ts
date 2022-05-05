@@ -8,7 +8,8 @@ export const contractQueries = {
     `,
 
     addContract: `
-        INSERT INTO customercontracts VALUES (nextval('"CustomerContracts_ContractID_seq"'::regclass), $1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO customercontracts (start_date, end_date, customer_id, customer_type, advance_payment, price, tariff_id, estimation_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     `,
 
     updateContract: `
@@ -18,10 +19,10 @@ export const contractQueries = {
             end_date = $2,
             customer_id = $3,
             customer_type = $4,
-            advanced_payement = $5,
+            advance_payment = $5,
             price = $6,
             tariff_id = $7,
-            estimated_id = $8
+            estimation_id = $8
         WHERE contract_id = $9
     `,
 

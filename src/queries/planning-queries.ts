@@ -8,7 +8,8 @@ export const planningQueries = {
     `,
 
     addPlanning: `
-        INSERT INTO planning SET $1
+        INSERT INTO planning (employee_id, customer_id, date, status)
+            VALUES ($1, $2, $3, $4)
     `,
 
     updatePlanning: `

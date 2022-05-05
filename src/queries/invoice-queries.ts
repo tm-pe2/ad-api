@@ -8,7 +8,8 @@ export const invoiceQueries = {
     `,
 
     addInvoice: `
-        INSERT INTO invoices SET $1
+        INSERT INTO invoices (customer_id, supplier_id, creation_date, due_date, status_id, gas_amount, electricity_type, price, tax, start_date, end_date)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     `,
 
     updateInvoice: `

@@ -8,9 +8,11 @@ export const employeeQueries = {
     `,
 
     addEmployee: `
-        INSERT INTO employees VALUES (nextval('"Employees_EmployeeID_seq"'::regclass), $1, $2, $3, $4, $5, $6)
+        INSERT INTO employees (department, permissions, hire_date, gender, salary, user_id)
+            VALUES ($1, $2, $3, $4, $5, $6)
     `,
 
+    //TODO: update user in same query?
     updateEmployees: `
         UPDATE employees 
         SET 

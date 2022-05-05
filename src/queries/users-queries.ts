@@ -16,7 +16,8 @@ export const userQueries = {
     `,
 
     AddUser: `
-        INSERT INTO users VALUES (NEXTVAL('users_userid_seq'::regclass), $1, $2, $3, $4, $5, $6, $7, $8, $9)
+        INSERT INTO users (role_id, first_name, last_name, birth_date, address_id, email, phone_number, password, national_registry_number) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING user_id
     `,
 

@@ -8,7 +8,8 @@ export const supplierQueries = {
     `,
 
     addSupplier: `
-        INSERT INTO suppliers SET $1
+        INSERT INTO suppliers (name, supply_type, company_name, address_id)
+            VALUES ($1, $2, $3, $4)
     `,
 
     updateSupplier: `
@@ -17,7 +18,7 @@ export const supplierQueries = {
             name = $1,
             supply_type = $2,
             company_name = $3,
-            adress_id = $4
+            address_id = $4
         WHERE supplier_id = $5
     `,
 

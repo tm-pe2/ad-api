@@ -8,7 +8,8 @@ export const tariffQueries = {
     `,
 
     addTariff: `
-        INSERT INTO tariffs SET $1
+        INSERT INTO tariffs (small_ind, medium_ind, big_ind, small_comp, medium_comp, big_comp)
+            VALUES  ($1, $2, $3, $4, $5, $6)
     `,
 
     updateTariff: `

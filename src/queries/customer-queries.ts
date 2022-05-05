@@ -1,6 +1,7 @@
 export const customerQueries = {
     getAllCustomers: `
-        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.user_id
+        SELECT * FROM users as u 
+            INNER JOIN customers c ON u.user_id = c.user_id
     `,
 
     getCustomerById: `
@@ -10,11 +11,13 @@ export const customerQueries = {
     `,
 
     getCustomersContracts:`
-        SELECT u.user_id, u.first_name, u.last_name, u.role_id, c.contract_id FROM users as u LEFT JOIN customercontracts as c ON u.user_id = c.customer_id
+        SELECT u.user_id, u.first_name, u.last_name, u.role_id, c.contract_id FROM users as u 
+            LEFT JOIN customercontracts as c ON u.user_id = c.customer_id
     `,
 
     AddCustomer: `
-        INSERT INTO customers VALUES (NEXTVAL('"Customers_CustomerID_seq"'::regclass), $1, $2, $3, $4, $5)
+        INSERT INTO customers (gas_type, electricity_type, gas_meter_id, electricity_meter_id, user_id) 
+            VALUES ($1, $2, $3, $4, $5)
     `,
 
     UpdateCustomer: `
