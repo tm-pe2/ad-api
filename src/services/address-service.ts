@@ -7,12 +7,13 @@ export const getAllAddresses = async () => {
 };
 
 export const getAddressById = async (id: Address['address_id']) => {
-    const result = await execute<Address[]>(addressQueries.getAddressById, [id], "rows");
-    return result[0];
+    const addresses = await execute<Address[]>(addressQueries.getAddressById, [id], "rows");
+
+    return addresses[0];
 };
 
 export const insertAddress = async (address: Address) => {
-    const result = await execute<{ rowCount: number }>(addressQueries.addAddress, [
+    const rowCount = await execute<number>(addressQueries.addAddress, [
         address.city,
         address.street,
         address.house_number,
@@ -20,12 +21,13 @@ export const insertAddress = async (address: Address) => {
         address.country,
         address.start_date,
         address.end_date,
-    ]);
-    return result.rowCount > 0;
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const updateAddress = async (address: Address) => {
-    const result = await execute<{ rowCount: number }>(addressQueries.updateAddress, [
+    const rowCount = await execute<number>(addressQueries.updateAddress, [
         address.city,
         address.street,
         address.house_number,
@@ -33,12 +35,15 @@ export const updateAddress = async (address: Address) => {
         address.country,
         address.start_date,
         address.end_date,
+
         address.address_id
-    ]);
-    return result.rowCount > 0;
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const deleteAddressById = async (id: Address['address_id']) => {
-    const result = await execute<{ rowCount: number }>(addressQueries.deleteAddressById, [id]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(addressQueries.deleteAddressById, [id], "rowCount");
+
+    return rowCount > 0;
 };

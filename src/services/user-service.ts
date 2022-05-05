@@ -3,11 +3,13 @@ import {User} from "../classes/user";
 import {userQueries} from "../queries/users-queries";
 
 export const getAllUsers = async () => {
-    return execute<User[]>(userQueries.getAllUsers, []);
+    return await execute<User[]>(userQueries.getAllUsers, [], "rows");
 };
 
 export const getUserById = async (id: User['user_id']) => {
-    return execute<User>(userQueries.getUserById, [id]);
+    const users = await execute<User[]>(userQueries.getUserById, [id], "rows");
+
+    return users[0];
 };
 
 export const getUserByEmail = async (email: User['email']) => {
@@ -16,12 +18,8 @@ export const getUserByEmail = async (email: User['email']) => {
     return result[0];
 };
 
-export const getLastUserID = async () => {
-    return execute<User>(userQueries.getLastID, []);
-};
-
 export const insertUser = async (user: User) => {
-    const result = await execute<{ rows: any }>(userQueries.AddUser, [
+    const newUser = await execute<User>(userQueries.AddUser, [
         user.role_id,
         user.first_name,
         user.last_name,
@@ -31,13 +29,13 @@ export const insertUser = async (user: User) => {
         user.phone_number,
         user.password,
         user.national_registry_number
-    ]);
+    ], "rows");
 
-    return result.rows[0].user_id;
+    return newUser.user_id;
 };
 
 export const updateUser = async (user: User) => {
-    const result = await execute<{ rowCount: number }>(userQueries.UpdateUser, [
+    const rowCount = await execute<number>(userQueries.UpdateUser, [
         user.role_id,
         user.first_name,
         user.last_name,
@@ -46,12 +44,15 @@ export const updateUser = async (user: User) => {
         user.email,
         user.phone_number,
         user.password,
+
         user.user_id
-    ]);
-    return result.rowCount > 0;
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const deleteUser = async (id: User['user_id']) => {
-    const result = await execute<{ rowCount: number }>(userQueries.DeleteUserById, [id]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(userQueries.DeleteUserById, [id], "rowCount");
+
+    return rowCount > 0;
 };

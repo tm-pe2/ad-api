@@ -3,36 +3,39 @@ import {Planning} from "../classes/planning";
 import {planningQueries} from "../queries/planning-queries";
 
 export const getAllPlannings = async () => {
-    let plannings = execute<{rows: Planning[]}>(planningQueries.getAllPlannings, []);
-    console.log(plannings);
-    return (await plannings).rows;
+    return await execute<Planning[]>(planningQueries.getAllPlannings, [], "rows");
 };
 
 export const getPlanningById = async (id: Planning['planning_id']) => {
-    let planning = execute<{rows: Planning}>(planningQueries.getPlanningById, [id]);
-    console.log(planning);
-    return (await planning).rows;
+    const plannings = await execute<Planning[]>(planningQueries.getPlanningById, [id], "rows");
+
+    return plannings[0];
 };
 
 export const insertPlanning = async (planning: Planning) => {
-    const result = await execute<{ rowCount: number }>(planningQueries.addPlanning, [
-        planning
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(planningQueries.addPlanning, [
+        planning.employee_id,
+        planning.customer_id,
+        planning.date,
+        planning.status
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const updatePlanning = async (planning: Planning) => {
-    const result = await execute<{ rowCount: number }>(planningQueries.updatePlanning, [
+    const rowCount = await execute<number>(planningQueries.updatePlanning, [
         planning.employee_id,
         planning.customer_id,
         planning.date,
         planning.status,
+
         planning.planning_id
-    ]);
-    return result.rowCount > 0;
+    ], "rowCount");
+    return rowCount > 0;
 };
 
 export const deletePlanningById = async (id: Planning['planning_id']) => {
-    const result = await execute<{ rowCount: number }>(planningQueries.deletePlanningById, [id]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(planningQueries.deletePlanningById, [id], "rowCount");
+    return rowCount > 0;
 };

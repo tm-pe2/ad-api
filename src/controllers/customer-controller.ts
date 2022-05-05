@@ -87,41 +87,8 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        // // const usr = {
-        // //     "user_id": req.body.user_id,
-        // //     "role_id": req.body.role_id,
-        // //     "first_name": req.body.first_name,
-        // //     "last_name": req.body.last_name,
-        // //     "birth_date": req.body.birth_date,
-        // //     "address_id": req.body.address_id,
-        // //     "email": req.body.email,
-        // //     "phone_number": req.body.phone_number,
-        // //     "password": req.body.password,
-        // // }
-        //
-        // const userValidationResult = await userSchema.validateAsync(req.body.user);
-        // let user: User = userValidationResult;
-        //
-        // //generate the salt to hash the password
-        // const salt = await bcrypt.genSalt(10);
-        // user.password = await bcrypt.hash(userValidationResult.password,salt);
-        //
-        // const uesrUpdateResult = await userService.UpdateUser(user);
-        // if(uesrUpdateResult !== true)
-        // {
-        //     throw new Error("Update failed!");
-        // }
-        //
-        // const cus = {
-        //     "customer_id": Number(req.body.user_id),
-        //     "gas_type": req.body.gas_type,
-        //     "electricity_type": req.body.electricity_type
-        // }
-        // const customerValidationResult = await customerSchema.validateAsync(cus)
-        // let customer: Customer = customerValidationResult;
-        //
-        // //update customer
-        // const result = await customerService.UpdateCustomer(customer);
+
+
         const result = "hoi";
         res.status(200).json({
             result

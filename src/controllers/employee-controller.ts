@@ -73,6 +73,7 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response) =
 export const updateEmployee: RequestHandler = async (req: Request, res: Response) => {
     try {
         const employee: Employee = await employeeSchema.validateAsync(req.body);
+
         const result = await employeeService.updateEmployee(employee);
 
         res.status(200).json({
