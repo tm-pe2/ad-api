@@ -21,10 +21,10 @@ describe('Estimation Endpoints', () => {
 
     it('should fetch a single estimation', async () => {
         const response = await request(router)
-            .get(`/api/estimations/1`)
+            .get(`/api/estimations/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.estimation[0]).toHaveProperty('estimation_id', 1);
+        expect(response.body.estimation).toHaveProperty('estimation_id', 2);
     });
 
     it('should fetch all estimations', async () => {
@@ -38,7 +38,7 @@ describe('Estimation Endpoints', () => {
         const response = await request(router)
             .put(`/api/estimations/`)
             .send({
-                estimation_id: 5,
+                estimation_id: 2,
                 service_type: 2,
                 address_id: 1,
                 building_type: 2,
@@ -54,7 +54,7 @@ describe('Estimation Endpoints', () => {
 
     it('should delete an estimation', async () => {
         const response = await request(router)
-            .delete(`/api/estimations/4`);
+            .delete(`/api/estimations/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

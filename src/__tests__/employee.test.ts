@@ -49,10 +49,10 @@ describe('Employee Endpoints', () => {
 
     it('should fetch a single employee', async () => {
         const response = await request(router)
-            .get(`/api/employees/1`)
+            .get(`/api/employees/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.employee[0]).toHaveProperty('employee_id', 1);
+        expect(response.body.employee).toHaveProperty('employee_id', 2);
     });
 
     it('should fetch all employees', async () => {
@@ -66,7 +66,7 @@ describe('Employee Endpoints', () => {
         const response = await request(router)
             .put(`/api/employees/`)
             .send({
-                employee_id: 5,
+                employee_id: 2,
                 first_name: 'updatedTestFirst',
                 last_name: 'UpdatedTestLast',
                 birth_date: '1-1-2010',
@@ -85,7 +85,7 @@ describe('Employee Endpoints', () => {
 
     it('should delete an employee', async () => {
         const response = await request(router)
-            .delete(`/api/employees/4`);
+            .delete(`/api/employees/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

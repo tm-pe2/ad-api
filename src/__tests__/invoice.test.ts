@@ -24,10 +24,10 @@ describe('Invoice Endpoints', () => {
 
     it('should fetch a single invoice', async () => {
         const response = await request(router)
-            .get(`/api/invoices/1`)
+            .get(`/api/invoices/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.invoice[0]).toHaveProperty('invoice_id', 1);
+        expect(response.body.invoice).toHaveProperty('invoice_id', 2);
     });
 
     it('should fetch all invoices', async () => {
@@ -41,7 +41,7 @@ describe('Invoice Endpoints', () => {
         const response = await request(router)
             .put(`/api/invoices/`)
             .send({
-                invoice_id: 1,
+                invoice_id: 2,
                 customer_id: 1,
                 supplier_id: 1,
                 Date: '2022-04-01',
@@ -60,7 +60,7 @@ describe('Invoice Endpoints', () => {
 
     it('should delete an invoice', async () => {
         const response = await request(router)
-            .delete(`/api/invoices/4`);
+            .delete(`/api/invoices/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

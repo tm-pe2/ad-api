@@ -2,11 +2,11 @@ import request from "supertest";
 import router from "../server";
 
 describe('Customer Endpoints', () => {
-
     it('should create a new customer', async () => {
         const response = await request(router)
             .post('/api/customers')
             .send({
+                role_id: 1,
                 first_name: 'TestFirst',
                 last_name: 'TestLast',
                 birth_date: '2022-01-01',
@@ -14,8 +14,11 @@ describe('Customer Endpoints', () => {
                 email: 'test@test.com',
                 phone_number: '0123 456789',
                 password: 'Testpw123',
+                national_registry_number: '987654321',
                 gas_type: 1,
-                electricity_type: 2
+                electricity_type: 1,
+                gas_meter_id: 0,
+                electricity_meter_id: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -23,10 +26,10 @@ describe('Customer Endpoints', () => {
 
     it('should fetch a single customer', async () => {
         const response = await request(router)
-            .get(`/api/customers/1`)
+            .get(`/api/customers/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.customer[0]).toHaveProperty('customer_id', 1);
+        expect(response.body.customer).toHaveProperty('customer_id', 2);
     });
 
     it('should fetch all customers', async () => {
@@ -40,7 +43,7 @@ describe('Customer Endpoints', () => {
         const response = await request(router)
             .put(`/api/customers/`)
             .send({
-                customer_id: 1,
+                customer_id: 2,
                 first_name: 'UpdTestFirst',
                 last_name: 'UpdTestLast',
                 birth_date: '2025-01-01',
@@ -49,7 +52,9 @@ describe('Customer Endpoints', () => {
                 phone_number: '0123 456999',
                 password: 'Testpw12663',
                 gas_type: 2,
-                electricity_type: 3
+                electricity_type: 3,
+                gas_meter_id: 0,
+                electricity_meter_id: 1
             });
         expect(response?.statusCode).toEqual(200);
         expect(response?.body.result).toEqual(true);
@@ -57,7 +62,7 @@ describe('Customer Endpoints', () => {
 
     it('should delete a customer', async () => {
         const response = await request(router)
-            .delete(`/api/customers/4`);
+            .delete(`/api/customers/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

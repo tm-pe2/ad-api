@@ -52,7 +52,7 @@ describe('Address Endpoints', () => {
 
     it('should delete an address', async () => {
         const response = await request(router)
-            .delete(`/api/addresses/2`);
+            .delete(`/api/addresses/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

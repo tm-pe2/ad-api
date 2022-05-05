@@ -17,10 +17,10 @@ describe('Supplier Endpoints', () => {
 
     it('should fetch a single supplier', async () => {
         const response = await request(router)
-            .get(`/api/suppliers/1`)
+            .get(`/api/suppliers/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.supplier[0]).toHaveProperty('supplier_id', 1);
+        expect(response.body.supplier).toHaveProperty('supplier_id', 2);
     });
 
     it('should fetch all suppliers', async () => {
@@ -34,7 +34,7 @@ describe('Supplier Endpoints', () => {
         const response = await request(router)
             .put(`/api/suppliers/`)
             .send({
-                supplier_id: 5,
+                supplier_id: 2,
                 name: 'name1',
                 supply_type: 'type1',
                 company_name: 'companyName1',
@@ -46,7 +46,7 @@ describe('Supplier Endpoints', () => {
 
     it('should delete a supplier', async () => {
         const response = await request(router)
-            .delete(`/api/suppliers/4`);
+            .delete(`/api/suppliers/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

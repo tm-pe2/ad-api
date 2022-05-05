@@ -19,10 +19,10 @@ describe('Tariff Endpoints', () => {
 
     it('should fetch a single tariff', async () => {
         const response = await request(router)
-            .get(`/api/tariffs/1`)
+            .get(`/api/tariffs/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.tariff[0]).toHaveProperty('tariff_id', 1);
+        expect(response.body.tariff).toHaveProperty('tariff_id', 2);
     });
 
     it('should fetch all tariffs', async () => {
@@ -36,7 +36,7 @@ describe('Tariff Endpoints', () => {
         const response = await request(router)
             .put(`/api/tariffs/`)
             .send({
-                tariff_id: 5,
+                tariff_id: 2,
                 small_ind: 9,
                 medium_ind: 9,
                 big_ind: 9,
@@ -50,7 +50,7 @@ describe('Tariff Endpoints', () => {
 
     it('should delete a tariff', async () => {
         const response = await request(router)
-            .delete(`/api/tariffs/4`);
+            .delete(`/api/tariffs/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });
