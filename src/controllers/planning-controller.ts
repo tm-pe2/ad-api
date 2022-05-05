@@ -34,7 +34,6 @@ export const getPlanningById: RequestHandler = async (req: Request, res: Respons
 
 export const addPlanning: RequestHandler = async (req: Request, res: Response) => {
     try {
-
         //validate the request body
         const addPlanningSchema = planningSchema.fork('planning_id', field => field.optional());
         let planning: Planning = await addPlanningSchema.validateAsync(req.body);

@@ -3,7 +3,6 @@ import {Customer, customerSchema} from '../classes/customer';
 import * as customerService from '../services/customer-service';
 import * as userService from '../services/user-service';
 import * as bcrypt from 'bcrypt';
-import * as employeeService from "../services/employee-service";
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -105,11 +104,9 @@ export const updateCustomer: RequestHandler = async (req: Request, res: Response
 
 export const DeleteCustomerById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usrRes = await userService.deleteUser(Number(req.body.id));
         const result = await customerService.deleteCustomer(Number(req.params.id));
 
         res.status(200).json({
-            usrRes,
             result
         });
     } catch (error) {

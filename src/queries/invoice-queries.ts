@@ -16,9 +16,9 @@ export const invoiceQueries = {
         UPDATE invoices SET
             customer_id = $1,
             supplier_id = $2,
-            date = $3,
+            creation_date = $3,
             due_date = $4,
-            status = $5,
+            status_id = $5,
             gas_amount = $6,
             electricity_type = $7,
             price = $8,

@@ -12,6 +12,6 @@ export const planningSchema = Joi.object({
     planning_id: Joi.number().integer().min(0).required(),
     employee_id: Joi.number().integer().min(0).required(),
     customer_id: Joi.number().integer().min(0).required(),
-    Date: Joi.date().min('1-1-1900').required(),
-    status_id: Joi.number().required()
+    date: Joi.date().min('1-1-1900').required(),
+    status: Joi.number().required()
 });

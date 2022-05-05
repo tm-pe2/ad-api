@@ -8,7 +8,7 @@ describe('Invoice Endpoints', () => {
             .send({
                 customer_id: 1,
                 supplier_id: 1,
-                Date: '2022-04-01',
+                creation_date : '2022-04-01',
                 due_date: '2022-05-01',
                 status_id: 1,
                 gas_amount: 100.01,
@@ -44,7 +44,7 @@ describe('Invoice Endpoints', () => {
                 invoice_id: 2,
                 customer_id: 1,
                 supplier_id: 1,
-                Date: '2022-04-01',
+                creation_date: '2022-04-01',
                 due_date: '2027-05-01',
                 status_id: 1,
                 gas_amount: 189.99,

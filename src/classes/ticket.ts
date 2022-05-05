@@ -17,7 +17,7 @@ export const ticketSchema = Joi.object({
     assigned_tech: Joi.number().required(),
     title: Joi.string().required(),
     description: Joi.string().required(),
-    Date: Joi.date().min('1-1-1900').required(),
+    date: Joi.date().min('1-1-1900').required(),
     status_id: Joi.number().required(),
     is_employee: Joi.bool().required()
 })

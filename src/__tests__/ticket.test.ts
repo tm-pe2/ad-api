@@ -12,7 +12,7 @@ describe('Ticket Endpoints', () => {
                 description: 'descr test',
                 date: '2012-01-01',
                 status_id: 0,
-                is_employee: 1
+                is_employee: true
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -42,9 +42,9 @@ describe('Ticket Endpoints', () => {
                 assigned_tech: 3,
                 title: 'updated title test',
                 description: 'updates descr test',
-                Date: '2012-01-01',
+                date: '2012-01-01',
                 status_id: 1,
-                is_employee: 0
+                is_employee: true
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
