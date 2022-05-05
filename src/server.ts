@@ -18,23 +18,13 @@ import * as DBConnector from './utils/mysql.connector';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
 import bodyParser from 'body-parser';
-
 import cors from 'cors';
-
 import dotenv from 'dotenv';
-import { Env } from './utils/env';
+import reportingRoutes from './routes/reporting';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
 }
-
-try {
-    Env.validateMandatoryKeys();
-} catch (err) {
-    console.error('.env not properly configured: ', err);
-    process.exit(-1);
-}
-
 
 const router: Express = express();
 
@@ -82,7 +72,8 @@ router.use('/api/',
     planningRoutes,
     tariffRoutes,
     supplierRoutes,
-    ticketRoutes
+    ticketRoutes,
+    reportingRoutes
 );
 
 /** Error handling */

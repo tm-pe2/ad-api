@@ -7,7 +7,7 @@ export function init() {
         const credentials = {
             user: "ad",
             host: "10.97.0.10",
-            database: "ADWEBSITE",
+            database: "TestADwebsite",
             password: "Ad2022%",
             port: 5432,
         };
