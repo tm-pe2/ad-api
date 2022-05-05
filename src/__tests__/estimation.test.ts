@@ -6,14 +6,14 @@ describe('Estimation Endpoints', () => {
         const response = await request(router)
             .post('/api/estimations')
             .send({
-                ServiceType: 1,
-                AdressID: 1,
-                BuildingType: 1,
-                FamilySize: 3,
-                PastConsumption: 999,
-                ElectricCar: 1,
-                Welness: 0,
-                HeatingType: 1
+                service_type: 1,
+                address_id: 1,
+                building_type: 1,
+                family_size: 3,
+                past_consumption: 999,
+                electric_car: 1,
+                wellness: 0,
+                heating_type: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -24,7 +24,7 @@ describe('Estimation Endpoints', () => {
             .get(`/api/estimations/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.estimation[0]).toHaveProperty('EstimatedID', 1);
+        expect(response.body.estimation[0]).toHaveProperty('estimation_id', 1);
     });
 
     it('should fetch all estimations', async () => {
@@ -38,15 +38,15 @@ describe('Estimation Endpoints', () => {
         const response = await request(router)
             .put(`/api/estimations/`)
             .send({
-                EstimatedID: 5,
-                ServiceType: 2,
-                AdressID: 1,
-                BuildingType: 2,
-                FamilySize: 9,
-                PastConsumption: 1000,
-                ElectricCar: 2,
-                Welness: 1,
-                HeatingType: 2
+                estimation_id: 5,
+                service_type: 2,
+                address_id: 1,
+                building_type: 2,
+                family_size: 9,
+                past_consumption: 1000,
+                electric_car: 2,
+                wellness: 1,
+                heating_type: 2
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

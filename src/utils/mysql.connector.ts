@@ -1,15 +1,26 @@
+import dotenv from 'dotenv';
 import { Pool } from 'pg';
+
+const path = require('path')
+
+if (process.env.NODE_ENV == 'test') {
+    dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
+}
+else {
+    dotenv.config();
+}
 
 let pool : Pool;
 
 export function init() {
     try {
+
         const credentials = {
-            user: "ad",
-            host: "10.97.0.10",
-            database: "ADWEBSITE",
-            password: "Ad2022%",
-            port: 5432,
+            user: process.env.DB_USER ?? '',
+            host: process.env.DB_HOST ?? '',
+            database: process.env.DB_DATABASE ?? '',
+            password: process.env.DB_PASSWORD ?? '',
+            port: Number(process.env.DB_PORT),
         };
 
         pool = new Pool(credentials);
@@ -30,7 +41,7 @@ export function end() {
 }
 
 
-export const execute = <T>(query: string, params: any[]): Promise<T> => {
+export const execute = <T>(query: string, params: any[], option?: string): Promise<T> => {
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
 
@@ -38,6 +49,9 @@ export const execute = <T>(query: string, params: any[]): Promise<T> => {
             pool.query(query, params, (error, results: any) => {
                 if (error)
                     reject(error);
+
+                if(option)
+                    resolve(results[option]);
                 else
                     resolve(results);
             });

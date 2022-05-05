@@ -1,10 +1,12 @@
 export const customerQueries = {
     getAllCustomers: `
-        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.customer_id
+        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.user_id
     `,
 
     getCustomerById: `
-        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.customer_id WHERE u.user_id = $1
+        SELECT * FROM customers c
+            INNER JOIN users u ON u.user_id = c.user_id
+        WHERE c.customer_id = $1
     `,
 
     getCustomersContracts:`
@@ -12,7 +14,7 @@ export const customerQueries = {
     `,
 
     AddCustomer: `
-        INSERT INTO customers SET $1
+        INSERT INTO customers VALUES (NEXTVAL('"Customers_CustomerID_seq"'::regclass), $1, $2, $3, $4, $5)
     `,
 
     UpdateCustomer: `
@@ -20,7 +22,9 @@ export const customerQueries = {
         SET 
             gas_type = $1,
             electricity_type = $2
-        WHERE customer_id = $3
+            gas_meter_id = $3
+            electricity_meter_id = $4
+        WHERE customer_id = $5
     `,
 
     DeleteCustomerById: `

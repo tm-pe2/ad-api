@@ -6,10 +6,10 @@ describe('Supplier Endpoints', () => {
         const response = await request(router)
             .post('/api/suppliers')
             .send({
-                Name: 'name1',
-                SupplyType: 'type1',
-                CompanyName: 'companyName1',
-                AdressID:  1
+                name: 'name1',
+                supply_type: 'type1',
+                company_name: 'companyName1',
+                address_id:  1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -20,7 +20,7 @@ describe('Supplier Endpoints', () => {
             .get(`/api/suppliers/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.supplier[0]).toHaveProperty('SupplierID', 1);
+        expect(response.body.supplier[0]).toHaveProperty('supplier_id', 1);
     });
 
     it('should fetch all suppliers', async () => {
@@ -34,11 +34,11 @@ describe('Supplier Endpoints', () => {
         const response = await request(router)
             .put(`/api/suppliers/`)
             .send({
-                SupplierID: 5,
-                Name: 'name1',
-                SupplyType: 'type1',
-                CompanyName: 'companyName1',
-                AdressID:  1
+                supplier_id: 5,
+                name: 'name1',
+                supply_type: 'type1',
+                company_name: 'companyName1',
+                address_id:  1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

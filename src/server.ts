@@ -2,8 +2,8 @@ import http from 'http';
 import express, {Express} from 'express';
 import {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
-import customerRoutes from './routes/customer-routes';
-import invoiceRoutes from './routes/invoice-routes';
+import customerRoutes from './routes/customer-routes'
+import invoiceRoutes from './routes/invoice-routes'
 import contractRoutes from './routes/contract-routes';
 import addressRoutes from './routes/address-routes';
 import employeeRoutes from './routes/employee-routes';

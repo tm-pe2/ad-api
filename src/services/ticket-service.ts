@@ -8,7 +8,7 @@ export const getAllTickets = async () => {
     return (await tickets).rows;
 };
 
-export const getTicketById = async (id: Ticket['TicketID']) => {
+export const getTicketById = async (id: Ticket['ticket_id']) => {
     let ticket = execute<{rows: Ticket}>(ticketQueries.getTicketById, [id]);
     console.log(ticket);
     return (await ticket).rows;
@@ -23,19 +23,19 @@ export const insertTicket = async (ticket: Ticket) => {
 
 export const updateTicket = async (ticket: Ticket) => {
     const result = await execute<{ rowCount: number }>(ticketQueries.updateTicket, [
-        ticket.IssueID,
-        ticket.AssignedTech,
-        ticket.Title,
-        ticket.Description,
-        ticket.Date,
-        ticket.Status,
-        ticket.Employee,
-        ticket.TicketID
+        ticket.issue_id,
+        ticket.assigned_tech,
+        ticket.title,
+        ticket.description,
+        ticket.date,
+        ticket.status_id,
+        ticket.is_employee,
+        ticket.ticket_id
     ]);
     return result.rowCount > 0;
 };
 
-export const deleteTicketById = async (id: Ticket['TicketID']) => {
+export const deleteTicketById = async (id: Ticket['ticket_id']) => {
     const result = await execute<{ rowCount: number }>(ticketQueries.deleteTicketById, [id]);
     return result.rowCount > 0;
 };

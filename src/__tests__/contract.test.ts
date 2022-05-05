@@ -6,14 +6,14 @@ describe('Contract Endpoints', () => {
         const response = await request(router)
             .post('/api/contracts')
             .send({
-                StartDate: '2022-04-12',
-                EndDate: '2023-04-12',
-                CustomerID: '1',
-                CustomerType: 'mastercard',
-                AdvancedPayement: '1000',
-                Price: '999.99',
-                TarifID: 1,
-                EstimatedID: 1
+                start_date: '2022-04-12',
+                end_date: '2023-04-12',
+                customer_id: '1',
+                customer_type: 'mastercard',
+                advance_payment: '1000',
+                price: '999.99',
+                tariff_id: 1,
+                estimation_id: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -25,7 +25,7 @@ describe('Contract Endpoints', () => {
             .get(`/api/contracts/1`);
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.contract[0]).toHaveProperty('ContractID', 1);
+        expect(response.body.contract[0]).toHaveProperty('contract_id', 1);
     });
 
     it('should fetch all contracts', async () => {
@@ -39,15 +39,15 @@ describe('Contract Endpoints', () => {
         const response = await request(router)
             .put(`/api/contracts/`)
             .send({
-                ContractID: 5,
-                StartDate: '2022-04-12',
-                EndDate: '2023-04-12',
-                CustomerID: '5',
-                CustomerType: 'mastercard',
-                AdvancedPayement: '1000',
-                Price: '999.99',
-                TarifID: 2,
-                EstimatedID: 1
+                contract_id: 5,
+                start_date: '2022-04-12',
+                end_date: '2023-04-12',
+                customer_id: '5',
+                customer_type: 'mastercard',
+                advance_payment: '1000',
+                price: '999.99',
+                tariff_id: 2,
+                estimation_id: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

@@ -6,12 +6,12 @@ describe('Ticket Endpoints', () => {
         const response = await request(router)
             .post('/api/tickets')
             .send({
-                IssueID: 1,
-                AssignedTech: 1,
-                Title: 'test',
-                Description: 'descr test',
+                issue_id: 1,
+                assigned_tech: 1,
+                title: 'test',
+                description: 'descr test',
                 Date: '2012-01-01',
-                Status: 0,
+                status_id: 0,
                 Employee: 1
             });
         expect(response.statusCode).toEqual(200);
@@ -23,7 +23,7 @@ describe('Ticket Endpoints', () => {
             .get(`/api/tickets/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.ticket[0]).toHaveProperty('TicketID', 1);
+        expect(response.body.ticket[0]).toHaveProperty('ticket_id', 1);
     });
 
     it('should fetch all tickets', async () => {
@@ -37,13 +37,13 @@ describe('Ticket Endpoints', () => {
         const response = await request(router)
             .put(`/api/tickets/`)
             .send({
-                TicketID: 5,
-                IssueID: 3,
-                AssignedTech: 3,
-                Title: 'updated title test',
-                Description: 'updates descr test',
+                ticket_id: 5,
+                issue_id: 3,
+                assigned_tech: 3,
+                title: 'updated title test',
+                description: 'updates descr test',
                 Date: '2012-01-01',
-                Status: 1,
+                status_id: 1,
                 Employee: 2
             });
         expect(response.statusCode).toEqual(200);

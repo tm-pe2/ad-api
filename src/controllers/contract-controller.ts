@@ -34,7 +34,7 @@ export const getContractById: RequestHandler = async (req: Request, res: Respons
 export const addContract: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addContractSchema = contractSchema.fork('ContractID', field => field.optional());
+        const addContractSchema = contractSchema.fork('contract_id', field => field.optional());
         let contract: Contract = await addContractSchema.validateAsync(req.body);
         const result = await contractService.insertContract(contract);
 

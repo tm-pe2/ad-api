@@ -6,7 +6,7 @@ export const getAllCustomers = async () => {
     return execute<Customer[]>(customerQueries.getAllCustomers, []);
 };
 
-export const getCustomerById = async (id: Customer['CustomerID']) => {
+export const getCustomerById = async (id: Customer['customer_id']) => {
     return execute<Customer>(customerQueries.getCustomerById, [id]);
 };
 
@@ -16,21 +16,29 @@ export const getCustomersContracts = async () => {
 
 export const insertCustomer = async (customer: Customer) => {
     const result = await execute<{ rowCount: number }>(customerQueries.AddCustomer, [
-        customer
+        customer.gas_type,
+        customer.electricity_type,
+        customer.gas_meter_id,
+        customer.electricity_meter_id,
+        customer.user_id
     ]);
     return result.rowCount > 0;
 };
 
 export const UpdateCustomer = async (customer: Customer) => {
     const result = await execute<{ rowCount: number }>(customerQueries.UpdateCustomer, [
-        customer.GasType,
-        customer.Electricitytype,
-        customer.CustomerID
+        customer.gas_type,
+        customer.electricity_type,
+        customer.gas_meter_id,
+        customer.electricity_meter_id,
+        customer.user_id,
+
+        customer.customer_id
     ]);
     return result.rowCount > 0;
 };
 
-export const deleteCustomer = async (id: Customer['CustomerID']) => {
+export const deleteCustomer = async (id: Customer['customer_id']) => {
     const result = await execute<{ rowCount: number }>(customerQueries.DeleteCustomerById, [
         id
     ]);

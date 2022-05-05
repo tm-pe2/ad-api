@@ -6,17 +6,17 @@ describe('Invoice Endpoints', () => {
         const response = await request(router)
             .post('/api/invoices')
             .send({
-                CustomerID: 1,
-                SupplierID: 1,
+                customer_id: 1,
+                supplier_id: 1,
                 Date: '2022-04-01',
-                DueDate: '2022-05-01',
-                Status: 1,
-                GasAmount: 100.01,
-                ElectricityType: 1,
-                Price: 991,
-                Tax: 21,
-                StartDate: '2022-01-01',
-                EndDate: '2023-01-01'
+                due_date: '2022-05-01',
+                status_id: 1,
+                gas_amount: 100.01,
+                electricity_type: 1,
+                price: 991,
+                tax: 21,
+                start_date: '2022-01-01',
+                end_date: '2023-01-01'
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -27,7 +27,7 @@ describe('Invoice Endpoints', () => {
             .get(`/api/invoices/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.invoice[0]).toHaveProperty('InvoiceID', 1);
+        expect(response.body.invoice[0]).toHaveProperty('invoice_id', 1);
     });
 
     it('should fetch all invoices', async () => {
@@ -41,18 +41,18 @@ describe('Invoice Endpoints', () => {
         const response = await request(router)
             .put(`/api/invoices/`)
             .send({
-                InvoiceID: 1,
-                CustomerID: 1,
-                SupplierID: 1,
+                invoice_id: 1,
+                customer_id: 1,
+                supplier_id: 1,
                 Date: '2022-04-01',
-                DueDate: '2027-05-01',
-                Status: 1,
-                GasAmount: 189.99,
-                ElectricityType: 1,
-                Price: 1000.08,
-                Tax: 17,
-                StartDate: '2022-01-01',
-                EndDate: '2024-01-01'
+                due_date: '2027-05-01',
+                status_id: 1,
+                gas_amount: 189.99,
+                electricity_type: 1,
+                price: 1000.08,
+                tax: 17,
+                start_date: '2022-01-01',
+                end_date: '2024-01-01'
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

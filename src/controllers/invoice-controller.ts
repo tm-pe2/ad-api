@@ -35,7 +35,7 @@ export const getInvoiceById: RequestHandler = async (req: Request, res: Response
 export const addInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addInvoiceSchema = invoiceSchema.fork('InvoiceID', field => field.optional());
+        const addInvoiceSchema = invoiceSchema.fork('invoice_id', field => field.optional());
         let invoice: Invoice = await addInvoiceSchema.validateAsync(req.body);
 
         const result = await invoiceService.insertInvoice(invoice);

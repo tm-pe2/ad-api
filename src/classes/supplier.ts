@@ -1,18 +1,18 @@
 import * as Joi from 'joi';
 
 export interface Supplier {
-    SupplierID: number,
-    Name: string,
-    SupplyType: string,
-    CompanyName: string,
-    AdressID: number
+    supplier_id: number,
+    name: string,
+    supply_type: string,
+    company_name: string,
+    address_id: number
 }
 
 export const supplierSchema = Joi.object({
-    SupplierID: Joi.number().integer().min(0).required(),
-    Name: Joi.string().required(),
-    SupplyType: Joi.string().required(),
-    CompanyName: Joi.string().required(),
-    AdressID: Joi.number().integer().min(0).required()
+    supplier_id: Joi.number().integer().min(0).required(),
+    name: Joi.string().required(),
+    supply_type: Joi.string().required(),
+    company_name: Joi.string().required(),
+    address_id: Joi.number().integer().min(0).required()
 });
 

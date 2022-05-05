@@ -8,7 +8,7 @@ export const contractQueries = {
     `,
 
     addContract: `
-        INSERT INTO customercontracts SET $1
+        INSERT INTO customercontracts VALUES (nextval('"CustomerContracts_ContractID_seq"'::regclass), $1, $2, $3, $4, $5, $6, $7, $8)
     `,
 
     updateContract: `

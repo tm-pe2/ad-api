@@ -1,23 +1,23 @@
 import * as Joi from 'joi';
 
 export interface Address {
-    AdressID: number,
-    City: string,
-    Street: string,
-    HouseNumber: string,
-    PostalCode: string,
-    Country: string,
-    StartDate: Date,
-    EndDate: Date  
+    address_id: number,
+    city: string,
+    street: string,
+    house_number: string,
+    postal_code: string,
+    country: string,
+    start_date: Date,
+    end_date: Date
 }
 
 export const addressSchema = Joi.object({
-    AdressID: Joi.number().integer().min(0).required(),
-    City: Joi.string().required(),
-    Street:  Joi.string().required(),
-    HouseNumber:  Joi.string().required(),
-    PostalCode:  Joi.string().required(),
-    Country:  Joi.string().required(),
-    StartDate: Joi.date().min('1-1-2000'),
-    EndDate: Joi.date()
+    address_id: Joi.number().integer().min(0).required(),
+    city: Joi.string().required(),
+    street:  Joi.string().required(),
+    house_number:  Joi.string().required(),
+    postal_code:  Joi.string().required(),
+    country:  Joi.string().required(),
+    start_date: Joi.date().min('1-1-2000'),
+    end_date: Joi.date()
 });

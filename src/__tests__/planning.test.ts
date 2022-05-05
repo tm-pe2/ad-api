@@ -6,10 +6,10 @@ describe('Planning Endpoints', () => {
         const response = await request(router)
             .post('/api/plannings')
             .send({
-                EmployeeID: 1,
-                CustomerID: 1,
+                employee_id: 1,
+                customer_id: 1,
                 Date: '2022-04-13',
-                Status: 1
+                status_id: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -20,7 +20,7 @@ describe('Planning Endpoints', () => {
             .get(`/api/plannings/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.planning[0]).toHaveProperty('PlanningID', 1);
+        expect(response.body.planning[0]).toHaveProperty('planning_id', 1);
     });
 
     it('should fetch all plannings', async () => {
@@ -34,11 +34,11 @@ describe('Planning Endpoints', () => {
         const response = await request(router)
             .put(`/api/plannings/`)
             .send({
-                PlanningID: 5,
-                EmployeeID: 1,
-                CustomerID: 1,
+                planning_id: 5,
+                employee_id: 1,
+                customer_id: 1,
                 Date: '2024-05-14',
-                Status: 0
+                status_id: 0
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

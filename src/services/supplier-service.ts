@@ -8,7 +8,7 @@ export const getAllSuppliers = async () => {
     return (await suppliers).rows;
 };
 
-export const getSupplierById = async (id: Supplier['SupplierID']) => {
+export const getSupplierById = async (id: Supplier['supplier_id']) => {
     let supplier = execute<{rows: Supplier}>(supplierQueries.getSupplierById, [id]);
     console.log(supplier);
     return (await supplier).rows;
@@ -23,16 +23,16 @@ export const insertSupplier = async (supplier: Supplier) => {
 
 export const updateSupplier = async (supplier: Supplier) => {
     const result = await execute<{ rowCount: number }>(supplierQueries.updateSupplier, [
-        supplier.Name,
-        supplier.SupplyType,
-        supplier.CompanyName,
-        supplier.AdressID,
-        supplier.SupplierID
+        supplier.name,
+        supplier.supply_type,
+        supplier.company_name,
+        supplier.address_id,
+        supplier.supplier_id
     ]);
     return result.rowCount > 0;
 };
 
-export const deleteSupplierById = async (id: Supplier['SupplierID']) => {
+export const deleteSupplierById = async (id: Supplier['supplier_id']) => {
     const result = await execute<{ rowCount: number }>(supplierQueries.deleteSupplierById, [id]);
     return result.rowCount > 0;
 };

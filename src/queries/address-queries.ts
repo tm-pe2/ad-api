@@ -8,11 +8,11 @@ export const addressQueries = {
     `,
 
     addAddress: `
-        INSERT INTO adsress SET $1
+        INSERT INTO address VALUES (NEXTVAL('"Adress_AdressID_seq"'::regclass), $1, $2, $3, $4, $5, $6, $7)
     `,
 
     updateAddress: `
-        UPDATE adsress 
+        UPDATE address 
         SET 
             city = $1,
             street = $2,

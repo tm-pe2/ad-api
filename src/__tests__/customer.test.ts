@@ -7,15 +7,15 @@ describe('Customer Endpoints', () => {
         const response = await request(router)
             .post('/api/customers')
             .send({
-                FirstName: 'TestFirst',
-                LastName: 'TestLast',
-                BirthDate: '2022-01-01',
-                AdressID: 1,
-                Email: 'test@test.com',
-                PhoneNumber: '0123 456789',
-                Password: 'Testpw123',
-                GasType: 1,
-                Electricitytype: 2
+                first_name: 'TestFirst',
+                last_name: 'TestLast',
+                birth_date: '2022-01-01',
+                address_id: 1,
+                email: 'test@test.com',
+                phone_number: '0123 456789',
+                password: 'Testpw123',
+                gas_type: 1,
+                electricity_type: 2
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -26,7 +26,7 @@ describe('Customer Endpoints', () => {
             .get(`/api/customers/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.customer[0]).toHaveProperty('CustomerID', 1);
+        expect(response.body.customer[0]).toHaveProperty('customer_id', 1);
     });
 
     it('should fetch all customers', async () => {
@@ -40,16 +40,16 @@ describe('Customer Endpoints', () => {
         const response = await request(router)
             .put(`/api/customers/`)
             .send({
-                CustomerID: 1,
-                FirstName: 'UpdTestFirst',
-                LastName: 'UpdTestLast',
-                BirthDate: '2025-01-01',
-                AdressID: 1,
-                Email: 'updtest@test.com',
-                PhoneNumber: '0123 456999',
-                Password: 'Testpw12663',
-                GasType: 2,
-                Electricitytype: 3
+                customer_id: 1,
+                first_name: 'UpdTestFirst',
+                last_name: 'UpdTestLast',
+                birth_date: '2025-01-01',
+                address_id: 1,
+                email: 'updtest@test.com',
+                phone_number: '0123 456999',
+                password: 'Testpw12663',
+                gas_type: 2,
+                electricity_type: 3
             });
         expect(response?.statusCode).toEqual(200);
         expect(response?.body.result).toEqual(true);

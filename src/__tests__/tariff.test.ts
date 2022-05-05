@@ -6,12 +6,12 @@ describe('Tariff Endpoints', () => {
         const response = await request(router)
             .post('/api/tariffs')
             .send({
-                SmallInd: 1,
-                MediumInd: 1,
-                BigInd: 1,
-                SmallComp: 1,
-                MediumComp: 1,
-                BigComp: 1
+                small_ind: 1,
+                medium_ind: 1,
+                big_ind: 1,
+                small_comp: 1,
+                medium_comp: 1,
+                big_comp: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -22,7 +22,7 @@ describe('Tariff Endpoints', () => {
             .get(`/api/tariffs/1`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.tariff[0]).toHaveProperty('TarifID', 1);
+        expect(response.body.tariff[0]).toHaveProperty('tariff_id', 1);
     });
 
     it('should fetch all tariffs', async () => {
@@ -36,13 +36,13 @@ describe('Tariff Endpoints', () => {
         const response = await request(router)
             .put(`/api/tariffs/`)
             .send({
-                TarifID: 5,
-                SmallInd: 9,
-                MediumInd: 9,
-                BigInd: 9,
-                SmallComp: 9,
-                MediumComp: 9,
-                BigComp: 9
+                tariff_id: 5,
+                small_ind: 9,
+                medium_ind: 9,
+                big_ind: 9,
+                small_comp: 9,
+                medium_comp: 9,
+                big_comp: 9
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
