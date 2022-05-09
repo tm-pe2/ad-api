@@ -42,7 +42,7 @@ describe('Contract Endpoints', () => {
                 contract_id: 2,
                 start_date: '2022-04-12',
                 end_date: '2023-04-12',
-                customer_id: '5',
+                customer_id: 2,
                 customer_type: 'mastercard',
                 advance_payment: '1000',
                 price: '999.99',

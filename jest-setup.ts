@@ -54,11 +54,13 @@ const insertDummyDataQuery = `
         ('supplier2', 'supplyType2', 'companyName2', 2),
         ('supplier3', 'supplyType3', 'companyName3', 3);
         
-    INSERT INTO tariffs (small_ind, medium_ind, big_ind, small_comp, medium_comp, big_comp)
+    INSERT INTO tariffs (customer_type, value)
         VALUES 
-        (10, 20, 30, 40, 50, 60),
-        (15, 25, 35, 45, 55, 65),
-        (20, 30, 40, 50, 60, 70);
+        ('customer_type1', 10),
+        ('customer_type2', 20),
+        ('customer_type3', 30),
+        ('customer_type4', 40),
+        ('customer_type5', 50);
         
     INSERT INTO tickets (issue_id, assigned_tech, title, description, date, is_employee)
         VALUES 
@@ -80,9 +82,9 @@ const insertDummyDataQuery = `
         
     INSERT INTO customercontracts (start_date, end_date, customer_id, customer_type, advance_payment, price, tariff_id, estimation_id)
         VALUES 
-        ('2000-01-01', '2001-01-01', 1, 'customerType1', 1000, 1200, 1, 1),
-        ('2001-01-01', '2002-01-01', 2, 'customerType2', 2000, 2200, 2, 2),
-        ('2002-01-01', '2003-01-01', 3, 'customerType3', 3000, 3200, 3, 3);
+        ('2000-01-01', '2005-01-01', 1, 'customerType1', 1000, 1200, 1, 1),
+        ('2022-02-01', '2023-02-01', 2, 'customerType2', 2000, 2200, 2, 2),
+        ('2021-01-01', '2025-01-01', 3, 'customerType3', 3000, 3200, 4, 3);
         
     INSERT INTO planning (employee_id, customer_id, date, status)
         VALUES 

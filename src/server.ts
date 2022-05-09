@@ -23,6 +23,7 @@ import cors from 'cors';
 
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
+import {generateEstimationInvoices} from "./utils/generate-invoice";
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -62,6 +63,15 @@ router.use((req: Request, res: Response, next: NextFunction) => {
         return res.status(200).json({});
     }
     next();
+});
+
+const schedule = require('node-schedule');
+
+const job = schedule.scheduleJob('*/1 * * * *', async function(){
+    console.log('Should run every 1 minutes! - ' + new Date());
+    let success = await generateEstimationInvoices(new Date());
+
+    console.log(success);
 });
 
 // create database pool

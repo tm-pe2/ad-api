@@ -8,27 +8,36 @@ export const invoiceQueries = {
     `,
 
     addInvoice: `
-        INSERT INTO invoices (customer_id, supplier_id, creation_date, due_date, status_id, gas_amount, electricity_type, price, tax, start_date, end_date)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        INSERT INTO invoices (customer_id, creation_date, due_date, status_id, price, start_date, end_date, tariff_id)
+            VALUES ($1, $2, $3, $4, $5, $6)
     `,
 
-    updateInvoice: `
-        UPDATE invoices SET
-            customer_id = $1,
-            supplier_id = $2,
-            creation_date = $3,
-            due_date = $4,
-            status_id = $5,
-            gas_amount = $6,
-            electricity_type = $7,
-            price = $8,
-            tax = $9,
-            start_date = $10,
-            end_date = $11
-        WHERE invoice_id = $12
+    addAdvanceInvoice: `
+        INSERT INTO advance_invoices (invoice_id, estimated_consumption)
+            VALUES ($1, $2)
     `,
 
-    deleteInvoiceById: `
-        DELETE FROM invoices WHERE invoice_id = $1
-    `
+    addAnnualInvoice: `
+        INSERT INTO annual_invoices (invoice_id, actual_consumption, advances_paid)
+            VALUES ($1, $2, $3)
+    `,
+
+    // updateInvoice: `
+    //     UPDATE invoices SET
+    //         customer_id = $1,
+    //         creation_date = $3,
+    //         due_date = $4,
+    //         status_id = $5,
+    //
+    //
+    //         price = $8,
+    //         tax = $9,
+    //         start_date = $10,
+    //         end_date = $11
+    //     WHERE invoice_id = $12
+    // `,
+    //
+    // deleteInvoiceById: `
+    //     DELETE FROM invoices WHERE invoice_id = $1
+    // `
 };

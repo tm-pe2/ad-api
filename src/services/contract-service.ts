@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {Contract} from "../classes/contracts";
 import {contractQueries} from "../queries/contract-queries";
+import {GenerateInvoiceData} from "../classes/generate-invoice-data";
 
 export const getAllContracts = async () => {
     return await execute<Contract[]>(contractQueries.getAllContracts, [], "rows");
@@ -47,4 +48,8 @@ export const deleteContract = async (id: Contract['contract_id']) => {
     const rowCount = await execute<number>(contractQueries.deleteContractById, [id], "rowCount");
 
     return rowCount > 0;
+};
+
+export const getAllActiveContracts = async () => {
+    return await execute<GenerateInvoiceData[]>(contractQueries.getAllActiveContracts, [new Date()], "rows");
 };
