@@ -1,5 +1,6 @@
 import express from 'express';
 import * as invoiceController from '../controllers/invoice-controller';
+import * as auth from "../middleware/auth"
 
 const router = express.Router();
 

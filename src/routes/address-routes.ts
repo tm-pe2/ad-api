@@ -1,5 +1,6 @@
 import express from 'express';
 import * as addressController from '../controllers/address-controller';
+import * as auth from "../middleware/auth"
 
 const router = express.Router();
 

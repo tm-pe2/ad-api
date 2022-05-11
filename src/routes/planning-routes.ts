@@ -1,6 +1,6 @@
 import express from 'express';
 import * as planningController from '../controllers/planning-controller';
-import { route } from './customer-routes';
+import * as auth from "../middleware/auth"
 
 const router = express.Router();
 

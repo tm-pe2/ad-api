@@ -1,5 +1,6 @@
 import express from 'express';
 import * as estimationController from '../controllers/estimation-controller';
+import * as auth from "../middleware/auth"
 
 const router = express.Router();
 

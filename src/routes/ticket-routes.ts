@@ -1,5 +1,6 @@
 import express from 'express';
 import * as ticketController from '../controllers/ticket-controller';
+import * as auth from "../middleware/auth"
 
 const router = express.Router();
 
