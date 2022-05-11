@@ -8,7 +8,11 @@ export const getAllSuppliers = async () => {
 
 export const getSupplierById = async (id: Supplier['supplier_id']) => {
     const suppliers = await execute<Supplier[]>(supplierQueries.getSupplierById, [id], "rows");
+    return suppliers[0];
+};
 
+export const getSupplierByVAT = async (id: Supplier['vat_number']) => {
+    const suppliers = await execute<Supplier[]>(supplierQueries.getSupplierByVAT, [id], "rows");
     return suppliers[0];
 };
 
@@ -17,7 +21,8 @@ export const insertSupplier = async (supplier: Supplier) => {
         supplier.name,
         supplier.supply_type,
         supplier.company_name,
-        supplier.address_id
+        supplier.address_id,
+        supplier.vat_number
     ], "rowCount");
 
     return rowCount > 0;
@@ -29,7 +34,7 @@ export const updateSupplier = async (supplier: Supplier) => {
         supplier.supply_type,
         supplier.company_name,
         supplier.address_id,
-
+        supplier.vat_number,
         supplier.supplier_id
     ], "rowCount");
 

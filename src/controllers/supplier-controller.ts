@@ -35,7 +35,7 @@ export const getSupplierById: RequestHandler = async (req: Request, res: Respons
 export const addSupplier: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addSupplierSchema = supplierSchema.fork('supplier_id', field => field.optional());
+        const addSupplierSchema = supplierSchema.fork(['supplier_id','address_id'], field => field.optional());
         let supplier: Supplier = await addSupplierSchema.validateAsync(req.body);
 
         const result = await supplierService.insertSupplier(supplier);

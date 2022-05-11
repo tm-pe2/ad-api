@@ -12,7 +12,7 @@ router.get('/customers/contracts', auth.authenticate([UserRole.ADMIN, UserRole.M
 //parametrized routes
 router.get('/customers/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
 router.get('/customers/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
-router.post('/customers', auth.authenticate([UserRole.ADMIN, UserRole.CUSTOMER]), customerController.addCustomer);
+router.post('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
 router.put('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
 router.delete('/customers/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
 
