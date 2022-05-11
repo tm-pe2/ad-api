@@ -8,7 +8,11 @@ export const getAllInvoices = async () => {
 
 export const getInvoiceById = async (id: Invoice['invoice_id']) => {
     const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceById, [id], "rows");
+    return invoices[0];
+};
 
+export const getInvoiceByPeriod = async (id: Invoice['customer_id'],startDate: Invoice['start_date'], endDate: Invoice['end_date']) => {
+    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [startDate,endDate], "rows");
     return invoices[0];
 };
 

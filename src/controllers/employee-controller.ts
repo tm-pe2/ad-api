@@ -1,5 +1,6 @@
 import {Request, RequestHandler, Response} from 'express';
 import {Employee, employeeSchema} from '../classes/employee';
+import * as employeeValidation from '../validations/employee-validation';
 import * as userService from '../services/user-service';
 import * as employeeService from '../services/employee-service';
 import * as bcrypt from 'bcrypt';
@@ -36,13 +37,12 @@ export const getEmployeeById: RequestHandler = async (req: Request, res: Respons
 
 export const addEmployee: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const addEmployeeSchema = employeeSchema.fork(['user_id', 'employee_id'], field => field.optional());
+        const addEmployeeSchema = employeeSchema.fork(['user_id', 'address_id', 'employee_id'], field => field.optional());
         const validatedEmployee = await addEmployeeSchema.validateAsync(req.body);
 
-        const existingUser = await userService.getUserByEmail(validatedEmployee.email)
-
-        if (!!existingUser) {
-            throw new Error("User already exists");
+        const validationResult = await employeeValidation.checkEmployeeData(validatedEmployee.user_id);
+        if (validationResult != '') {
+            throw new Error(String(validationResult));
         }
 
         const salt = await bcrypt.genSalt(10);

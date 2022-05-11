@@ -1,6 +1,8 @@
 export const userQueries = {
     getAllUsers: `
-        SELECT * FROM users
+        SELECT * FROM users u
+        INNER JOIN address a
+        ON u.address_id = a.address_id
     `,
 
     getUserById: `
@@ -8,7 +10,11 @@ export const userQueries = {
     `,
 
     getUserByEmail: `
-        SELECT * FROM users WHERE email = $1 
+        SELECT * FROM users WHERE email = $1
+    `,
+
+    getUserByNationalNumber: `
+        SELECT * FROM users WHERE national_registry_number = $1
     `,
 
     getLastID: `

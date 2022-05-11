@@ -8,14 +8,19 @@ export const getAllUsers = async () => {
 
 export const getUserById = async (id: User['user_id']) => {
     const users = await execute<User[]>(userQueries.getUserById, [id], "rows");
-
     return users[0];
 };
 
 export const getUserByEmail = async (email: User['email']) => {
     const result = await execute<User[]>(userQueries.getUserByEmail, [email], "rows")
-
     return result[0];
+};
+
+
+export const getUserByNationalNumber = async (nationalNumber: User['national_registry_number']) => {
+    const users = await execute<User[]>(userQueries.getUserByNationalNumber, [nationalNumber], "rows");
+
+    return users[0];
 };
 
 export const insertUser = async (user: User) => {

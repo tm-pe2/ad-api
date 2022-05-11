@@ -8,8 +8,11 @@ export const getAllContracts = async () => {
 
 export const getContractById = async (id: Contract['contract_id']) => {
     const contracts = await execute<Contract[]>(contractQueries.getContractById, [id], "rows");
-
     return contracts[0];
+};
+
+export const getContractsByCustomerAndAddressID = async (customerID: Contract['customer_id'],contractType: Contract['contract_type'],addressID: Contract['address_id'], endDate: Contract['end_date']) => {
+    return await execute<Contract[]>(contractQueries.getContractByCustomerAndAddressID, [customerID,contractType,addressID,endDate], "rows");
 };
 
 export const insertContract = async (contract: Contract) => {
@@ -22,6 +25,8 @@ export const insertContract = async (contract: Contract) => {
         contract.price,
         contract.tariff_id,
         contract.estimation_id,
+        contract.address_id,
+        contract.contract_type
     ], "rowCount");
 
     return rowCount > 0;

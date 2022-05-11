@@ -1,6 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
-import * as contractService from '../services/contract-service';
 import {Contract, contractSchema } from "../classes/contracts";
+import * as contractService from '../services/contract-service';
+import * as contractValidation from '../validations/contract-validation'
 
 export const getAllContracts: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -33,9 +34,16 @@ export const getContractById: RequestHandler = async (req: Request, res: Respons
 
 export const addContract: RequestHandler = async (req: Request, res: Response) => {
     try {
-        //validate the request body
+        // input validation
         const addContractSchema = contractSchema.fork('contract_id', field => field.optional());
         let contract: Contract = await addContractSchema.validateAsync(req.body);
+
+        // contract logic validation
+        const validationResult = await contractValidation.checkContractData(contract);
+        if (validationResult != '') {
+            throw new Error(String(validationResult));
+        }
+
         const result = await contractService.insertContract(contract);
 
         res.status(200).json({
@@ -44,7 +52,7 @@ export const addContract: RequestHandler = async (req: Request, res: Response) =
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when adding new contract'
+            message: error.message
         });
     }
 };

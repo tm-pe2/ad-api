@@ -18,7 +18,14 @@ describe('Customer Endpoints', () => {
                 gas_type: 1,
                 electricity_type: 1,
                 gas_meter_id: 0,
-                electricity_meter_id: 1
+                electricity_meter_id: 1,
+                city: "Affligem",
+                street: "Brusselbaan",
+                house_number: "197",
+                postal_code: "1780",
+                country: "Belgium",
+                start_date: "2020-03-14",
+                end_date: "2020-06-14"
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

@@ -8,7 +8,11 @@ export const getAllPlannings = async () => {
 
 export const getPlanningById = async (id: Planning['planning_id']) => {
     const plannings = await execute<Planning[]>(planningQueries.getPlanningById, [id], "rows");
+    return plannings[0];
+};
 
+export const getPlanningByEmployeeId = async (id: Planning['employee_id']) => {
+    const plannings = await execute<Planning[]>(planningQueries.getPlanningByEmployeeId, [id], "rows");
     return plannings[0];
 };
 

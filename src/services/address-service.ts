@@ -12,18 +12,22 @@ export const getAddressById = async (id: Address['address_id']) => {
     return addresses[0];
 };
 
+export const getAddressByDetails = async (city: Address['city'], street: Address['street'], huose_number: Address['house_number'], postal_code: Address['postal_code'], country: Address['country']) => {
+    const addresses = await execute<Address[]>(addressQueries.getAddressByDetails, [city,street,huose_number,postal_code,country], "rows");
+
+    return addresses[0];
+};
+
 export const insertAddress = async (address: Address) => {
-    const rowCount = await execute<number>(addressQueries.addAddress, [
+    const newAddress = await execute<Address[]>(addressQueries.addAddress, [
         address.city,
         address.street,
         address.house_number,
         address.postal_code,
-        address.country,
-        address.start_date,
-        address.end_date,
-    ], "rowCount");
+        address.country
+    ], "rows");
 
-    return rowCount > 0;
+    return newAddress[0].address_id;
 };
 
 export const updateAddress = async (address: Address) => {
@@ -33,9 +37,6 @@ export const updateAddress = async (address: Address) => {
         address.house_number,
         address.postal_code,
         address.country,
-        address.start_date,
-        address.end_date,
-
         address.address_id
     ], "rowCount");
 

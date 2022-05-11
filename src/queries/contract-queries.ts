@@ -7,9 +7,15 @@ export const contractQueries = {
         SELECT * FROM customercontracts WHERE contract_id = $1
     `,
 
+    getContractByCustomerAndAddressID:`
+        SELECT * FROM customercontracts
+        WHERE customer_id = $1 AND contract_type = $2 AND address_id = $3 
+        AND  $4 BETWEEN start_date AND end_date
+    `,
+
     addContract: `
-        INSERT INTO customercontracts (start_date, end_date, customer_id, customer_type, advance_payment, price, tariff_id, estimation_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO customercontracts (start_date, end_date, customer_id, customer_type, advance_payment, price, tariff_id, estimation_id, address_id, contract_type)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     `,
 
     updateContract: `
@@ -23,7 +29,9 @@ export const contractQueries = {
             price = $6,
             tariff_id = $7,
             estimation_id = $8
-        WHERE contract_id = $9
+            address_id = $9
+            contract_type = 10
+        WHERE contract_id = $11
     `,
 
     deleteContractById: `

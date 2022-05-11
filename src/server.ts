@@ -14,7 +14,7 @@ import supplierRoutes from './routes/supplier-routes';
 import ticketRoutes from './routes/ticket-routes';
 
 import * as DBConnector from './utils/mysql.connector';
-//import userRoutes from './routes/user-routes';
+import userRoutes from './routes/user-routes';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
 import bodyParser from 'body-parser';
@@ -70,7 +70,7 @@ DBConnector.init();
 
 /** Routes */
 router.use('/api/',
-    //userRoutes,
+    userRoutes,
     authRoutes,
     testRoutes,
     customerRoutes,
