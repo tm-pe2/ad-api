@@ -6,14 +6,24 @@ export interface Invoice {
     SupplierID: number,
     Date: Date,
     DueDate: Date,
-    Status: number,
+    Statusid: InvoiceStatus,
     GasAmount: number,
     ElectricityType: number,
     Price: number,
     Tax: number,
-    StartDate: Date,
-    EndDate: Date
+    StartDate: Date, //?
+    EndDate: Date, //?
 }
+
+//move to db table?
+export enum InvoiceStatus {
+    sent,
+    paid,
+    overdue,
+    void,
+    writeOff,
+    draft 
+ }
 
 export const invoiceSchema = Joi.object({
     InvoiceID: Joi.number().integer().min(0).required(),

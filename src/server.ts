@@ -20,7 +20,6 @@ import testRoutes from './routes/test-routes';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import reportingRoutes from './routes/reporting';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -73,7 +72,6 @@ router.use('/api/',
     tariffRoutes,
     supplierRoutes,
     ticketRoutes,
-    reportingRoutes
 );
 
 /** Error handling */

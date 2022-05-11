@@ -82,3 +82,27 @@ export const deleteInvoiceById: RequestHandler = async (req: Request, res: Respo
         });
     }
 };
+
+//TODO add authentication
+export const getOverdueInvoices: RequestHandler = async (req: Request, res: Response) => {
+    console.log("before 1");
+    
+    try {
+        console.log("before 2");
+
+        const invoice = await invoiceService.getOverdueInvoices();
+        console.log("before 3");
+
+        res.status(200).json({
+            invoice
+    });
+    } catch (error) {
+        console.log();
+        
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching estimations'
+        });
+    }
+};
+
