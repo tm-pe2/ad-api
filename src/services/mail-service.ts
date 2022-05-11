@@ -33,10 +33,10 @@ export class MailService {
 
     private checkEnv() {
         if (!process.env.MAILSERVER_P)
-            throw new Error("Please define MAILSERVICE_USER in your env file");
+            throw new Error("Please define MAILSERVER_U in your env file");
 
         if (!process.env.MAILSERVER_U)
-            throw new Error("Please define MAILSERVICE_PASS in your env file");
+            throw new Error("Please define MAILSERVER_P in your env file");
     }
 
     private createTrans() {
