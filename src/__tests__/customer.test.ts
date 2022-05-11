@@ -51,17 +51,20 @@ describe('Customer Endpoints', () => {
             .put(`/api/customers/`)
             .send({
                 customer_id: 2,
+                role_id: 2,
                 first_name: 'UpdTestFirst',
                 last_name: 'UpdTestLast',
                 birth_date: '2025-01-01',
-                address_id: 1,
+                address_id: 2,
                 email: 'updtest@test.com',
                 phone_number: '0123 456999',
                 password: 'Testpw12663',
+                national_registry_number: '1002',
                 gas_type: 2,
                 electricity_type: 3,
-                gas_meter_id: 0,
-                electricity_meter_id: 1
+                gas_meter_id: 1,
+                electricity_meter_id: 2,
+                user_id: 2
             });
         expect(response?.statusCode).toEqual(200);
         expect(response?.body.result).toEqual(true);

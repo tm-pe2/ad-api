@@ -43,10 +43,11 @@ export const customerQueries = {
         UPDATE customers 
         SET 
             gas_type = $1,
-            electricity_type = $2
-            gas_meter_id = $3
-            electricity_meter_id = $4
-        WHERE customer_id = $5
+            electricity_type = $2,
+            gas_meter_id = $3,
+            electricity_meter_id = $4,
+            user_id = $5
+        WHERE customer_id = $6
     `,
 
     DeleteCustomerById: `

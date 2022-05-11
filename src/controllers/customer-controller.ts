@@ -1,9 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Customer, customerSchema} from '../classes/customer';
-import * as addressServices from '../services/address-service';
+import { customerSchema } from '../classes/customer';
 import * as customerValidation from '../validations/customer-validation';
 import * as customerService from '../services/customer-service';
-import * as userService from '../services/user-service';
 import * as bcrypt from 'bcrypt';
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {

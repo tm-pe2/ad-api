@@ -20,8 +20,8 @@ export const ticketQueries = {
             title = $3,
             description = $4,
             date = $5,
-            status = $6,
-            employee = $7
+            status_id = $6,
+            is_employee = $7
         WHERE ticket_id = $8
     `,
 

@@ -8,8 +8,8 @@ describe('Planning Endpoints', () => {
             .send({
                 employee_id: 1,
                 customer_id: 1,
-                Date: '2022-04-13',
-                status_id: 1
+                date: '2022-04-13',
+                status: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -37,17 +37,12 @@ describe('Planning Endpoints', () => {
                 planning_id: 2,
                 employee_id: 1,
                 customer_id: 1,
-                Date: '2024-05-14',
-                status_id: 0
+                date: '2024-05-14',
+                status: 0
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });
 
-    it('should delete a planning', async () => {
-        const response = await request(router)
-            .delete(`/api/plannings/3`);
-        expect(response.statusCode).toEqual(200);
-        expect(response.body.result).toEqual(true);
-    });
+
 });

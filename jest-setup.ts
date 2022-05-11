@@ -3,13 +3,12 @@ require('./src/server');
 import {execute} from './src/utils/mysql.connector';
 
 module.exports = async () => {
-    console.log("I'll be called first before any test cases run");
     await execute<any>(truncateTablesQuery, []);
     await execute<any>(insertDummyDataQuery, []);
 };
 
 const truncateTablesQuery = `
-    TRUNCATE roles, address, users, customers, employees, suppliers, tariffs, tickets, invoices, estimations, customercontracts RESTART IDENTITY CASCADE;
+    TRUNCATE roles, address, users, customers, employees, suppliers, tariffs, tickets, invoices, estimations, customercontracts, planning RESTART IDENTITY CASCADE;
 `;
 
 const insertDummyDataQuery = `
@@ -84,6 +83,12 @@ const insertDummyDataQuery = `
         ('2000-01-01', '2001-01-01', 1, 'customerType1', 1000, 1200, 1, 1),
         ('2001-01-01', '2002-01-01', 2, 'customerType2', 2000, 2200, 2, 2),
         ('2002-01-01', '2003-01-01', 3, 'customerType3', 3000, 3200, 3, 3);
+        
+    INSERT INTO planning (employee_id, customer_id, date, status)
+        VALUES 
+        (0, 0, '2000-01-01', 0),
+        (1, 1, '2001-01-01', 1),
+        (2, 2, '2002-01-01', 0);
 `;
 
 

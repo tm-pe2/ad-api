@@ -14,7 +14,6 @@ export const employeeQueries = {
             VALUES ($1, $2, $3, $4, $5, $6)
     `,
 
-    //TODO: update user in same query?
     updateEmployees: `
         UPDATE employees 
         SET 

@@ -67,6 +67,7 @@ describe('Employee Endpoints', () => {
             .put(`/api/employees/`)
             .send({
                 employee_id: 2,
+                role_id: 1,
                 first_name: 'updatedTestFirst',
                 last_name: 'UpdatedTestLast',
                 birth_date: '1-1-2010',
@@ -74,10 +75,13 @@ describe('Employee Endpoints', () => {
                 email: 'updatedTestEmail@test.com',
                 phone_number: '0123 456000',
                 password: 'TestPw12345',
+                national_registry_number: '123456789',
                 department: "updatedDepartment",
                 permissions: "2",
                 hire_date: '2022-04-01',
-                gender: 0
+                gender: 0,
+                salary: 3000,
+                user_id: 5
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
