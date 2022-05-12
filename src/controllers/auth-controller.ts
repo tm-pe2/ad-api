@@ -8,48 +8,30 @@ import * as bcrypt from 'bcrypt';
 const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days
 
-// get all clients
-// const dummyUsers = [
-//     {
-//         'id': '1',
-//         'email': 'example',
-//         'pass': 'nohash',
-//         'role': 'admin'
-//     },
-//     {
-//         'id': '2',
-//         'email': 'user',
-//         'pass': 'pass',
-//         'role': 'normal'
-//     }
-// ]
-
 async function login(req: Request, res: Response, next: NextFunction) {
     if (process.env.JWTSECRET == undefined) {
         throw new Error('JWTSECRET undefined');
     }
 
-    const email = req.body.email;   //validation ?
-    const password = req.body.password;     //validation
-
-    // const user = dummyUsers.find(u => {
-    //     return u.email == email && u.pass == password;
-    // })
+    const email = req.body.email;
+    const password = req.body.password;
 
     const user = await userService.getUserByEmail(email);
     
+    bcrypt.compare(password, user.Password, (err, result) => {
+        if (err) {
+            return res.sendStatus(500);
+        }
+        if (result) {
+            const tokenData = {'id': user.UserID, 'role': user.RoleID.toString()}
+            const accessToken = createAccessToken(tokenData);
+            const refreshToken = createRefreshToken(user.UserID);
 
-    if (user) {
-        const tokenData = {'id': user.UserID, 'role': user.RoleID.toString()}
-        const accessToken = createAccessToken(tokenData);
-        const refreshToken = createRefreshToken(user.UserID);
-
-        res.json({accessToken, refreshToken});
-    }
-    else {
-        res.status(401);
-        res.send('Incorrect login attempt.');
-    }
+            res.json({accessToken, refreshToken});
+        } else {
+            res.status(401).send('Invalid credentials');
+        }
+    });
 }
 
 async function refreshToken(req: Request, res: Response, next: NextFunction) {
@@ -57,7 +39,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
         throw new Error('JWTSECRET undefined');
     }
     
-    const token = req.body.refreshToken;    // validation ?
+    const token = req.body.refreshToken;
 
     if (!token)
         return res.status(401).send('Refresh token required.'); // unauthorized
@@ -107,7 +89,6 @@ const createRefreshToken = (userid: number) => {
     let expirationDate = new Date();
     expirationDate.setSeconds(expirationDate.getSeconds() + refreshExpireTime);
     
-    // store in db
     const token = uuid();
     RefreshToken.addRefreshToken(userid, token)
 
@@ -119,10 +100,5 @@ interface AccessTokenData {
     role: string
 }
 
-// interface RefreshTokenData {
-//     token: string,
-//     userid: string,
-//     expiryDate: number,
-// }
 
 export default {login, logout, refreshToken};
