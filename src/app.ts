@@ -7,7 +7,6 @@ import { Env } from './utils/env';
 import { Logger } from './utils/logger';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
-    console.log(process.env.JWTSECRET)
   dotenv.config();
 }
 

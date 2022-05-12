@@ -4,15 +4,15 @@ export const userQueries = {
     `,
 
     getUserById: `
-        SELECT * FROM users WHERE UserID = $1
+        SELECT * FROM users WHERE user_id = $1
     `,
 
     getUserByEmail: `
-        SELECT * FROM users WHERE Email = $1 
+        SELECT * FROM users WHERE email = $1 
     `,
 
     getLastID: `
-        SELECT UserID from users ORDER BY UserID DESC LIMIT 1 
+        SELECT user_id from users ORDER BY user_id DESC LIMIT 1 
     `,
 
     AddUser: `
@@ -22,18 +22,18 @@ export const userQueries = {
     UpdateUser: `
         UPDATE users 
         SET 
-            RoleID = $1,
-            FirstName = $2,
-            LastName = $3,
-            BirthDate = $4,
-            AddressID = $5,
-            Email = $6,
-            PhoneNumber = $7,
-            Password = $8
-        WHERE UserID = $9
+            role_id = $1,
+            first_name = $2,
+            last_name = $3,
+            birth_date = $4,
+            address_id = $5,
+            email = $6,
+            phone_number = $7,
+            password = $8
+        WHERE user_id = $9
     `,
 
     DeleteUserById: `
-    DELETE FROM users WHERE UserID = $1
+    DELETE FROM users WHERE user_id = $1
     `
 };

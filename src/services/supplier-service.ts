@@ -3,11 +3,15 @@ import {Supplier} from "../classes/supplier";
 import {supplierQueries} from "../queries/supplier-queries";
 
 export const getAllSuppliers = async () => {
-    return execute<Supplier[]>(supplierQueries.getAllSuppliers, []);
+    let suppliers = execute<{rows: Supplier[]}>(supplierQueries.getAllSuppliers, []);
+    console.log(suppliers);
+    return (await suppliers).rows;
 };
 
 export const getSupplierById = async (id: Supplier['SupplierID']) => {
-    return execute<Supplier>(supplierQueries.getSupplierById, [id]);
+    let supplier = execute<{rows: Supplier}>(supplierQueries.getSupplierById, [id]);
+    console.log(supplier);
+    return (await supplier).rows;
 };
 
 export const insertSupplier = async (supplier: Supplier) => {

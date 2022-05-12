@@ -4,7 +4,7 @@ export const planningQueries = {
     `,
 
     getPlanningById: `
-        SELECT * FROM planning WHERE PlanningID = $1
+        SELECT * FROM planning WHERE planning_id = $1
     `,
 
     addPlanning: `
@@ -14,14 +14,14 @@ export const planningQueries = {
     updatePlanning: `
         UPDATE planning 
         SET
-            EmployeeID = $1,
-            CustomerID = $2,
-            Date = $3,
-            Status = $4
-        WHERE PlanningID = $5
+            employee_id = $1,
+            customer_id = $2,
+            date = $3,
+            status = $4
+        WHERE planning_id = $5
     `,
 
     deletePlanningById: `
-        DELETE FROM planning WHERE PlanningID = $1
+        DELETE FROM planning WHERE planning_id = $1
     `
 };

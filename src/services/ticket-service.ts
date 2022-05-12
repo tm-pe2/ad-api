@@ -3,11 +3,15 @@ import {Ticket} from "../classes/ticket";
 import {ticketQueries} from "../queries/ticket-queries";
 
 export const getAllTickets = async () => {
-    return execute<Ticket[]>(ticketQueries.getAllTickets, []);
+    let tickets = execute<{rows: Ticket[]}>(ticketQueries.getAllTickets, []);
+    console.log(tickets);
+    return (await tickets).rows;
 };
 
 export const getTicketById = async (id: Ticket['TicketID']) => {
-    return execute<Ticket>(ticketQueries.getTicketById, [id]);
+    let ticket = execute<{rows: Ticket}>(ticketQueries.getTicketById, [id]);
+    console.log(ticket);
+    return (await ticket).rows;
 };
 
 export const insertTicket = async (ticket: Ticket) => {

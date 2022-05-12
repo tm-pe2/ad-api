@@ -1,14 +1,14 @@
 export const customerQueries = {
     getAllCustomers: `
-        SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID
+        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.customer_id
     `,
 
     getCustomerById: `
-    SELECT * FROM users as u INNER JOIN customers c WHERE u.UserID = c.CustomerID AND u.UserID = $1
+        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.customer_id WHERE u.user_id = $1
     `,
 
     getCustomersContracts:`
-        SELECT u.UserID, u.FirstName, u.LastName, u.RoleID, c.ContractID FROM users as u LEFT JOIN customercontracts as c ON u.UserID = c.CustomerID
+        SELECT u.user_id, u.first_name, u.last_name, u.role_id, c.contract_id FROM users as u LEFT JOIN customercontracts as c ON u.user_id = c.customer_id
     `,
 
     AddCustomer: `
@@ -18,12 +18,12 @@ export const customerQueries = {
     UpdateCustomer: `
         UPDATE customers 
         SET 
-            GasType = $1,
-            Electricitytype = $2
-        WHERE CustomerID = $3
+            gas_type = $1,
+            electricity_type = $2
+        WHERE customer_id = $3
     `,
 
     DeleteCustomerById: `
-    DELETE FROM customers WHERE CustomerID = $1
+    DELETE FROM customers WHERE customer_id = $1
     `
 };

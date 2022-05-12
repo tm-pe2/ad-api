@@ -3,11 +3,15 @@ import {Contract} from "../classes/contracts";
 import {contractQueries} from "../queries/contract-queries";
 
 export const getAllContracts = async () => {
-    return execute<Contract[]>(contractQueries.getAllContracts, []);
+    let contracts = execute<{rows: Contract[]}>(contractQueries.getAllContracts, []);
+    console.log(contracts);
+    return (await contracts).rows;
 };
 
 export const getContractById = async (id: Contract['ContractID']) => {
-    return execute<Contract>(contractQueries.getContractById, [id]);
+    let contract = execute<{rows: Contract}>(contractQueries.getContractById, [id]);
+    console.log(contract);
+    return (await contract).rows;
 };
 
 export const insertContract = async (contract: Contract) => {

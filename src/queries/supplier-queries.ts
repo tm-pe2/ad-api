@@ -4,7 +4,7 @@ export const supplierQueries = {
     `,
 
     getSupplierById: `
-        SELECT * FROM suppliers WHERE SupplierID = $1
+        SELECT * FROM suppliers WHERE supplier_id = $1
     `,
 
     addSupplier: `
@@ -14,14 +14,14 @@ export const supplierQueries = {
     updateSupplier: `
         UPDATE suppliers 
         SET
-            Name = $1,
-            SupplyType = $2,
-            CompanyName = $3,
-            AdressID = $4
-        WHERE SupplierID = $5
+            name = $1,
+            supply_type = $2,
+            company_name = $3,
+            adress_id = $4
+        WHERE supplier_id = $5
     `,
 
     deleteSupplierById: `
-        DELETE FROM suppliers WHERE SupplierID = $1
+        DELETE FROM suppliers WHERE supplier_id = $1
     `
 };

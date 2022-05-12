@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { UserRole } from '../models/userrole';
 
-// TODO change to custom user role type, allow for self check (eg: get own user info with /user/self)
-function authorize(role: string): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
         if (process.env.JWTSECRET == undefined) {
             throw new Error('JWTSECRET undefined');
@@ -19,8 +19,8 @@ function authorize(role: string): (req: Request, res: Response, next: NextFuncti
                     }
 
                     if (decoded.role != undefined && decoded.id != undefined
-                        && decoded.role == role) {
-                        // TODO: check if okay practise
+                        && roles.includes(decoded.role)) {
+                        // TODO: check if okay practise to pass in body
                         // Pass decoded info into request body for later use in controllers
                         req.body.userId = decoded.id
                         req.body.userRole = decoded.role

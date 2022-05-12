@@ -3,11 +3,15 @@ import {Planning} from "../classes/planning";
 import {planningQueries} from "../queries/planning-queries";
 
 export const getAllPlannings = async () => {
-    return execute<Planning[]>(planningQueries.getAllPlannings, []);
+    let plannings = execute<{rows: Planning[]}>(planningQueries.getAllPlannings, []);
+    console.log(plannings);
+    return (await plannings).rows;
 };
 
 export const getPlanningById = async (id: Planning['PlanningID']) => {
-    return execute<Planning>(planningQueries.getPlanningById, [id]);
+    let planning = execute<{rows: Planning}>(planningQueries.getPlanningById, [id]);
+    console.log(planning);
+    return (await planning).rows;
 };
 
 export const insertPlanning = async (planning: Planning) => {

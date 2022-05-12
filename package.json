@@ -6,10 +6,10 @@
   "private": true,
   "main": "src/app.ts",
   "scripts": {
-    "test": "jest --forceExit",
+    "test": "jest",
+    "serve": "nodemon --config nodemon.json",
     "tsc": "tsc",
-    "eslint": "eslint",
-    "serve": "nodemon"
+    "eslint": "eslint"
   },
   "repository": {
     "type": "git",

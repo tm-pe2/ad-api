@@ -3,11 +3,15 @@ import {Estimation} from "../classes/estimation";
 import {estimationQueries} from "../queries/estimation-queries";
 
 export const getAllEstimations = async () => {
-    return execute<Estimation[]>(estimationQueries.getAllEstimations, []);
+    let estimations = execute<{rows: Estimation[]}>(estimationQueries.getAllEstimations, []);
+    console.log(estimations);
+    return (await estimations).rows;
 };
 
 export const getEstimationById = async (id: Estimation['EstimatedID']) => {
-    return execute<Estimation>(estimationQueries.getEstimationById, [id]);
+    let estimation = execute<{rows: Estimation}>(estimationQueries.getEstimationById, [id]);
+    console.log(estimation);
+    return (await estimation).rows;
 };
 
 export const insertEstimation = async (estimation: Estimation) => {

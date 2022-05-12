@@ -21,6 +21,8 @@ you have to be connected to the vpn
 ## this is your vpn user login + mail password
 MAILSERVER_U=""
 MAILSERVER_P=""
+
+JWTSECRET=SomethingYouCanPickYourselfButSecure:)
 ```
 
 ## Running

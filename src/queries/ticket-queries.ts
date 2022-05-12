@@ -4,7 +4,7 @@ export const ticketQueries = {
     `,
 
     getTicketById: `
-        SELECT * FROM tickets WHERE tickets.ticketid = $1
+        SELECT * FROM tickets WHERE tickets.ticket_id = $1
     `,
 
     addTicket: `
@@ -14,17 +14,17 @@ export const ticketQueries = {
     updateTicket: `
         UPDATE tickets 
         SET
-            IssueID = $1,
-            AssignedTech = $2,
-            Title = $3,
-            Description = $4,
-            Date = $5,
-            Status = $6,
-            Employee = $7
-        WHERE ticketid = $8
+            issue_id = $1,
+            assigned_tech = $2,
+            title = $3,
+            description = $4,
+            date = $5,
+            status = $6,
+            employee = $7
+        WHERE ticket_id = $8
     `,
 
     deleteTicketById: `
-        DELETE FROM tickets WHERE ticketid = $1
+        DELETE FROM tickets WHERE ticket_id = $1
     `
 };
