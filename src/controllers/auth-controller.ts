@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/user-service';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
+import { RefreshToken, RefreshTokenData } from '../classes/refreshtokens';
 
 const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days
@@ -22,9 +23,6 @@ const refreshExpireTime = 604800; // 7 days
 //     }
 // ]
 
-// dummy, store in db later
-let refreshTokens: RefreshTokenData[] = [];
-
 async function login(req: Request, res: Response, next: NextFunction) {
     if (process.env.JWTSECRET == undefined) {
         throw new Error('JWTSECRET undefined');
@@ -38,11 +36,12 @@ async function login(req: Request, res: Response, next: NextFunction) {
     // })
 
     const user = await userService.getUserByEmail(email);
+    bcrypt
 
     if (user) {
-        const tokenData = {'id': user.UserID.toString(), 'role': user.RoleID.toString()}
+        const tokenData = {'id': user.UserID, 'role': user.RoleID.toString()}
         const accessToken = createAccessToken(tokenData);
-        const refreshToken = createRefreshToken(user.UserID.toString());
+        const refreshToken = createRefreshToken(user.UserID);
 
         res.json({accessToken, refreshToken});
     }
@@ -62,31 +61,38 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
     if (!token)
         return res.status(401).send('Refresh token required.'); // unauthorized
     
-    let rt = refreshTokens.find((r) => r.token == token); 
-
-    if (rt === undefined)
-        return res.status(403).send('Invalid refresh token'); // forbidden
-    if (rt.expiryDate < (new Date()).getTime()) {
-        refreshTokens = refreshTokens.filter((t) => t !== rt);
-        return res.status(403).send('Refresh token expired'); // forbidden
-    }
-    // 403 => Front-end needs to ask for login again
-
-    //const user = dummyUsers.find((u) => u.id == rt?.userid);
-    const user = await userService.getUserById(Number(rt.userid));
-    if (user === undefined) {
-        return res.sendStatus((500));
-    }
-
-    const accessToken = createAccessToken({id: user.UserID.toString(), role: user.RoleID.toString()})
-
-    res.json({accessToken});
+    RefreshToken.getRefreshToken(token)
+        .then((rt) => {
+            if (rt.expires.getTime() < (new Date()).getTime()) {
+                return res.status(403).send('Refresh token expired'); // forbidden
+            }
+            
+            // Valid refresh token -> refresh token
+            userService.getUserById(rt.userId)
+            .then((user) => {
+                const accessToken = createAccessToken({id: user.UserID, role: user.RoleID.toString()})
+                res.json({accessToken});
+            })
+            .catch((err) => {
+                return res.sendStatus((500));
+            });
+        })
+        .catch((err) => {
+            // not found
+            return res.status(403).send('Refresh token invalid'); // forbidden
+        });
 };
 
+// TODO: update front-end to use user id
 async function logout(req: Request, res: Response, next: NextFunction) {
-    const rt = req.body.refreshToken;   //validation ?
-    refreshTokens = refreshTokens.filter(t => t !== rt);
-    res.sendStatus(200);
+    const id = req.body.user_id;
+    RefreshToken.deleteRefreshToken(id) // Logs out everywhere, all refresh tokens become invalid
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch((err) => {
+            res.sendStatus(400);
+        })
 };
 
 const createAccessToken = (tokenData: AccessTokenData) => {
@@ -96,30 +102,26 @@ const createAccessToken = (tokenData: AccessTokenData) => {
     return jwt.sign(tokenData, process.env.JWTSECRET, {expiresIn: accessExpireTime});
 }
 
-const createRefreshToken = (userid: string) => {
+const createRefreshToken = (userid: number) => {
     let expirationDate = new Date();
     expirationDate.setSeconds(expirationDate.getSeconds() + refreshExpireTime);
-    const refreshToken: RefreshTokenData = {
-        token: uuid(),
-        userid: userid,
-        expiryDate: expirationDate.getTime(),
-    }
-
+    
     // store in db
-    refreshTokens.push(refreshToken);
+    const token = uuid();
+    RefreshToken.addRefreshToken(userid, token)
 
-    return refreshToken.token;
+    return token;
 }
 
 interface AccessTokenData {
-    id: string,
+    id: number,
     role: string
 }
 
-interface RefreshTokenData {
-    token: string,
-    userid: string,
-    expiryDate: number,
-}
+// interface RefreshTokenData {
+//     token: string,
+//     userid: string,
+//     expiryDate: number,
+// }
 
 export default {login, logout, refreshToken};
