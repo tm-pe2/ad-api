@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/user-service';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
-import { RefreshToken, RefreshTokenData } from '../classes/refreshtokens';
+import { RefreshToken } from '../classes/refreshtokens';
 import * as bcrypt from 'bcrypt';
 
 const accessExpireTime = 1800; // 30 min
@@ -18,14 +18,14 @@ async function login(req: Request, res: Response, next: NextFunction) {
 
     const user = await userService.getUserByEmail(email);
     
-    bcrypt.compare(password, user.Password, (err, result) => {
+    bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
             return res.sendStatus(500);
         }
         if (result) {
-            const tokenData = {'id': user.UserID, 'role': user.RoleID.toString()}
+            const tokenData = {'id': user.user_id, 'role_id': user.role_id}
             const accessToken = createAccessToken(tokenData);
-            const refreshToken = createRefreshToken(user.UserID);
+            const refreshToken = createRefreshToken(user.user_id);
 
             res.json({accessToken, refreshToken});
         } else {
@@ -53,7 +53,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
             // Valid refresh token -> refresh token
             userService.getUserById(rt.userId)
             .then((user) => {
-                const accessToken = createAccessToken({id: user.UserID, role: user.RoleID.toString()})
+                const accessToken = createAccessToken({id: user.user_id, role_id: user.role_id})
                 res.json({accessToken});
             })
             .catch((err) => {
@@ -95,9 +95,10 @@ const createRefreshToken = (userid: number) => {
     return token;
 }
 
+// TODO: change front-end
 interface AccessTokenData {
     id: number,
-    role: string
+    role_id: number
 }
 
 
