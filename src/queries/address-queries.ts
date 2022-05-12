@@ -8,11 +8,11 @@ export const addressQueries = {
     `,
 
     addAddress: `
-        INSERT INTO adsress SET $1
+        INSERT INTO address SET $1
     `,
 
     updateAddress: `
-        UPDATE adsress 
+        UPDATE address 
         SET 
             city = $1,
             street = $2,
