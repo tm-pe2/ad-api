@@ -34,7 +34,7 @@ export const getAddressById: RequestHandler = async (req: Request, res: Response
 export const addAddress: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addAddressSchema = addressSchema.fork('AdressID', field => field.optional());
+        const addAddressSchema = addressSchema.fork('address_id', field => field.optional());
         let address: Address = await addAddressSchema.validateAsync(req.body);
 
         const result = await addressService.insertAddress(address);

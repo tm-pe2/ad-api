@@ -3,6 +3,7 @@ import * as userService from '../services/user-service';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import { RefreshToken, RefreshTokenData } from '../classes/refreshtokens';
+import * as bcrypt from 'bcrypt';
 
 const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days
@@ -36,7 +37,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
     // })
 
     const user = await userService.getUserByEmail(email);
-    bcrypt
+    
 
     if (user) {
         const tokenData = {'id': user.UserID, 'role': user.RoleID.toString()}
@@ -49,7 +50,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
         res.status(401);
         res.send('Incorrect login attempt.');
     }
-};
+}
 
 async function refreshToken(req: Request, res: Response, next: NextFunction) {
     if (process.env.JWTSECRET == undefined) {

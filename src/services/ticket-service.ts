@@ -3,39 +3,47 @@ import {Ticket} from "../classes/ticket";
 import {ticketQueries} from "../queries/ticket-queries";
 
 export const getAllTickets = async () => {
-    let tickets = execute<{rows: Ticket[]}>(ticketQueries.getAllTickets, []);
-    console.log(tickets);
-    return (await tickets).rows;
+    return await execute<{rows: Ticket[]}>(ticketQueries.getAllTickets, [], "rows");
 };
 
-export const getTicketById = async (id: Ticket['TicketID']) => {
-    let ticket = execute<{rows: Ticket}>(ticketQueries.getTicketById, [id]);
-    console.log(ticket);
-    return (await ticket).rows;
+export const getTicketById = async (id: Ticket['ticket_id']) => {
+    const tickets = await execute<Ticket[]>(ticketQueries.getTicketById, [id], "rows");
+
+    return tickets[0];
 };
 
 export const insertTicket = async (ticket: Ticket) => {
-    const result = await execute<{ rowCount: number }>(ticketQueries.addTicket, [
-        ticket
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(ticketQueries.addTicket, [
+        ticket.issue_id,
+        ticket.assigned_tech,
+        ticket.title,
+        ticket.description,
+        ticket.date,
+        ticket.status_id,
+        ticket.is_employee
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const updateTicket = async (ticket: Ticket) => {
-    const result = await execute<{ rowCount: number }>(ticketQueries.updateTicket, [
-        ticket.IssueID,
-        ticket.AssignedTech,
-        ticket.Title,
-        ticket.Description,
-        ticket.Date,
-        ticket.Status,
-        ticket.Employee,
-        ticket.TicketID
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(ticketQueries.updateTicket, [
+        ticket.issue_id,
+        ticket.assigned_tech,
+        ticket.title,
+        ticket.description,
+        ticket.date,
+        ticket.status_id,
+        ticket.is_employee,
+
+        ticket.ticket_id
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
-export const deleteTicketById = async (id: Ticket['TicketID']) => {
-    const result = await execute<{ rowCount: number }>(ticketQueries.deleteTicketById, [id]);
-    return result.rowCount > 0;
+export const deleteTicketById = async (id: Ticket['ticket_id']) => {
+    const rowCount = await execute<number>(ticketQueries.deleteTicketById, [id], "rowCount");
+
+    return rowCount > 0;
 };

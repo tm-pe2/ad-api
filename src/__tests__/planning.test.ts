@@ -6,10 +6,10 @@ describe('Planning Endpoints', () => {
         const response = await request(router)
             .post('/api/plannings')
             .send({
-                EmployeeID: 1,
-                CustomerID: 1,
-                Date: '2022-04-13',
-                Status: 1
+                employee_id: 1,
+                customer_id: 1,
+                date: '2022-04-13',
+                status: 1
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -17,10 +17,10 @@ describe('Planning Endpoints', () => {
 
     it('should fetch a single planning', async () => {
         const response = await request(router)
-            .get(`/api/plannings/1`)
+            .get(`/api/plannings/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.planning[0]).toHaveProperty('PlanningID', 1);
+        expect(response.body.planning).toHaveProperty('planning_id', 2);
     });
 
     it('should fetch all plannings', async () => {
@@ -34,20 +34,15 @@ describe('Planning Endpoints', () => {
         const response = await request(router)
             .put(`/api/plannings/`)
             .send({
-                PlanningID: 5,
-                EmployeeID: 1,
-                CustomerID: 1,
-                Date: '2024-05-14',
-                Status: 0
+                planning_id: 2,
+                employee_id: 1,
+                customer_id: 1,
+                date: '2024-05-14',
+                status: 0
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });
 
-    it('should delete a planning', async () => {
-        const response = await request(router)
-            .delete(`/api/plannings/4`);
-        expect(response.statusCode).toEqual(200);
-        expect(response.body.result).toEqual(true);
-    });
+
 });

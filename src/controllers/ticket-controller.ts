@@ -35,7 +35,7 @@ export const getTicketById: RequestHandler = async (req: Request, res: Response)
 export const addTicket: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addTicketSchema = ticketSchema.fork('TicketID', field => field.optional());
+        const addTicketSchema = ticketSchema.fork('ticket_id', field => field.optional());
         let ticket: Ticket = await addTicketSchema.validateAsync(req.body);
 
         const result = await ticketService.insertTicket(ticket);

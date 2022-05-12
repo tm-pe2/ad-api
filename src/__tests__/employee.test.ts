@@ -6,28 +6,53 @@ describe('Employee Endpoints', () => {
         const response = await request(router)
             .post('/api/employees')
             .send({
-                FirstName: 'testFirstName',
-                LastName: 'testLastName',
-                BirthDate: '1-1-2000',
-                AdressID: 1,
-                Email: 'testEmail@test.com',
-                PhoneNumber: '0123 456789',
-                Password: 'TestPw123',
-                Departement: "Human Resources",
-                Permissions: 1,
-                HireDate: '2000-04-01',
-                Gender: 1
+                role_id: 0,
+                first_name: 'testFirstName',
+                last_name: 'testLastName',
+                birth_date: '1-1-2000',
+                address_id: 1,
+                email: 'testEmail@test.com',
+                phone_number: '0123 456789',
+                password: 'TestPw123',
+                national_registry_number: '123456789',
+                department: "Human Resources",
+                permissions: 1,
+                hire_date: '2000-04-01',
+                gender: 1,
+                salary: 3000
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });
 
+    it('should not create a new employee when user with email already exists', async () => {
+        const response = await request(router)
+            .post('/api/employees')
+            .send({
+                role_id: 0,
+                first_name: 'testFirstName',
+                last_name: 'testLastName',
+                birth_date: '1-1-2000',
+                address_id: 1,
+                email: 'testEmail@test.com',
+                phone_number: '0123 456789',
+                password: 'TestPw123',
+                national_registry_number: '123456789',
+                department: "Human Resources",
+                permissions: 1,
+                hire_date: '2000-04-01',
+                gender: 1,
+                salary: 3000
+            });
+        expect(response.statusCode).toEqual(400);
+    });
+
     it('should fetch a single employee', async () => {
         const response = await request(router)
-            .get(`/api/employees/1`)
+            .get(`/api/employees/2`)
         expect(response.statusCode).toEqual(200);
         expect(Object.keys(response.body).length).toEqual(1);
-        expect(response.body.employee[0]).toHaveProperty('EmployeeID', 1);
+        expect(response.body.employee).toHaveProperty('employee_id', 2);
     });
 
     it('should fetch all employees', async () => {
@@ -41,18 +66,22 @@ describe('Employee Endpoints', () => {
         const response = await request(router)
             .put(`/api/employees/`)
             .send({
-                EmployeeID: 5,
-                FirstName: 'updatedTestFirst',
-                LastName: 'UpdatedTestLast',
-                BirthDate: '1-1-2010',
-                AdressID: 1,
-                Email: 'updatedTestEmail@test.com',
-                PhoneNumber: '0123 456000',
-                Password: 'TestPw12345',
-                Departement: "updatedDepartment",
-                Permissions: "2",
-                HireDate: '2022-04-01',
-                Gender: 0
+                employee_id: 2,
+                role_id: 1,
+                first_name: 'updatedTestFirst',
+                last_name: 'UpdatedTestLast',
+                birth_date: '1-1-2010',
+                address_id: 1,
+                email: 'updatedTestEmail@test.com',
+                phone_number: '0123 456000',
+                password: 'TestPw12345',
+                national_registry_number: '123456789',
+                department: "updatedDepartment",
+                permissions: "2",
+                hire_date: '2022-04-01',
+                gender: 0,
+                salary: 3000,
+                user_id: 5
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -60,7 +89,7 @@ describe('Employee Endpoints', () => {
 
     it('should delete an employee', async () => {
         const response = await request(router)
-            .delete(`/api/employees/4`);
+            .delete(`/api/employees/3`);
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
     });

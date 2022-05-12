@@ -1,6 +1,8 @@
 export const userQueries = {
     getAllUsers: `
-        SELECT * FROM users
+        SELECT * FROM users u
+        INNER JOIN address a
+        ON u.address_id = a.address_id
     `,
 
     getUserById: `
@@ -8,7 +10,11 @@ export const userQueries = {
     `,
 
     getUserByEmail: `
-        SELECT * FROM users WHERE email = $1 
+        SELECT * FROM users WHERE email = $1
+    `,
+
+    getUserByNationalNumber: `
+        SELECT * FROM users WHERE national_registry_number = $1
     `,
 
     getLastID: `
@@ -16,7 +22,9 @@ export const userQueries = {
     `,
 
     AddUser: `
-        INSERT INTO users SET $1
+        INSERT INTO users (role_id, first_name, last_name, birth_date, address_id, email, phone_number, password, national_registry_number) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING user_id
     `,
 
     UpdateUser: `

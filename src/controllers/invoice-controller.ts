@@ -1,6 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
 import {Invoice, invoiceSchema} from '../classes/invoice';
 import * as invoiceService from '../services/invoice-service';
+import * as invoiceValidation from '../validations/invoice-validation';
 
 export const getAllInvoices: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -35,9 +36,16 @@ export const getInvoiceById: RequestHandler = async (req: Request, res: Response
 export const addInvoice: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addInvoiceSchema = invoiceSchema.fork('InvoiceID', field => field.optional());
+        const addInvoiceSchema = invoiceSchema.fork('invoice_id', field => field.optional());
         let invoice: Invoice = await addInvoiceSchema.validateAsync(req.body);
 
+        //validate the invoice
+        const validationResult = await invoiceValidation.checkInvoice(invoice);
+        if (validationResult != '') {
+            throw new Error(String(validationResult));
+        }
+
+        // insert invoice
         const result = await invoiceService.insertInvoice(invoice);
 
         res.status(200).json({

@@ -1,25 +1,25 @@
 import * as Joi from 'joi';
 
 export interface Estimation {
-    EstimatedID: number,
-    ServiceType: number,
-    AdressID: number,
-    BuildingType: number,
-    FamilySize: number,
-    PastConsumption: number,
-    ElectricCar: number,
-    Welness: number,
-    HeatingType: number
+    estimation_id: number,
+    service_type: number,
+    address_id: number,
+    building_type: number,
+    family_size: number,
+    past_consumption: number,
+    electric_car: number,
+    wellness: number,
+    heating_type: number
 }
 
 export const estimationSchema = Joi.object({
-    EstimatedID: Joi.number().integer().min(0).required(),
-    ServiceType: Joi.number().required(),
-    AdressID: Joi.number().integer().min(0).required(),
-    BuildingType: Joi.number().required(),
-    FamilySize: Joi.number().integer().min(1).required(),
-    PastConsumption: Joi.number().required(),
-    ElectricCar: Joi.number().integer().min(0).required(),
-    Welness: Joi.number().required(),
-    HeatingType: Joi.number().required()
+    estimation_id: Joi.number().integer().min(0).required(),
+    service_type: Joi.number().required(),
+    address_id: Joi.number().integer().min(0).required(),
+    building_type: Joi.number().required(),
+    family_size: Joi.number().integer().min(1).required(),
+    past_consumption: Joi.number().required(),
+    electric_car: Joi.number().integer().min(0).required(),
+    wellness: Joi.number().required(),
+    heating_type: Joi.number().required()
 });

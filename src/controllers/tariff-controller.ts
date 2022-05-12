@@ -35,7 +35,7 @@ export const getTariffById: RequestHandler = async (req: Request, res: Response)
 export const addTariff: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addTariffSchema = tariffSchema.fork('TarifID', field => field.optional());
+        const addTariffSchema = tariffSchema.fork('tariff_id', field => field.optional());
         let tariff: Tariff = await addTariffSchema.validateAsync(req.body);
 
         const result = await tariffService.insertTariff(tariff);
