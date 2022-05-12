@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {Invoice, InvoiceStatus} from "../classes/invoice";
 import {invoiceQueries} from "../queries/invoice-queries";
+import { setInterval } from "timers";
 
 export const getAllInvoices = async () => {
     let invoices = execute<{rows: Invoice[]}>(invoiceQueries.getAllInvoices, []);
@@ -46,15 +47,20 @@ export const deleteInvoiceById = async (id: Invoice['InvoiceID']) => {
 
 export const getOverdueInvoices = async () => {
     console.log("start");
-    const invoicesSql = await execute<{rows: Invoice[]}>('SELECT * FROM invoices WHERE "DueDate" <= $1;', [new Date().toISOString()]).catch(e => console.log("catch", e));
+    const query = 'SELECT * FROM invoices WHERE "statusid" == $1;'
+    const invoicesSql = await execute<{rows: Invoice[]}>(query, [InvoiceStatus.overdue]).catch(e => console.log("catch", e));
     console.log("overdue: 2");
     if(!invoicesSql)
         return undefined
-    console.log(invoicesSql);
-    const invoices = invoicesSql.rows;
-    console.log("overdue: 3");
     //this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue
-    invoices.forEach(e => e.Statusid = InvoiceStatus.overdue)
-    return invoices;
+    return invoicesSql.rows;
 };
 
+export async function setOverdue() {
+    const query = `UPDATE "invoices" SET "Statusid" = ${InvoiceStatus.overdue} WHERE "Statusid" = ${InvoiceStatus.sent} AND "DueDate" <= '${new Date().toISOString()}'` //AND  // "DueDate" <=  ${new Date().toISOString()
+    const invoicesSql = await execute<unknown>(query);
+}
+
+export async function startIntervalsOverdue() {
+    setInterval(setOverdue, 1000);
+}

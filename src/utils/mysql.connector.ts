@@ -30,7 +30,7 @@ export function end() {
 }
 
 
-export const execute = <T>(query: string, params: any[]): Promise<T> => {
+export const execute = <T>(query: string, params: any[] = []): Promise<T> => {
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
 
