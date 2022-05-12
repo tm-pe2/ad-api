@@ -12,15 +12,12 @@ import planningRoutes from './routes/planning-routes';
 import tariffRoutes from './routes/tariff-routes';
 import supplierRoutes from './routes/supplier-routes';
 import ticketRoutes from './routes/ticket-routes';
-
 import * as DBConnector from './utils/mysql.connector';
 import userRoutes from './routes/user-routes';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
 import bodyParser from 'body-parser';
-
 import cors from 'cors';
-
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
 
