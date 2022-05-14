@@ -9,7 +9,8 @@ describe('Supplier Endpoints', () => {
                 name: 'name1',
                 supply_type: 'type1',
                 company_name: 'companyName1',
-                address_id:  1
+                address_id:  1,
+                vat_number: "BE0123456789"
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);
@@ -38,7 +39,8 @@ describe('Supplier Endpoints', () => {
                 name: 'name1',
                 supply_type: 'type1',
                 company_name: 'companyName1',
-                address_id:  1
+                address_id:  1,
+                vat_number: "BE0123456789"
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.result).toEqual(true);

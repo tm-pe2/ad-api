@@ -32,6 +32,21 @@ export const getEstimationById: RequestHandler = async (req: Request, res: Respo
     }
 };
 
+export const getEstimationByCustomerId: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const estimation = await estimationService.getEstimationByCustomerId(Number(req.params.id));
+
+        res.status(200).json({
+            estimation
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching estimation'
+        });
+    }
+};
+
 export const addEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
