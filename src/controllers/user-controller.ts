@@ -1,5 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
-import {User, userSchema} from '../classes/user';
+import {userSchema} from '../classes/user';
+import {UserAddress} from '../classes/user-addresses';
+import * as userAdressService from '../services/user-address-service';
 import * as userValidation from '../validations/user-validation';
 import * as addressServices from '../services/address-service';
 import * as userService from '../services/user-service';
@@ -77,6 +79,10 @@ export const getUserSelf: RequestHandler = async (req: Request, res: Response) =
 
 export const addUser: RequestHandler = async (req: Request, res: Response) => {
     try {
+        let userAddressObject: UserAddress = {
+            user_id: -1,
+            address_id:-1
+        };
         // input validation
         const addUserSchema = userSchema.fork(['user_id', 'address_id'], field => field.optional());
         const validatedUser = await addUserSchema.validateAsync(req.body);
@@ -93,7 +99,9 @@ export const addUser: RequestHandler = async (req: Request, res: Response) => {
 
         //insert address and user
         validatedUser.address_id = await addressServices.insertAddress(validatedUser);
-        const result = await userService.insertUser(validatedUser);
+        userAddressObject.user_id = await userService.insertUser(validatedUser);
+        userAddressObject.address_id = validatedUser.address_id;
+        const result = await userAdressService.insertUserAddress(userAddressObject);
 
         res.status(200).json({
             result

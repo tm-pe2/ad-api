@@ -23,14 +23,8 @@ export const insertEstimation = async (estimation: Estimation) => {
         estimation.building_type,
         estimation.family_size,
         estimation.past_consumption,
-        estimation.meters_number,
-        estimation.meter_type,
-        estimation.meter_value,
-        estimation.meter_type2,
-        estimation.meter_value2,
-        estimation.meter_type3,
-        estimation.meter_value3,
-        estimation.equipments
+        estimation.equipments,
+        estimation.estimated_consumption
     ], "rowCount");
 
     return rowCount > 0;
@@ -43,14 +37,8 @@ export const updateEstimation = async (estimation: Estimation) => {
         estimation.building_type,
         estimation.family_size,
         estimation.past_consumption,
-        estimation.meters_number,
-        estimation.meter_type,
-        estimation.meter_value,
-        estimation.meter_type2,
-        estimation.meter_value2,
-        estimation.meter_type3,
-        estimation.meter_value3,
         estimation.equipments,
+        estimation.estimated_consumption,
         estimation.estimation_id
     ], "rowCount");
 

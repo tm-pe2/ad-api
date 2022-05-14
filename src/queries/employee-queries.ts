@@ -1,12 +1,17 @@
 export const employeeQueries = {
     getAllEmployees: `
-        SELECT * FROM users AS u 
-        INNER JOIN employees AS e ON u.user_id = e.employee_id
-        INNER JOIN address a ON u.address_id = a.address_id
+        SELECT * FROM users as u 
+        INNER JOIN employees as e ON u.user_id = e.user_id
+        INNER JOIN useraddress as ua ON u.user_id = ua.user_id       
+        INNER JOIN address a ON a.address_id = ua.address_id
     `,
 
     getEmployeeById: `
-        SELECT * FROM users as u INNER JOIN employees e ON u.user_id = e.employee_id WHERE u.user_id = $1
+        SELECT * FROM users as u 
+        INNER JOIN employees as e ON u.user_id = e.user_id
+        INNER JOIN useraddress as ua ON u.user_id = ua.user_id       
+        INNER JOIN address a ON a.address_id = ua.address_id
+        WHERE e.employee_id = $1
     `,
 
     addEmployee: `

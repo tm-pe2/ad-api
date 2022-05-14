@@ -8,13 +8,11 @@ export const getAllAddresses = async () => {
 
 export const getAddressById = async (id: Address['address_id']) => {
     const addresses = await execute<Address[]>(addressQueries.getAddressById, [id], "rows");
-
     return addresses[0];
 };
 
 export const getAddressByDetails = async (city: Address['city'], street: Address['street'], huose_number: Address['house_number'], postal_code: Address['postal_code'], country: Address['country']) => {
     const addresses = await execute<Address[]>(addressQueries.getAddressByDetails, [city,street,huose_number,postal_code,country], "rows");
-
     return addresses[0];
 };
 
@@ -45,6 +43,5 @@ export const updateAddress = async (address: Address) => {
 
 export const deleteAddressById = async (id: Address['address_id']) => {
     const rowCount = await execute<number>(addressQueries.deleteAddressById, [id], "rowCount");
-
     return rowCount > 0;
 };

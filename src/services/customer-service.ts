@@ -18,10 +18,10 @@ export const getCustomerByUserId = async (id: Customer['user_id']) => {
     return customers[0];
 };
 
-export const getAddressIdByCustomerId = async (id: Customer['customer_id']) => {
-    const addressID = await execute<number[]>(customerQueries.getAddressIdByCustomerID, [id], "rows");
-    return addressID[0];
-};
+// export const getAddressIdByCustomerId = async (id: Customer['customer_id']) => {
+//     const addressID = await execute<number[]>(customerQueries.getAddressIdByCustomerID, [id], "rows");
+//     return addressID[0];
+// };
 
 //TODO?
 export const getCustomersContracts = async () => {
@@ -34,23 +34,17 @@ export const getCustomersContractsByID = async (id: Customer['customer_id']) => 
 
 export const insertCustomer = async (customer: Customer) => {
     const rowCount = await execute<number>(customerQueries.AddCustomer, [
-        customer.gas_type,
-        customer.electricity_type,
-        customer.gas_meter_id,
-        customer.electricity_meter_id,
-        customer.user_id
+        customer.user_id,
+        customer.customer_type,
     ], "rowCount");
 
     return rowCount > 0;
 };
 
 export const updateCustomer = async (customer: Customer) => {
-    const rowCount = await execute<number>(customerQueries.UpdateCustomer, [
-        customer.gas_type,
-        customer.electricity_type,
-        customer.gas_meter_id,
-        customer.electricity_meter_id,
+    const rowCount = await execute<number>(customerQueries.updateCustomer, [
         customer.user_id,
+        customer.customer_type,
         customer.customer_id
     ], "rowCount");
 

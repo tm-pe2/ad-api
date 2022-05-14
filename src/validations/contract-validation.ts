@@ -10,7 +10,7 @@ const errorList = {
 }
 
 const checkActiveContract = async (contract: Contract) => {
-    const result =  await contractService.getContractsByCustomerAndAddressID(contract.customer_id,contract.contract_type,contract.address_id,contract.end_date);
+    const result =  await contractService.getContractsByCustomerAndAddressID(contract.customer_id,contract.service_type,contract.address_id,contract.end_date);
     if(result.length > 0)
     {
         return false;
