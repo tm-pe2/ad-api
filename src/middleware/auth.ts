@@ -37,7 +37,7 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
     }
 }
 
-function getToken(req: Request): Promise<string> {
+export function getToken(req: Request): Promise<string> {
     const promise = new Promise<string>((resolve, reject) => {
         const authHeader = req.headers.authorization;
         if (authHeader != undefined) {
@@ -51,4 +51,4 @@ function getToken(req: Request): Promise<string> {
     return promise;
 }
 
-export {authorize as authenticate}
+export {authorize as authenticate, getToken as getAccessToken}

@@ -38,9 +38,9 @@ export class RefreshToken {
         });
     };
 
-    static deleteRefreshToken(userId: number): Promise<void> {
+    static deleteRefreshToken(token: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            execute<{ rowCount: number }>(refreshtokenQueries.deleteTokenByUserId, [userId])
+            execute<{ rowCount: number }>(refreshtokenQueries.deleteToken, [token])
                 .then(() => {
                     resolve();
                 })

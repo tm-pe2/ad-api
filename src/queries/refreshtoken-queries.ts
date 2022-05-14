@@ -8,7 +8,7 @@ export const refreshtokenQueries = {
         VALUES ($1, $2, $3)
     `,
 
-    deleteTokenByUserId: `
-        DELETE FROM refreshtokens WHERE user_id = $1
+    deleteToken: `
+        DELETE FROM refreshtokens WHERE token = $1
     `
 };
