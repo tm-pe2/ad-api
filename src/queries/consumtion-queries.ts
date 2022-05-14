@@ -1,0 +1,27 @@
+export const consumtionQueries = {
+    getAllConsumptions: `
+        SELECT * FROM consumption
+    `,
+
+    getConsumptionById: `
+        SELECT * FROM consumption WHERE consumption_id = $1
+    `,
+
+    addConsumption: `
+        INSERT INTO consumption (meter_id,consumtion,date)
+            VALUES ($1, $2, $3)
+    `,
+
+    updateConsumption: `
+        UPDATE consumption
+        SET
+            meter_id = $1,
+            consumption = $2,
+            date = $3
+        WHERE consumption_id = $4
+    `,
+
+    deleteConsumptionById: `
+        DELETE FROM consumption WHERE consumption_id = $1
+    `
+};

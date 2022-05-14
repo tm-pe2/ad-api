@@ -13,8 +13,8 @@ export const invoiceQueries = {
     `,
 
     addInvoice: `
-        INSERT INTO invoices (customer_id, supplier_id, creation_date, due_date, status_id, gas_amount, electricity_type, price, tax, start_date, end_date)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        INSERT INTO invoices (customer_id, supplier_id, creation_date, due_date, status_id, price, tax, start_date, end_date)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     `,
 
     updateInvoice: `
@@ -24,13 +24,11 @@ export const invoiceQueries = {
             creation_date = $3,
             due_date = $4,
             status_id = $5,
-            gas_amount = $6,
-            electricity_type = $7,
-            price = $8,
-            tax = $9,
-            start_date = $10,
-            end_date = $11
-        WHERE invoice_id = $12
+            price = $6,
+            tax = $7,
+            start_date = $8,
+            end_date = $9
+        WHERE invoice_id = $10
     `,
 
     deleteInvoiceById: `

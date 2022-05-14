@@ -15,10 +15,8 @@ export const estimationQueries = {
     `,
 
     addEstimation: `
-        INSERT INTO estimations (service_type, address_id, building_type, 
-            family_size, past_consumption, meters_number,  meter_type, meter_value,  
-            meter_type2,  meter_value2, meter_type3, meter_value3, equipments)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14 )
+        INSERT INTO estimations (service_type, address_id, building_type, family_size, past_consumption, equipments, estimated_consumption)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
     `,
 
     updateEstimation: `
@@ -29,15 +27,9 @@ export const estimationQueries = {
             building_type = $3,
             family_size = $4,
             past_consumption = $5,
-            meters_number = $6,
-            meter_type = $7,
-            meter_value = $8,
-            meter_type2 = $9,  
-            meter_value2 = $10,
-            meter_type3 = $11,
-            meter_value3 = $12,
-            equipments = $13
-        WHERE estimation_id = $14
+            equipments = $6,
+            estimated_consumption = $7,
+        WHERE estimation_id = $8
     `,
 
     deleteEstimationById: `

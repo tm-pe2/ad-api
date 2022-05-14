@@ -1,6 +1,10 @@
 import {Request, RequestHandler, Response} from 'express';
 import { customerSchema } from '../classes/customer';
-import * as customerValidation from '../validations/customer-validation';
+import { UserAddress } from '../classes/user-addresses';
+import * as userAdressService from '../services/user-address-service';
+import * as userService from '../services/user-service';
+import * as addressServices from '../services/address-service';
+import * as userValidation from '../validations/user-validation';
 import * as customerService from '../services/customer-service';
 import * as bcrypt from 'bcrypt';
 
@@ -66,10 +70,11 @@ export const getCustomersContracts: RequestHandler = async (req: Request, res: R
 
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const addCustomerSchema = customerSchema.fork(['customer_id'], field => field.optional());
+        
+        const addCustomerSchema = customerSchema.fork(['user_id', 'address_id','customer_id'], field => field.optional());
         const validatedCustomer = await addCustomerSchema.validateAsync(req.body);
 
-        const validationResult = await customerValidation.checkCustomerData(validatedCustomer.user_id);
+        const validationResult = await userValidation.checkUserData(validatedCustomer);
         if (validationResult != '') {
             throw new Error(String(validationResult));
         }
@@ -77,6 +82,15 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
         const salt = await bcrypt.genSalt(10);
         validatedCustomer.password = await bcrypt.hash(validatedCustomer.password, salt);
 
+        validatedCustomer.address_id = await addressServices.insertAddress(validatedCustomer);
+        validatedCustomer.user_id = await userService.insertUser(validatedCustomer);
+        
+        let userAddressObject: UserAddress = {
+            user_id: validatedCustomer.user_id,
+            address_id: validatedCustomer.address_id
+        };
+
+        const add = await userAdressService.insertUserAddress(userAddressObject);
         const result = await customerService.insertCustomer(validatedCustomer);
         res.status(200).json({
             result
