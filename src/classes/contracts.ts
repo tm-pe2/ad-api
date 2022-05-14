@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
-import { Customer } from './customer';
+import {estimationSchema} from './estimation';
 
-export interface Contract extends Customer{
+export interface Contract{
     contract_id: number,
     start_date: Date,
     end_date: Date,
@@ -9,16 +9,18 @@ export interface Contract extends Customer{
     tariff_id: number,
     estimation_id: number,
     address_id: number,
-    service_type: number
+    service_type: number,
+    status: string
 }
 
-export const contractSchema = Joi.object({
+export const contractSchema = estimationSchema.keys({
     contract_id: Joi.number().integer().min(0).required(),
-    start_date: Joi.date().min('1-1-2000').required(),
-    end_date:  Joi.date().min('1-1-2000').required(),
+    start_date: Joi.date().required(),
+    end_date:  Joi.date().required(),
     customer_type:  Joi.string().required(),
     tariff_id: Joi.number().integer().min(0).required(),
     estimation_id: Joi.number().integer().min(0).required(),
     address_id: Joi.number().integer().min(0).required(),
-    service_type: Joi.number().integer().min(0).required()
+    service_type: Joi.number().integer().min(0).required(),
+    status: Joi.string().min(0).required()
 });

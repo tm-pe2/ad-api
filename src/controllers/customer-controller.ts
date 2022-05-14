@@ -37,6 +37,21 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
     }
 };
 
+export const getCustomerByUserId: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const customer = await customerService.getCustomerByUserId(Number(req.params.id));
+
+        res.status(200).json({
+            customer
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching customer'
+        });
+    }
+};
+
 export const getCustomerContractsByID: RequestHandler = async (req: Request, res: Response) => {
     try {
         const customer = await customerService.getCustomersContractsByID(Number(req.params.id));

@@ -1,5 +1,6 @@
 import {Request, RequestHandler, Response} from 'express';
 import {Contract, contractSchema } from "../classes/contracts";
+import * as estimationServies from '../services/estimation-service';
 import * as contractService from '../services/contract-service';
 import * as contractValidation from '../validations/contract-validation'
 
@@ -35,8 +36,8 @@ export const getContractById: RequestHandler = async (req: Request, res: Respons
 export const addContract: RequestHandler = async (req: Request, res: Response) => {
     try {
         // input validation
-        const addContractSchema = contractSchema.fork('contract_id', field => field.optional());
-        let contract: Contract = await addContractSchema.validateAsync(req.body);
+        const addContractSchema = contractSchema.fork(['contract_id','estimation_id'], field => field.optional());
+        let contract = await addContractSchema.validateAsync(req.body);
 
         // contract logic validation
         const validationResult = await contractValidation.checkContractData(contract);
@@ -44,10 +45,15 @@ export const addContract: RequestHandler = async (req: Request, res: Response) =
             throw new Error(String(validationResult));
         }
 
-        const result = await contractService.insertContract(contract);
+        //insert estimation
+        const estimationID = await estimationServies.insertEstimation(contract);
+        contract.estimation_id = estimationID;
+
+        //insert contract
+        const contractID = await contractService.insertContract(contract);
 
         res.status(200).json({
-            result
+            "contract_id": contractID
         });
     } catch (error) {
         console.log(error);

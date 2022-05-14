@@ -1,4 +1,5 @@
 import * as Joi from 'joi';
+import {indexValuesSchema} from './index-values';
 
 export interface Estimation {
     estimation_id: number,

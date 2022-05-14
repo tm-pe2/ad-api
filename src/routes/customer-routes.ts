@@ -5,27 +5,28 @@ import { UserRole } from '../models/userrole';
 
 const router = express.Router();
 
-// //static routes
-// router.get('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]), customerController.getAllCustomers);
-// router.get('/customers/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);
-
-// //parametrized routes
-// router.get('/customers/:id',customerController.getCustomerById);
-// router.get('/customers/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
-// router.post('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
-// router.put('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
-// router.delete('/customers/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
-
-
 //static routes
-router.get('', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getAllCustomers);
-router.get('/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);
+router.get('', customerController.getAllCustomers);
+router.get('/contracts',customerController.getCustomersContracts);
 
 //parametrized routes
-router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
-router.get('/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
-router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
-router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
-router.delete('/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
+router.get('/:id',customerController.getCustomerById);
+router.get('/:id/addresses',customerController.getCustomerByUserId);
+router.get('/:id/contracts',customerController.getCustomerContractsByID);
+router.post('', customerController.addCustomer);
+router.put('', customerController.updateCustomer);
+router.delete('/:id', customerController.DeleteCustomerById);
+
+
+// //static routes
+// router.get('', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getAllCustomers);
+// router.get('/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);
+
+// //parametrized routes
+// router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
+// router.get('/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
+// router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
+// router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
+// router.delete('/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
 
 export = router;

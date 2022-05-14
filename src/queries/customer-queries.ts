@@ -29,10 +29,10 @@ export const customerQueries = {
     `,
 
     getCustomersContractsByID:`
-        SELECT * FROM contracts c
-        INNER JOIN customercontracts cc
-        ON c.contract_id = cc.contract_id
-        WHERE cc.customer_id = $1
+        SELECT u.user_id, u.first_name, u.last_name, c.customer_type, u.role_id, cc.contract_id FROM users as u 
+        INNER JOIN customers c ON u.user_id = c.user_id
+        LEFT JOIN customercontracts as cc ON c.customer_id = cc.customer_id
+        WHERE c.customer_id = $1
     `,
 
     AddCustomer: `

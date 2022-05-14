@@ -15,7 +15,7 @@ export const getCustomerById = async (id: Customer['customer_id']) => {
 
 export const getCustomerByUserId = async (id: Customer['user_id']) => {
     const customers = await execute<Customer[]>(customerQueries.getCustomerByUserId, [id], "rows");
-    return customers[0];
+    return customers;
 };
 
 // export const getAddressIdByCustomerId = async (id: Customer['customer_id']) => {
