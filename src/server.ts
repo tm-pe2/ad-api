@@ -21,6 +21,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
 import { RefreshToken } from './classes/refreshtokens';
+import {generateAdvanceInvoices} from "./utils/generate-invoice-util";
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -111,3 +112,20 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 /** Server */
 export const httpServer = http.createServer(router);
 export default router;
+
+/** Scheduled jobs */
+const schedule = require('node-schedule');
+
+const advanceInvoiceJob = schedule.scheduleJob('*/1 * * * *', async function(){
+    console.log('Should run once a day - ' + new Date());
+    let success = await generateAdvanceInvoices(new Date());
+
+    console.log(success);
+});
+
+const annualInvoiceJob = schedule.scheduleJob('*/1 * * * *', async function(){
+    console.log('Should run once a week - ' + new Date());
+    // let success = await generateAnnualInvoices(new Date());
+    //
+    // console.log(success);
+});

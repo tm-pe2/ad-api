@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {CustomerContracts} from '../classes/customer-contracts';
 import {customerContractsQueries} from '../queries/customer-contracts-queries';
+import {AdvanceInvoiceData} from "../classes/invoice_generation/advance-invoice-data";
 
 export const getAllCustomersContracts = async () => {
     return await execute<CustomerContracts[]>(customerContractsQueries.getAllCustomerContracts, [], "rows");
@@ -32,3 +33,7 @@ export const deleteContractMeters = async (id: CustomerContracts['contract_id'])
     const rowCount = await execute<number>(customerContractsQueries.deleteCustomerContractById, [id], "rowCount");
     return rowCount > 0;
 }
+
+export const getAdvanceInvoiceData = async (id: CustomerContracts['contract_id']) => {
+    return await execute<AdvanceInvoiceData[]>(customerContractsQueries.getAdvanceInvoiceData, [id], "rows");
+};

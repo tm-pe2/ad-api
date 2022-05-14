@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {Invoice} from "../classes/invoice";
 import {invoiceQueries} from "../queries/invoice-queries";
+import {Contract} from "../classes/contracts";
 
 export const getAllInvoices = async () => {
     return await execute<Invoice[]>(invoiceQueries.getAllInvoices, [], "rows");
@@ -52,6 +53,16 @@ export const updateInvoice = async (invoice: Invoice) => {
 
 export const deleteInvoiceById = async (id: Invoice['invoice_id']) => {
     const rowCount = await execute<number>(invoiceQueries.deleteInvoiceById, [id], "rowCount");
+
+    return rowCount > 0;
+};
+
+export const getInvoiceByIdAndContractPeriod = async (contract: Contract) => {
+    const rowCount = await execute<number>(invoiceQueries.getInvoiceByIdAndContractPeriod, [
+        contract.contract_id,
+        contract.start_date,
+        contract.end_date,
+    ], "rowCount");
 
     return rowCount > 0;
 };

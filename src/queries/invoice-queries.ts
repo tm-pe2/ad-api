@@ -33,5 +33,10 @@ export const invoiceQueries = {
 
     deleteInvoiceById: `
         DELETE FROM invoices WHERE invoice_id = $1
-    `
+    `,
+
+    getInvoiceByIdAndContractPeriod: `
+        SELECT * FROM invoices 
+        WHERE contract_id = $1 AND start_date = $2 AND end_date = $3
+    `,
 };
