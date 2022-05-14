@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
+import { UserAddress, userAddressesSchema } from './user-addresses';
 
-export interface Address {
+export interface Address extends UserAddress{
     address_id: number,
     city: string,
     street: string,
@@ -9,7 +10,7 @@ export interface Address {
     country: string,
 }
 
-export const addressSchema = Joi.object({
+export const addressSchema = userAddressesSchema.keys({
     address_id: Joi.number().integer().min(0).required(),
     city: Joi.string().required(),
     street:  Joi.string().required(),

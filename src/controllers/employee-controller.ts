@@ -48,7 +48,7 @@ export const addEmployee: RequestHandler = async (req: Request, res: Response) =
         const salt = await bcrypt.genSalt(10);
         validatedEmployee.password = await bcrypt.hash(validatedEmployee.password, salt);
 
-        validatedEmployee.user_id = await userService.insertUser(validatedEmployee);
+        validatedEmployee.user_id = await userService.addUser(validatedEmployee);
         const result = await employeeService.insertEmployee(validatedEmployee);
 
         res.status(200).json({
