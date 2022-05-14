@@ -5,10 +5,10 @@ import * as auth from "../middleware/auth"
 
 const router = express.Router();
 
-router.get('/addresses', addressController.getAllAddresses);
-router.get('/addresses/:id', addressController.getAddressById);
-router.post('/addresses', addressController.addAddress);
-router.put('/addresses', addressController.updateAddress);
-router.delete('/addresses/:id', addressController.deleteAddressById);
+router.get('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),addressController.getAllAddresses);
+router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.CUSTOMER]),addressController.getAddressById);
+router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),addressController.addAddress);
+router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),addressController.updateAddress);
+router.delete('/:id', auth.authenticate([UserRole.ADMIN]), addressController.deleteAddressById);
 
 export = router;

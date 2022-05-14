@@ -2,54 +2,37 @@ import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/user-service';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
+import { RefreshToken } from '../classes/refreshtokens';
+import * as bcrypt from 'bcrypt';
+import { UserRole } from '../models/userrole';
 
 const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days
-
-// get all clients
-// const dummyUsers = [
-//     {
-//         'id': '1',
-//         'email': 'example',
-//         'pass': 'nohash',
-//         'role': 'admin'
-//     },
-//     {
-//         'id': '2',
-//         'email': 'user',
-//         'pass': 'pass',
-//         'role': 'normal'
-//     }
-// ]
-
-// dummy, store in db later
-let refreshTokens: RefreshTokenData[] = [];
 
 async function login(req: Request, res: Response, next: NextFunction) {
     if (process.env.JWTSECRET == undefined) {
         throw new Error('JWTSECRET undefined');
     }
 
-    const email = req.body.email;   //validation ?
-    const password = req.body.password;     //validation
-
-    // const user = dummyUsers.find(u => {
-    //     return u.email == email && u.pass == password;
-    // })
+    const email = req.body.email;
+    const password = req.body.password;
 
     const user = await userService.getUserByEmail(email);
+    
+    bcrypt.compare(password, user.password, (err, result) => {
+        if (err) {
+            return res.sendStatus(500);
+        }
+        if (result) {
+            const tokenData = {'id': user.user_id, 'role_id': user.role_id}
+            const accessToken = createAccessToken(tokenData);
+            const refreshToken = createRefreshToken(user.user_id);
 
-    if (user) {
-        const tokenData = {'id': user.user_id.toString(), 'role': user.role_id.toString()}
-        const accessToken = createAccessToken(tokenData);
-        const refreshToken = createRefreshToken(user.user_id.toString());
-
-        res.json({accessToken, refreshToken});
-    }
-    else {
-        res.status(401);
-        res.send('Incorrect login attempt.');
-    }
+            res.json({accessToken, refreshToken});
+        } else {
+            res.status(401).send('Invalid credentials');
+        }
+    });
 }
 
 async function refreshToken(req: Request, res: Response, next: NextFunction) {
@@ -57,37 +40,44 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
         throw new Error('JWTSECRET undefined');
     }
     
-    const token = req.body.refreshToken;    // validation ?
+    const token = req.body.refreshToken;
 
     if (!token)
         return res.status(401).send('Refresh token required.'); // unauthorized
     
-    let rt = refreshTokens.find((r) => r.token == token); 
+    RefreshToken.getRefreshToken(token)
+        .then((rt) => {
+            if (rt.expires.getTime() < (new Date()).getTime()) {
+                return res.status(403).send('Refresh token expired'); // forbidden
+            }
+            
+            // Valid refresh token -> refresh token
+            userService.getUserById(rt.userId)
+            .then((user) => {
+                const accessToken = createAccessToken({id: user.user_id, role_id: user.role_id})
+                res.json({accessToken});
+            })
+            .catch((err) => {
+                return res.sendStatus((500));
+            });
+        })
+        .catch((err) => {
+            // not found
+            return res.status(403).send('Refresh token invalid'); // forbidden
+        });
+};
 
-    if (rt === undefined)
-        return res.status(403).send('Invalid refresh token'); // forbidden
-    if (rt.expiryDate < (new Date()).getTime()) {
-        refreshTokens = refreshTokens.filter((t) => t !== rt);
-        return res.status(403).send('Refresh token expired'); // forbidden
-    }
-    // 403 => Front-end needs to ask for login again
-
-    //const user = dummyUsers.find((u) => u.id == rt?.userid);
-    const user = await userService.getUserById(Number(rt.userid));
-    if (user === undefined) {
-        return res.sendStatus((500));
-    }
-
-    const accessToken = createAccessToken({id: user.user_id.toString(), role: user.role_id.toString()})
-
-    res.json({accessToken});
-}
-
+// TODO: update front-end to use user id
 async function logout(req: Request, res: Response, next: NextFunction) {
-    const rt = req.body.refreshToken;   //validation ?
-    refreshTokens = refreshTokens.filter(t => t !== rt);
-    res.sendStatus(200);
-}
+    const token = req.body.refreshToken;
+    RefreshToken.deleteRefreshToken(token) // Logs out everywhere, all refresh tokens become invalid
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch((err) => {
+            res.sendStatus(400);
+        })
+};
 
 const createAccessToken = (tokenData: AccessTokenData) => {
     if (process.env.JWTSECRET == undefined) {
@@ -96,30 +86,20 @@ const createAccessToken = (tokenData: AccessTokenData) => {
     return jwt.sign(tokenData, process.env.JWTSECRET, {expiresIn: accessExpireTime});
 }
 
-const createRefreshToken = (userid: string) => {
+const createRefreshToken = (userid: number) => {
     let expirationDate = new Date();
     expirationDate.setSeconds(expirationDate.getSeconds() + refreshExpireTime);
-    const refreshToken: RefreshTokenData = {
-        token: uuid(),
-        userid: userid,
-        expiryDate: expirationDate.getTime(),
-    }
+    
+    const token = uuid();
+    RefreshToken.addRefreshToken(userid, token)
 
-    // store in db
-    refreshTokens.push(refreshToken);
-
-    return refreshToken.token;
+    return token;
 }
 
-interface AccessTokenData {
-    id: string,
-    role: string
-}
-
-interface RefreshTokenData {
-    token: string,
-    userid: string,
-    expiryDate: number,
+// TODO: change front-end
+export interface AccessTokenData {
+    id: number,
+    role_id: UserRole
 }
 
 export default {login, logout, refreshToken};
