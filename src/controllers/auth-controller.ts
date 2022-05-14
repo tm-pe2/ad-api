@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import { RefreshToken } from '../classes/refreshtokens';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from '../models/userrole';
 
 const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days
@@ -68,8 +69,8 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
 
 // TODO: update front-end to use user id
 async function logout(req: Request, res: Response, next: NextFunction) {
-    const id = req.body.user_id;
-    RefreshToken.deleteRefreshToken(id) // Logs out everywhere, all refresh tokens become invalid
+    const token = req.body.refreshToken;
+    RefreshToken.deleteRefreshToken(token) // Logs out everywhere, all refresh tokens become invalid
         .then(() => {
             res.sendStatus(200);
         })
@@ -96,10 +97,9 @@ const createRefreshToken = (userid: number) => {
 }
 
 // TODO: change front-end
-interface AccessTokenData {
+export interface AccessTokenData {
     id: number,
-    role_id: number
+    role_id: UserRole
 }
-
 
 export default {login, logout, refreshToken};

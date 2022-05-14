@@ -70,21 +70,20 @@ DBConnector.init();
 
 
 /** Routes */
-router.use('/api/',
-    userRoutes,
-    authRoutes,
-    testRoutes,
-    customerRoutes,
-    invoiceRoutes,
-    contractRoutes,
-    addressRoutes,
-    employeeRoutes,
-    estimationRoutes,
-    planningRoutes,
-    tariffRoutes,
-    supplierRoutes,
-    ticketRoutes
-);
+router.use('/auth/', authRoutes)
+router.use('/test/', testRoutes)
+
+router.use('/addresses/', addressRoutes)
+router.use('/contracts/', contractRoutes)
+router.use('/customers/', customerRoutes)
+router.use('/employees/', employeeRoutes)
+router.use('/estimations/', estimationRoutes)
+router.use('/invoices/', invoiceRoutes)
+router.use('/plannings/', planningRoutes)
+router.use('/suppliers/', supplierRoutes)
+router.use('/tariffs/', tariffRoutes)
+router.use('/tickets/', ticketRoutes)
+router.use('/users/', userRoutes)
 
 // RefreshToken.addRefreshToken(1, 'test').then(() => {
 //     console.log('added refresh token');
