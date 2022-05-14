@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { UserRole } from '../models/userrole';
 
-function authorize(roles: string[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
         if (process.env.JWTSECRET == undefined) {
             throw new Error('JWTSECRET undefined');
@@ -36,7 +37,7 @@ function authorize(roles: string[]): (req: Request, res: Response, next: NextFun
     }
 }
 
-function getToken(req: Request): Promise<string> {
+export function getToken(req: Request): Promise<string> {
     const promise = new Promise<string>((resolve, reject) => {
         const authHeader = req.headers.authorization;
         if (authHeader != undefined) {
@@ -50,4 +51,4 @@ function getToken(req: Request): Promise<string> {
     return promise;
 }
 
-export {authorize as authenticate}
+export {authorize as authenticate, getToken as getAccessToken}

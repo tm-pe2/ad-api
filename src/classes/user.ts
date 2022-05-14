@@ -1,9 +1,10 @@
 import * as Joi from 'joi';
+import { UserRole } from '../models/userrole';
 import {Address, addressSchema} from './address';
 
 export interface User extends Address {
     user_id: number,
-    role_id: number,
+    role_id: UserRole,
     first_name: string,
     last_name: string,
     birth_date: Date,

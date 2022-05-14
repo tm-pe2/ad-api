@@ -18,14 +18,14 @@ const router = express.Router();
 
 
 //static routes
-router.get('/customers', customerController.getAllCustomers);
-router.get('/customers/contracts', customerController.getCustomersContracts);
+router.get('', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getAllCustomers);
+router.get('/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);
 
 //parametrized routes
-router.get('/customers/:id',customerController.getCustomerById);
-router.get('/customers/:id/contracts', customerController.getCustomerContractsByID);
-router.post('/customers',  customerController.addCustomer);
-router.put('/customers',  customerController.updateCustomer);
-router.delete('/customers/:id', customerController.DeleteCustomerById);
+router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
+router.get('/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
+router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
+router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
+router.delete('/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
 
 export = router;
