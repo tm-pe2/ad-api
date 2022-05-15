@@ -35,6 +35,6 @@ export const deleteContractMeters = async (id: Meter['meter_id']) => {
     return rowCount > 0;
 }
 
-export const getMeterByContractIdAndPeriod = async (contract: Contract) => {
-    return await execute<Meter[]>(metersQueries.getMeterById, [id], "rows");
+export const getMetersByContractId = async (contractId: number) => {
+    return await execute<Meter[]>(metersQueries.getMetersByContractId, [contractId], "rows");
 }

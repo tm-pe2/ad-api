@@ -52,8 +52,3 @@ export const deleteContract = async (id: Contract['contract_id']) => {
 export const getAllActiveContracts = async () => {
     return await execute<Contract[]>(contractQueries.getAllActiveContracts, [new Date()], "rows");
 };
-
-export const getContractInvoiceData = async (id: Contract['contract_id']) => {
-    const result = await execute<GenerateInvoiceData[]>(contractQueries.getDataForInvoiceGeneration, [id], "rows");
-    return result[0];
-};

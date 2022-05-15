@@ -1,9 +1,14 @@
 import path from "path";
-import {AnnualInvoicePdf} from "../classes/annual-invoice-pdf";
 import * as invoiceService from "../services/invoice-service";
-import {getInvoiceType} from "../services/invoice-service";
-import {AdvanceInvoicePdf} from "../classes/advance-invoice-pdf";
+import * as consumptionService from "../services/consumption-service";
+import * as meterService from "../services/meter-service";
+
+import {Invoice} from "../classes/invoice";
+import {Meter} from "../classes/meters";
 import {InvoicePdf} from "../classes/invoice-pdf";
+import {Consumption} from "../classes/consumption";
+
+import {monthDiff} from "./generate-invoice-util";
 
 const fs = require('fs');
 const PDFDocument = require("pdfkit");
@@ -15,14 +20,18 @@ export const generatePdf = async (invoiceId: number) => {
     return new Promise<void> (async resolve => {
         const destinationPath = getPathToInvoiceFile(invoiceId);
 
-        const type: string = await getInvoiceType(invoiceId)
-        if (type === 'Annual') {
-            const pdfData: AnnualInvoicePdf = await invoiceService.getAnnualInvoicePdfData(invoiceId);
+        const invoicePdf: InvoicePdf = await invoiceService.getInvoicePdfData(invoiceId);
 
-            generateAnnualInvoicePdf(pdfData);
-        } else {
-            const pdfData: AdvanceInvoicePdf = await invoiceService.getAdvanceInvoicePdfData(invoiceId);
-            // generate advance invoice
+        if (monthDiff(invoicePdf.period_start, invoicePdf.period_end) > 1) {
+            console.log("annual invoice");
+
+            const meterConsumptions = await getMeterConsumptions(invoicePdf);
+
+            generateAnnualInvoicePdf(invoicePdf, meterConsumptions);
+        }
+        else {
+            console.log("advance invoice");
+            generateAdvanceInvoicePdf(invoicePdf);
         }
 
         doc.end();
@@ -30,6 +39,21 @@ export const generatePdf = async (invoiceId: number) => {
 
         b.on('finish', resolve);
     });
+}
+
+const getMeterConsumptions = async (invoicePdf: InvoicePdf) => {
+
+    let meterConsumption: Map<Meter, Consumption> = new Map<Meter, Consumption>();
+
+    const meters: Meter[] = await meterService.getMetersByContractId(invoicePdf.contract_id)
+
+    for (const meter of meters) {
+        const consumption: Consumption = await consumptionService.getConsumptionByMeterIdAndPeriod(meter.meter_id, invoicePdf.period_start, invoicePdf.period_end);
+
+        meterConsumption.set(meter, consumption);
+    }
+
+    return meterConsumption;
 }
 
 export const fileExistsForInvoice = (invoiceId: number): boolean => {
@@ -46,18 +70,57 @@ export const getPathToInvoiceFile = (invoiceId: number): string => {
     return path.join(resourcePath, 'invoice' + invoiceId + '.pdf');
 }
 
-const generateAnnualInvoicePdf = (pdfData: AnnualInvoicePdf) => {
-    generateHeader();
-    generateCustomerInformation(pdfData);
+const generateAnnualInvoicePdf = (invoicePdf: InvoicePdf, meterConsumptions: Map<Meter, Consumption>) => {
+    const consumptionWithTax = (invoicePdf.price + invoicePdf.tax); //392.3304
+    const totalAdvances = invoicePdf.estimated_consumption * 11 * invoicePdf.tariff_rate;
+    const totalAdvancesWithTax = totalAdvances + (totalAdvances * 0.21);
+    const endTotal = consumptionWithTax - totalAdvancesWithTax;
+    console.log(endTotal);
 
-    generateInvoiceTableHeader(pdfData);
-    generateRowElectricityConsumption(360, pdfData)
+    generateHeader();
+    generateCustomerInformation(invoicePdf, endTotal);
+    generateInvoiceTableHeader(invoicePdf);
+
+    let i = 0;
+    let baseInvoiceTablePosition = 360
+    for (const meter of meterConsumptions.keys())
+    {
+        generateMeterRow(baseInvoiceTablePosition + i * 20, invoicePdf, meter.physical_id.toString(), meterConsumptions.get(meter)!);
+        i++;
+    }
+
+    const baseAfterTablePosition = baseInvoiceTablePosition + i * 20;
+
+    generateHr(baseAfterTablePosition);
+
+    generateRowTax(baseAfterTablePosition + 10, invoicePdf.tax);
+
+    generatePartialHr(400, 550, baseAfterTablePosition + 25);
+
+    generateRowSubtotal(baseAfterTablePosition + 40, consumptionWithTax);
+    generateRowAdvances(baseAfterTablePosition + 60, totalAdvancesWithTax);
+
+    generatePartialHr(400, 550, baseAfterTablePosition + 75);
+
+    generateRowAmountDue(baseAfterTablePosition + 90, invoicePdf, endTotal);
+}
+
+const generateAdvanceInvoicePdf = (invoicePdf: InvoicePdf) => {
+    const advance = invoicePdf.estimated_consumption * invoicePdf.tariff_rate;
+    const endTotal = advance + (advance * 0.21);
+
+    generateHeader();
+    generateCustomerInformation(invoicePdf, endTotal);
+    generateInvoiceTableHeader(invoicePdf);
+
+    generateAdvanceTableRow(360, invoicePdf);
+
     generateHr(380);
 
-    generateRowAdvances(390, pdfData);
+    generateRowTax(390,invoicePdf.tax);
     generatePartialHr(400, 550, 405);
 
-    generateRowAmountDue(415, pdfData);
+    generateRowAmountDue(415, invoicePdf, endTotal);
 }
 
 const generateHeader = () => {
@@ -77,13 +140,13 @@ const generateHeader = () => {
         .moveDown();
 }
 
-const generateCustomerInformation = (invoicePdf: InvoicePdf) => {
+const generateCustomerInformation = (invoicePdf: InvoicePdf, endTotal: number) => {
     let title = '';
     let label = '';
 
-    if (invoicePdf.price > 0) {
+    if (endTotal > 0) {
         title = "Invoice";
-        label = "Balance due";
+        label = "Balance due:";
     }
     else
     {
@@ -110,26 +173,17 @@ const generateCustomerInformation = (invoicePdf: InvoicePdf) => {
 
         .text("Period:", 50, customerInformationTop + 30)
         .text(
-            invoicePdf.start_date.toLocaleDateString() + ' - ' + invoicePdf.end_date.toLocaleDateString(),
+            invoicePdf.period_start.toLocaleDateString() + ' - ' + invoicePdf.period_end.toLocaleDateString(),
             150,
             customerInformationTop + 30
         )
-
         .font("Helvetica-Bold")
-        .text(label, 50, customerInformationTop + 45)
-        .text(
-            formatCurrency(invoicePdf.price),
-            150,
-            customerInformationTop + 45
-        )
+        .text("Date due:", 50, customerInformationTop + 45)
+        .text(invoicePdf.due_date.toLocaleDateString(), 150, customerInformationTop + 45)
 
-        .text("Date due:", 50, customerInformationTop + 60)
-        .text(invoicePdf.due_date.toLocaleDateString(), 150, customerInformationTop + 60)
-
-        .font("Helvetica-Bold")
-        .text(invoicePdf.first_name + ' ' + invoicePdf.last_name, 350, customerInformationTop + 15, { align: "right" })
+        .text(invoicePdf.first_name + ' ' + invoicePdf.last_name, 350, customerInformationTop + 10, { align: "right" })
         .font("Helvetica")
-        .text(invoicePdf.street + ' ' + invoicePdf.house_number, 350, customerInformationTop + 30, { align: "right" })
+        .text(invoicePdf.street + ' ' + invoicePdf.house_number, 350, customerInformationTop + 25, { align: "right" })
         .text(
             invoicePdf.postal_code +
             ' ' +
@@ -137,16 +191,15 @@ const generateCustomerInformation = (invoicePdf: InvoicePdf) => {
             ", " +
             invoicePdf.country,
             350,
-            customerInformationTop + 45,
+            customerInformationTop + 40,
             { align: "right" }
         )
         .moveDown();
 
-    generateHr(customerInformationTop + 80);
+    generateHr(customerInformationTop + 70);
 }
 
 const generateInvoiceTableHeader = (invoicePdf: InvoicePdf) => {
-    let i;
     const invoiceTableTop = 330;
 
     doc.font("Helvetica-Bold");
@@ -164,34 +217,80 @@ const generateInvoiceTableHeader = (invoicePdf: InvoicePdf) => {
     doc.font("Helvetica");
 }
 
-const generateRowElectricityConsumption = (position: number, pdfData: AnnualInvoicePdf) => {
+const generateMeterRow = (position: number, invoicePdf: InvoicePdf, physicalId: string, consumption: Consumption) => {
     generateTableRow(
         position,
         '1',
-        'Electricity consumption',
-        pdfData.value.toString(), //tariff rate
-        "{actual_cons}",//pdfData.actual_consumption.toString(),
-        formatCurrency(pdfData.actual_consumption * pdfData.value),
+        physicalId.toString(),
+        invoicePdf.tariff_rate.toString(), //tariff rate
+        consumption.consumption.toString(),
+        formatCurrency(invoicePdf.tariff_rate * consumption.consumption),
         "right",
         0
     );
 }
 
-const generateRowAdvances = (position: number, pdfData: AnnualInvoicePdf) => {
+const generateAdvanceTableRow = (position: number, invoicePdf: InvoicePdf) => {
+    generateTableRow(
+        position,
+        '1',
+        'Advance',
+        invoicePdf.tariff_rate.toString(),
+        invoicePdf.estimated_consumption.toString(),
+        formatCurrency(invoicePdf.tariff_rate * invoicePdf.estimated_consumption),
+        "right",
+        0
+    );
+}
+
+const generateRowAdvances = (position: number, totalAdvancesWithTax: number) => {
+
     generateTableRow(
         position,
         "",
         "",
         "",
         "Advances",
-        '- ' + formatCurrency(pdfData.advances_paid),
+        '- ' + formatCurrency(totalAdvancesWithTax),
         "left",
         30
     );
 }
 
-const generateRowAmountDue = (position: number, pdfData: AnnualInvoicePdf) => {
-    const label = pdfData.price > 0 ? "Balance Due" : "Credit Note Total";
+const generateRowTax = (position: number, tax: number) => {
+
+    doc.font("Helvetica");
+    generateTableRow(
+        position,
+        "",
+        "",
+        " ",
+        'Tax',
+        '+ ' + formatCurrency(tax),
+        "left",
+        30
+    );
+    doc.font("Helvetica");
+}
+
+const generateRowSubtotal = (position: number, subTotal: number) => {
+
+    doc.font("Helvetica");
+    generateTableRow(
+        position,
+        "",
+        "",
+        " ",
+        'Subtotal',
+        formatCurrency(subTotal),
+        "left",
+        30
+    );
+    doc.font("Helvetica");
+}
+
+const generateRowAmountDue = (position: number, invoicePdf: InvoicePdf, endTotal: number) => {
+    const label = endTotal > 0 ? "Balance Due" : "Credit Note Total";
 
     doc.font("Helvetica-Bold");
     generateTableRow(
@@ -200,7 +299,7 @@ const generateRowAmountDue = (position: number, pdfData: AnnualInvoicePdf) => {
         "",
         " ",
         label,
-        formatCurrency(pdfData.price),
+        formatCurrency(endTotal),
         "left",
         30
     );

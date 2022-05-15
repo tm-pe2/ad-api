@@ -1,4 +1,4 @@
-export const consumtionQueries = {
+export const consumptionQueries = {
     getAllConsumptions: `
         SELECT * FROM consumption
     `,
@@ -23,5 +23,10 @@ export const consumtionQueries = {
 
     deleteConsumptionById: `
         DELETE FROM consumption WHERE consumption_id = $1
+    `,
+
+    getConsumptionByMeterIdAndPeriod: `
+        SELECT * FROM consumption
+        WHERE meter_id = $1 AND date > $2 AND date < $3
     `
 };

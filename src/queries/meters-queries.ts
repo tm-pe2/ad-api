@@ -22,5 +22,16 @@ export const metersQueries = {
 
     deleteMeter: `
         DELETE FROM meters WHERE meter_id = $1
+    `,
+
+    getMetersByContractId: `
+        SELECT
+            m.meter_id,
+            m.meter_type,
+            m.physical_id,
+            cm.contract_id
+        FROM meters m
+        JOIN contractmeters cm ON cm.meter_id = m.meter_id
+        WHERE cm.contract_id = $1
     `
 }

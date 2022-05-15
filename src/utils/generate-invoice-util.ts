@@ -1,13 +1,18 @@
 import * as contractService from '../services/contract-service';
 import * as invoiceService from '../services/invoice-service';
 import * as meterService from '../services/meter-service';
+import * as consumptionService from '../services/consumption-service';
+import * as tariffService from '../services/tariff-service';
+import * as estimationService from '../services/estimation-service';
 
 import {Contract} from "../classes/contracts";
 import {Invoice} from "../classes/invoice";
+import {Meter} from "../classes/meters";
+import {Tariff} from "../classes/tariff";
+import {Estimation} from "../classes/estimation";
+import {Consumption} from "../classes/consumption";
 
 export const generateAdvanceInvoices = async (currentDate: Date) => {
-
-    //TODO: combine invoices when customer has multiple? (map)
     currentDate.setHours(0, 0, 0, 0);
 
     try {
@@ -24,7 +29,7 @@ export const generateAdvanceInvoices = async (currentDate: Date) => {
             console.log("next invoice date is on :" + nextInvoiceDate);
 
             const timeForAdvanceInvoice = nextInvoiceDate.valueOf() === currentDate.valueOf() && amountOfPastInvoices < 11
-            console.log("Is it time to make an advance invoice: " + (nextInvoiceDate.valueOf() === currentDate.valueOf()));
+            console.log("Is it time to make an advance invoice: " + timeForAdvanceInvoice);
             if (timeForAdvanceInvoice) {
                 console.log("Less than 11 advance invoices were sent out so let's sent one out for this month.");
                 console.log("amountOfPastInvoices < 11 = " + (amountOfPastInvoices < 11));
@@ -39,35 +44,33 @@ export const generateAdvanceInvoices = async (currentDate: Date) => {
 }
 
 const generateAdvanceInvoice = async (contract: Contract) => {
+    const tariff: Tariff = await tariffService.getTariffById(contract.tariff_id);
+    const estimation: Estimation = await estimationService.getEstimationById(contract.estimation_id);
 
-    //TODO : get estimated_consumption from estimations table linked to contract
-    // get tariff.value from tariffs table linked to contract
-    // tax = ? price + (21% * price)?
     let invoice: Invoice = {
         invoice_id: -1,
-        customer_id: contract.customer_id,
-        supplier_id: contract.supplier_id,
+        contract_id: contract.contract_id,
+        supplier_id: 0, // TODO?
         creation_date: new Date(),
         due_date: addMonths(new Date(), 1),
         status_id: 0,
-        price: 0, //estimated_consumption * tariff.value * tax?
-        tax: 0, // zero on estimation?
-        start_date: new Date(),
-        end_date: addMonths(new Date(), 1),
+        price: tariff.value * estimation.estimated_consumption,
+        tax: tariff.value * estimation.estimated_consumption * 0.21,
+        period_start: new Date(),
+        period_end: addMonths(new Date(), 1),
+        tariff_rate: tariff.value
     };
 
     return await invoiceService.insertInvoice(invoice);
 }
 
 export const generateAnnualInvoices = async (currentDate: Date) => {
-
-    //TODO: combine invoices when customer has multiple? (map)
     currentDate.setHours(0,0,0,0);
 
     try {
         const activeContracts: Contract[] = await contractService.getAllActiveContracts();
 
-        activeContracts.forEach(function (contract) {
+        for (const contract of activeContracts) {
             console.log("******************" + contract.contract_id + "******************");
 
             const nearAnnualInvoiceDate: Date = addMonths(contract.start_date, 10);
@@ -75,25 +78,17 @@ export const generateAnnualInvoices = async (currentDate: Date) => {
 
             const timeForAnnualInvoice = currentDate >= nearAnnualInvoiceDate;
 
-
             if (timeForAnnualInvoice)
             {
                 console.log("It's past " + nearAnnualInvoiceDate + ". It's time to try and make and annual invoice.")
 
-                if (!invoiceAlreadyExists(contract))
+                if (!await invoiceAlreadyExists(contract))
                 {
-                    console.log("Invoice does not exist yet");
-                    if (contractHasCurrentMeterReading(contract))
-                    {
-                        // create the annual invoice
-                    }
-                    else {
-                        // create planning entry to get new reading
-                    }
+                    console.log("invoice does not exist yet");
+                    await handleAnnualInvoice(contract);
                 }
-
             }
-        });
+        }
 
         return true;
     }
@@ -106,37 +101,56 @@ const invoiceAlreadyExists = async (contract: Contract) => {
     return await invoiceService.getInvoiceByIdAndContractPeriod(contract);
 }
 
-const contractHasCurrentMeterReading = async (contract: Contract) => {
-    return await meterService.getReadingByContractIdAndPeriod(contract);
+const handleAnnualInvoice = async (contract: Contract) => {
+    const meters: Meter[] = await meterService.getMetersByContractId(contract.contract_id);
+    let totalConsumption = 0;
+
+    console.log("got meter data");
+    let metersWithMissingReading: Meter[] = [];
+
+    for (const meter of meters) {
+        const consumption: Consumption = await consumptionService.getConsumptionByMeterIdAndPeriod(meter.meter_id, contract.start_date, contract.end_date);
+
+        console.log("got consumption: " + consumption);
+        if (consumption != undefined) {
+            totalConsumption += consumption.consumption;
+        }
+        else {
+            metersWithMissingReading.push(meter);
+        }
+    }
+
+    if (metersWithMissingReading.length > 0)
+    {
+        for (const meter of metersWithMissingReading) {
+            console.log("create planning entry for meter");
+            //TODO
+        }
+    }
+    else {
+        await generateAnnualInvoice(contract, totalConsumption);
+    }
 }
 
-const generateAnnualInvoice = async (contract: Contract) => {
-    const invoiceGenerationData: GenerateInvoiceData = await contractService.getContractInvoiceData(contract.contract_id);
+const generateAnnualInvoice = async (contract: Contract, totalConsumption: number) => {
+    const tariff: Tariff = await tariffService.getTariffById(contract.tariff_id);
 
-    // TODO actual consumption * tariff value - sum(past estimations)
-    const endTotal = (1 * invoiceGenerationData.value) - (12 * contract.advance_payment)
-
-    const annualInvoice: AnnualInvoice = {
+    const invoice: Invoice = {
         invoice_id: -1,
         contract_id: contract.contract_id,
+        supplier_id: 0, //TODO?
         creation_date: new Date(),
         due_date: addMonths(new Date(), 1),
         status_id: 0,
-        price: endTotal,
-        start_date: new Date(),
-        end_date: addMonths(new Date(), 1),
-        annual_invoice_id: -1,
-        actual_consumption: 0, //TODO
-        advances_paid: 12 * contract.advance_payment
+        price: totalConsumption * tariff.value,
+        tax: totalConsumption * tariff.value * 0.21,
+        tariff_rate: tariff.value,
+        period_start: contract.start_date,
+        period_end: contract.end_date
     };
 
-    return await invoiceService.insertAnnualInvoice(annualInvoice);
+    return await invoiceService.insertInvoice(invoice);
 }
-
-//
-// const getDaysInMonth = (year: number, month: number) => {
-//     return new Date(year, month, 0).getDate();
-// }
 
 const addMonths = (date: Date, amount: number) => {
     const endDate = new Date(date.getTime());
@@ -155,7 +169,7 @@ const addMonths = (date: Date, amount: number) => {
     return new Date(endDate);
 }
 
-const monthDiff = (from: Date, to: Date) => {
+export const monthDiff = (from: Date, to: Date) => {
     const years = to.getFullYear() - from.getFullYear();
     const months = to.getMonth() - from.getMonth();
 

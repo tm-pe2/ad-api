@@ -1,17 +1,18 @@
 import {execute} from "../utils/mysql.connector";
-import {Consumtion} from '../classes/consumption';
-import {consumtionQueries} from '../queries/consumtion-queries';
+import {Consumption} from '../classes/consumption';
+import {consumptionQueries} from '../queries/consumption-queries';
+import {Meter} from "../classes/meters";
 
 export const getAllConsumptions = async () => {
-    return await execute<Consumtion[]>(consumtionQueries.getAllConsumptions, [], "rows");
+    return await execute<Consumption[]>(consumptionQueries.getAllConsumptions, [], "rows");
 };
 
-export const getConsumptionById = async (id: Consumtion['consumption_id']) => {
-    return await execute<Consumtion[]>(consumtionQueries.getConsumptionById, [id], "rows");
+export const getConsumptionById = async (id: Consumption['consumption_id']) => {
+    return await execute<Consumption[]>(consumptionQueries.getConsumptionById, [id], "rows");
 };
 
-export const insertConsumption = async (consumption: Consumtion) => {
-    const rowCount = await execute<number>(consumtionQueries.addConsumption, [
+export const insertConsumption = async (consumption: Consumption) => {
+    const rowCount = await execute<number>(consumptionQueries.addConsumption, [
         consumption.meter_id,
         consumption.consumption,
         consumption.date
@@ -20,8 +21,8 @@ export const insertConsumption = async (consumption: Consumtion) => {
     return rowCount;
 };
 
-export const updateConsumption = async (consumption: Consumtion) => {
-    const rowCount = await execute<number>(consumtionQueries.updateConsumption, [
+export const updateConsumption = async (consumption: Consumption) => {
+    const rowCount = await execute<number>(consumptionQueries.updateConsumption, [
         consumption.meter_id,
         consumption.consumption,
         consumption.date,
@@ -31,7 +32,17 @@ export const updateConsumption = async (consumption: Consumtion) => {
     return rowCount;
 }
 
-export const deleteConsumption = async (id: Consumtion['consumption_id']) => {
-    const rowCount = await execute<number>(consumtionQueries.deleteConsumptionById, [id], "rowCount");
+export const deleteConsumption = async (id: Consumption['consumption_id']) => {
+    const rowCount = await execute<number>(consumptionQueries.deleteConsumptionById, [id], "rowCount");
     return rowCount > 0;
+}
+
+export const getConsumptionByMeterIdAndPeriod = async (meterId: Meter['meter_id'], period_start: Date, period_end: Date) => {
+    const result = await execute<Consumption[]>(consumptionQueries.getConsumptionByMeterIdAndPeriod, [
+        meterId,
+        period_start,
+        period_end
+    ], "rows");
+
+    return result[0];
 }

@@ -38,13 +38,8 @@ export const contractQueries = {
     `,
 
     getAllActiveContracts: `
-        SELECT * FROM customercontracts as cc
+        SELECT * FROM contracts
          WHERE start_date <= $1 AND end_date >= $1
     `,
 
-    getDataForInvoiceGeneration: `
-    SELECT * FROM customercontracts as cc
-        JOIN tariffs as t ON cc.tariff_id = t.tariff_id
-        JOIN customers as c ON cc.customer_id = c.customer_id
-    `
 };

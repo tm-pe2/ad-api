@@ -2,6 +2,7 @@ import {execute} from "../utils/mysql.connector";
 import {Invoice} from "../classes/invoice";
 import {invoiceQueries} from "../queries/invoice-queries";
 import {Contract} from "../classes/contracts";
+import {InvoicePdf} from "../classes/invoice-pdf";
 
 export const getAllInvoices = async () => {
     return await execute<Invoice[]>(invoiceQueries.getAllInvoices, [], "rows");
@@ -12,22 +13,23 @@ export const getInvoiceById = async (id: Invoice['invoice_id']) => {
     return invoices[0];
 };
 
-export const getInvoiceByPeriod = async (id: Invoice['customer_id'],startDate: Invoice['start_date'], endDate: Invoice['end_date']) => {
-    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [startDate,endDate], "rows");
+export const getInvoiceByPeriod = async (id: Invoice['contract_id'],periodStart: Invoice['period_start'], periodEnd: Invoice['period_end']) => {
+    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [periodStart,periodEnd], "rows");
     return invoices[0];
 };
 
 export const insertInvoice = async (invoice: Invoice) => {
     const rowCount = await execute<number>(invoiceQueries.addInvoice, [
-        invoice.customer_id,
+        invoice.contract_id,
         invoice.supplier_id,
         invoice.creation_date,
         invoice.due_date,
         invoice.status_id,
         invoice.price,
         invoice.tax,
-        invoice.start_date,
-        invoice.end_date
+        invoice.period_start,
+        invoice.period_end,
+        invoice.tariff_rate
     ], "rowCount");
 
     return rowCount > 0;
@@ -35,15 +37,16 @@ export const insertInvoice = async (invoice: Invoice) => {
 
 export const updateInvoice = async (invoice: Invoice) => {
     const rowCount = await execute<number>(invoiceQueries.updateInvoice, [
-        invoice.customer_id,
+        invoice.contract_id,
         invoice.supplier_id,
         invoice.creation_date,
         invoice.due_date,
         invoice.status_id,
         invoice.price,
         invoice.tax,
-        invoice.start_date,
-        invoice.end_date,
+        invoice.period_start,
+        invoice.period_end,
+        invoice.tariff_rate,
 
         invoice.invoice_id
     ], "rowCount");
@@ -66,3 +69,9 @@ export const getInvoiceByIdAndContractPeriod = async (contract: Contract) => {
 
     return rowCount > 0;
 };
+
+export const getInvoicePdfData = async (id: Invoice['invoice_id']) => {
+    const result = await execute<InvoicePdf[]>(invoiceQueries.getInvoicePdfData, [id], "rows");
+
+    return result[0];
+}
