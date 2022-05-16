@@ -14,7 +14,7 @@ export const getAllMeters: RequestHandler = async (req: Request, res: Response) 
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching contracts'
+            message: 'There was an error when fetching meters!'
         });
     }
 };
@@ -29,7 +29,7 @@ export const getMeterById: RequestHandler = async (req: Request, res: Response) 
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching contract'
+            message: 'There was an error when fetching meter!'
         });
     }
 };
@@ -37,7 +37,7 @@ export const getMeterById: RequestHandler = async (req: Request, res: Response) 
 export const addMeter: RequestHandler = async (req: Request, res: Response) => {
     try {
 
-        const addMeterSchema = meterSchema.fork([],field => field.optional())
+        const addMeterSchema = meterSchema.fork(['meter_id', 'index_id'],field => field.optional())
         const validatedMeter = await addMeterSchema.validateAsync(req.body);
 
         const validationResult = await meterValidation.checkMeter(validatedMeter);
@@ -48,21 +48,40 @@ export const addMeter: RequestHandler = async (req: Request, res: Response) => {
 
         //insert meter
         const meterID = await meterServies.insertMeter(validatedMeter);
-
-        // insert contract meter
-        const resultCM = await contractMeterServices.insertContractMeters(validatedMeter);
-
-        //insert meter index values 
-        validatedMeter.meter_id = meterID;
-        const result = await indexValuesServices.insertIndexValue(validatedMeter);
-
-        res.status(200).json({
-            result
-        });
+        if(meterID){
+            validatedMeter.meter_id = meterID;
+            // insert contract meter
+            if(await contractMeterServices.insertContractMeters(validatedMeter)){
+                //insert meter index values 
+                if(await indexValuesServices.insertIndexValue(validatedMeter))
+                {
+                    res.status(200).json({
+                        message: "Meter added succefully!"
+                    });
+                }
+                else
+                {
+                    res.status(401).json({
+                        message: "An error occurred when inserting index values!"
+                    });
+                }
+            }
+            else
+            {
+                res.status(401).json({
+                    message: "An error occurred when inserting contract-meter!"
+                });
+            }
+        }
+        else{
+            res.status(401).json({
+                message: "An error occurred when inserting meter!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: error.message
+            message: 'There was an error when adding new meter!'
         });
     }
 };
@@ -72,30 +91,41 @@ export const updateMeter: RequestHandler = async (req: Request, res: Response) =
         //validate the request body
         let meter: Meter = await meterSchema.validateAsync(req.body);
 
-        const result = await meterServies.updateMeter(meter);
+        if(await meterServies.updateMeter(meter)){
+            res.status(200).json({
+                message: "Meter updated successfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occurred when updating meter!"
+            });
+        }
 
-        res.status(200).json({
-            result
-        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when updating contract'
+            message: 'There was an error when updating meter!'
         });
     }
 };
 
 export const deleteMeterById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await meterServies.deleteMeter(Number(req.params.id));
-
-        res.status(200).json({
-            result
-        });
+        if(await meterServies.deleteMeter(Number(req.params.id))){
+            res.status(200).json({
+                message: "Meter deleted successfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occurred when deleting meter!"
+            })
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when deleting contract'
+            message: 'There was an error when deleting meter!'
         });
     }
 };

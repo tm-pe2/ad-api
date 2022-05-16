@@ -14,7 +14,7 @@ router.get('/:id',customerController.getCustomerById);
 router.get('/:id/addresses',customerController.getCustomerByUserId);
 router.get('/:id/contracts',customerController.getCustomerContractsByID);
 router.post('', customerController.addCustomer);
-router.put('', customerController.updateCustomer);
+router.put('/:type', customerController.updateCustomer);
 router.delete('/:id', customerController.DeleteCustomerById);
 
 
@@ -26,7 +26,7 @@ router.delete('/:id', customerController.DeleteCustomerById);
 // router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
 // router.get('/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
 // router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
-// router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
+// router.put('/:type', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
 // router.delete('/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
 
 export = router;

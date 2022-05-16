@@ -1,5 +1,5 @@
 import * as Joi from 'joi';
-import {meterSchema} from './meters';
+import {contractMeterSchema} from './contract-meters';
 
 export interface IndexValues {
     index_id: number,
@@ -8,7 +8,7 @@ export interface IndexValues {
     index_value: number
 }
 
-export const indexValuesSchema = meterSchema.keys({
+export const indexValuesSchema = Joi.object({
     contract_id: Joi.number().integer().min(0).required(),
     meter_id: Joi.number().integer().min(0).required(),
     date: Joi.date().required(),

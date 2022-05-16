@@ -1,7 +1,6 @@
 import {execute} from "../utils/mysql.connector";
 import {Employee} from "../classes/employee";
 import {employeeQueries} from "../queries/employee-queries";
-import * as userService from '../services/user-service'
 
 export const getAllEmployees = async () => {
     return execute<Employee[]>(employeeQueries.getAllEmployees, [], "rows");
@@ -33,14 +32,11 @@ export const updateEmployee = async (employee: Employee) => {
         employee.hire_date,
         employee.gender,
         employee.salary,
-        employee.user_id,
 
         employee.employee_id
     ], "rowCount");
 
-    const userUpdated = await userService.updateUser(employee)
-
-    return  rowCount > 0 || userUpdated;
+    return  rowCount;
 };
 
 export const deleteEmployeeById = async (id: Employee['employee_id']) => {

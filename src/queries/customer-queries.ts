@@ -42,9 +42,8 @@ export const customerQueries = {
     updateCustomer: `
         UPDATE customers
         SET
-            user_id = $1,
-            customer_type = $2
-        WHERE customer_id = $3
+            customer_type = $1
+        WHERE customer_id = $2
     `,
 
     DeleteCustomerById: `

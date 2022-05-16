@@ -71,39 +71,3 @@ export const getUserSelf: RequestHandler = async (req: Request, res: Response) =
             res.status(401).send(err);
         })
 };
-
-
-export const addUser: RequestHandler = async (req: Request, res: Response) => {
-    try {
-        let userAddressObject: UserAddress = {
-            user_id: -1,
-            address_id:-1
-        };
-        // input validation
-        const addUserSchema = userSchema.fork(['user_id', 'address_id'], field => field.optional());
-        const validatedUser = await addUserSchema.validateAsync(req.body);
-
-//         //user logic validation
-//         const validationResult = await userValidation.checkUserData(validatedUser);
-//         if (validationResult != '') {
-//             throw new Error(String(validationResult));
-//         }
-
-//         //hash password
-//         const salt = await bcrypt.genSalt(10);
-//         validatedUser.password = await bcrypt.hash(validatedUser.password, salt);
-
-//         //insert address and user
-//         const result = await addressServices.insertAddress(validatedUser);
-
-//         res.status(200).json({
-//             result
-//         });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Error adding a user'
-        });
-    }
-};

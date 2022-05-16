@@ -33,22 +33,10 @@ const checkDate = (startDate: Date) => {
     return true;
 }
 
-export const checkContractData =async (contract: Contract): Promise<string> => {
+export const checkContractData =async (contract: Contract) => {
     let errorVar: string = '';
     try 
     {
-        // if(!await checkActiveContract(contract))
-        // {
-        //     errorVar = errorList.activeContract;
-        //     throw new Error(errorList.activeContract);
-        // }
-
-        // if(!await checkCustomerExists(contract.customer_id))
-        // {
-        //     errorVar = errorList.customer;
-        //     throw new Error(errorList.customer);
-        // }
-
         if(!checkDate(contract.start_date))
         {
             errorVar = errorList.startDate;

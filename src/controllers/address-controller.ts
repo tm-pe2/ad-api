@@ -37,16 +37,24 @@ export const addAddress: RequestHandler = async (req: Request, res: Response) =>
         const addAddressSchema = addressSchema.fork('address_id', field => field.optional());
         let address: Address = await addAddressSchema.validateAsync(req.body);
 
-        const result = await addressService.insertAddress(address);
-
-        res.status(200).json({
-            result
-        });
+        if(await addressService.insertAddress(address))
+        {
+            res.status(200).json({
+                message: "Address inserted succesfully!"
+            });
+        }
+        else
+        {
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
+        
     } catch (errors) {
         console.log(errors);
         if(errors)
         res.status(500).json({
-            message: 'There was an error when updating address!'
+            message: 'There was an error when inserting address!'
         });
     }
 };
@@ -55,11 +63,18 @@ export const updateAddress: RequestHandler = async (req: Request, res: Response)
     try {
         let address: Address = await addressSchema.validateAsync(req.body);
 
-        const result = await addressService.updateAddress(address);
-
-        res.status(200).json({
-            result
-        });
+        if(await addressService.updateAddress(address))
+        {
+            res.status(200).json({
+                message: "Address updated succesfully!"
+            });
+        }
+        else
+        {
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -70,11 +85,19 @@ export const updateAddress: RequestHandler = async (req: Request, res: Response)
 
 export const deleteAddressById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await addressService.deleteAddressById(Number(req.params.id));
 
-        res.status(200).json({
-            result
-        });
+        if(await addressService.deleteAddressById(Number(req.params.id)))
+        {
+            res.status(200).json({
+                message: "Address deleted succesfully!"
+            });
+        }
+        else
+        {
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({

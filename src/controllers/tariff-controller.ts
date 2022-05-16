@@ -38,11 +38,14 @@ export const addTariff: RequestHandler = async (req: Request, res: Response) => 
         const addTariffSchema = tariffSchema.fork('tariff_id', field => field.optional());
         let tariff: Tariff = await addTariffSchema.validateAsync(req.body);
 
-        const result = await tariffService.insertTariff(tariff);
-
-        res.status(200).json({
-            result
-        });
+        if(await tariffService.insertTariff(tariff))
+            res.status(200).json({
+                message: "Tariff inserted successfully!"
+            });
+        else
+            res.status(200).json({
+                message: "An erro occurred when inserting tariff!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -56,11 +59,14 @@ export const updateTariff: RequestHandler = async (req: Request, res: Response) 
         //validate the request body
         let tariff: Tariff = await tariffSchema.validateAsync(req.body);
 
-        const result = await tariffService.updateTariff(tariff);
-
-        res.status(200).json({
-            result
-        });
+        if(await tariffService.updateTariff(tariff))
+            res.status(200).json({
+                message: "Tariff updated successfully!"
+            });
+        else
+            res.status(200).json({
+                message: "An erro occurred when updating tariff!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -71,11 +77,14 @@ export const updateTariff: RequestHandler = async (req: Request, res: Response) 
 
 export const deleteTariffById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await tariffService.deleteTariffById(Number(req.params.id));
-
-        res.status(200).json({
-            result
-        });
+        if(await tariffService.deleteTariffById(Number(req.params.id)))
+            res.status(200).json({
+                message: "Tariff deleted successfully!"
+            });
+        else
+            res.status(200).json({
+                message: "An erro occurred when deleting tariff!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({

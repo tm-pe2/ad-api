@@ -62,7 +62,7 @@ export const getCustomerContractsByID: RequestHandler = async (req: Request, res
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching customer'
+            message: 'There was an error when fetching contracts!'
         });
     }
 };
@@ -92,42 +92,74 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
         if (validationResult != '') {
             throw new Error(String(validationResult));
         }
+
         //hash password
         const salt = await bcrypt.genSalt(10);
         validatedCustomer.password = await bcrypt.hash(validatedCustomer.password, salt);
 
         //insert address
         const addressID = await addressServices.insertAddress(validatedCustomer);
-        validatedCustomer.address_id = addressID;
+        if(addressID){
+            validatedCustomer.address_id = addressID;
 
-        //insert user
-        const userID = await userServices.addUser(validatedCustomer);
-        validatedCustomer.user_id = userID;
-
-        //insert user-addresses
-        const userResult = await userAddressService.insertUserAddress(validatedCustomer);
-
-        //insert customer
-        const result = await customerService.insertCustomer(validatedCustomer);
-
-        res.status(200).json({
-            result
-        });
-        
+            //insert user
+            const userID = await userServices.addUser(validatedCustomer);
+            if(userID){
+                
+                validatedCustomer.user_id = userID;
+                //insert user-addresses
+                if(await userAddressService.insertUserAddress(validatedCustomer)){
+                    
+                    //insert customer
+                    if(await customerService.insertCustomer(validatedCustomer)){
+                        
+                        res.status(200).json({
+                            message: "Customer inserted succesfully!"
+                        });
+                    }
+                    else{
+                        res.status(401).json({
+                            message: "An error occured while insering customer!"
+                        });
+                    }
+                }
+                else{
+                    res.status(401).json({
+                        message: "An error occured while insering user-address!"
+                    });
+                }
+            }
+            else{
+                res.status(401).json({
+                    message: "An error occured while insering user!"
+                });
+            }
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured while insering address!"
+            });
+        }   
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: error.message
+            message: 'There was an error when inserting customer'
         });
     }
 };
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = "update route!";  // TODO !
-        res.status(200).json({
-            result
-        });
+        if(await customerService.updateCustomer(req.params.type,Number(req.params.id))){
+            res.status(200).json({
+                message: "Customer updated succesfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured while updating customer!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -138,11 +170,18 @@ export const updateCustomer: RequestHandler = async (req: Request, res: Response
 
 export const DeleteCustomerById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const userID = await customerService.deleteCustomer(Number(req.params.id));
+        if(await customerService.deleteCustomer(Number(req.params.id)))
+        {
+            res.status(200).json({
+                message: "Customer deleted succesfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
 
-        res.status(200).json({
-            "Delted user id : ":userID,
-        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
