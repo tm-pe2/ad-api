@@ -14,13 +14,11 @@ export const checkSupplier = async (supplier: Supplier) => {
         if(!await addressServices.getAddressByDetails(supplier.city,supplier.street,supplier.house_number,supplier.postal_code,supplier.country))
         {
             errorVar = errorList.address;
-            throw new Error(errorList.address);
         }
 
         if(!supplierServices.getSupplierByVAT(supplier.vat_number))
         {
             errorVar = errorList.vatNumber;
-            throw new Error(errorList.vatNumber);
         }
     } 
     catch (error) 

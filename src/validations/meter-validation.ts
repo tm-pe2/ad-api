@@ -13,7 +13,6 @@ export const checkMeter =async (meter: Meter) => {
         if(!await meterServices.getMeterByPhysicalId(meter.physical_id))
         {
             errorVar = errorList.existingPhysicalID;
-            throw new Error(errorList.existingPhysicalID);
         }
     } 
     catch (error) 

@@ -15,19 +15,16 @@ export const checkUserData = async (user: User) => {
         if(!!await userServices.getUserByEmail(user.email))
         {
             errorVar = errorList.email;
-            throw new Error(errorList.email);
         }
 
         if(!!await userServices.getUserByNationalNumber(user.national_registry_number))
         {
             errorVar = errorList.nationalNumber;
-            throw new Error(errorList.nationalNumber);
         }
 
         if(!!await addressServices.getAddressByDetails(user.city, user.street, user.house_number, user.postal_code, user.country))
         {
             errorVar = errorList.address;
-            throw new Error(errorList.address);
         }
     } 
     catch (error) 

@@ -6,7 +6,7 @@ const errorList = {
     activeContract:`Contract already exists!`
 }
 
-export const checkContractData =async (contract: Contract) => {
+export const checkContractData = async (contract: Contract) => {
     let errorVar: string = '';
     let date = new Date();
     try 
@@ -14,7 +14,6 @@ export const checkContractData =async (contract: Contract) => {
         if(contract.start_date < date)
         {
             errorVar = errorList.startDate;
-            throw new Error(errorList.startDate);
         }
     } 
     catch (error) 
