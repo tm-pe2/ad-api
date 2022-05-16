@@ -11,7 +11,7 @@ import { UserRole } from '../models/userrole';
  * authenticate is a middleware function that will be called before any other route.
  * It will check if the user is authenticated and if they have a role included in the provided roles array.
  */
-router.get('/test', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]), async (req, res, next) => {
+router.get('/protected', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]), async (req, res, next) => {
     res.send({data:'protected'});
 })
 

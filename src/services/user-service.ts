@@ -23,13 +23,12 @@ export const getUserByNationalNumber = async (nationalNumber: User['national_reg
     return users[0];
 };
 
-export const insertUser = async (user: User) => {
+export const addUser = async (user: User) => {
     const newUser = await execute<User[]>(userQueries.AddUser, [
         user.role_id,
         user.first_name,
         user.last_name,
         user.birth_date,
-        user.address_id,
         user.email,
         user.phone_number,
         user.password,
@@ -45,7 +44,6 @@ export const updateUser = async (user: User) => {
         user.first_name,
         user.last_name,
         user.birth_date,
-        user.address_id,
         user.email,
         user.phone_number,
         user.password,

@@ -11,37 +11,35 @@ export const getContractById = async (id: Contract['contract_id']) => {
     return contracts[0];
 };
 
-export const getContractsByCustomerAndAddressID = async (customerID: Contract['customer_id'],contractType: Contract['contract_type'],addressID: Contract['address_id'], endDate: Contract['end_date']) => {
-    return await execute<Contract[]>(contractQueries.getContractByCustomerAndAddressID, [customerID,contractType,addressID,endDate], "rows");
+export const getContractsByCustomerAndAddressID = async (customerID: number,serviceType: Contract['service_type'],addressID: Contract['address_id'], endDate: Contract['end_date']) => {
+    return await execute<Contract[]>(contractQueries.getContractByCustomerAndAddressID, [customerID,serviceType,addressID,endDate], "rows");
 };
 
 export const insertContract = async (contract: Contract) => {
-    const rowCount = await execute<number>(contractQueries.addContract, [
+    const rowCount = await execute<Contract[]>(contractQueries.addContract, [
         contract.start_date,
         contract.end_date,
-        contract.customer_id,
         contract.customer_type,
-        contract.advance_payment,
-        contract.price,
         contract.tariff_id,
         contract.estimation_id,
         contract.address_id,
-        contract.contract_type
-    ], "rowCount");
+        contract.service_type,
+        contract.status
+    ], "rows");
 
-    return rowCount > 0;
+    return rowCount[0].contract_id;
 };
 
 export const updateContract = async (contract: Contract) => {
     const rowCount = await execute<number>(contractQueries.updateContract, [
         contract.start_date,
         contract.end_date,
-        contract.customer_id,
         contract.customer_type,
-        contract.advance_payment,
-        contract.price,
         contract.tariff_id,
         contract.estimation_id,
+        contract.address_id,
+        contract.service_type,
+        contract.status,
         contract.contract_id
     ], "rowCount");
 

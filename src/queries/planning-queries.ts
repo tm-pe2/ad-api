@@ -12,7 +12,7 @@ export const planningQueries = {
     `,
 
     addPlanning: `
-        INSERT INTO planning (employee_id, customer_id, date, status)
+        INSERT INTO planning (employee_id, contract_id, date, status)
             VALUES ($1, $2, $3, $4)
     `,
 
@@ -20,7 +20,7 @@ export const planningQueries = {
         UPDATE planning 
         SET
             employee_id = $1,
-            customer_id = $2,
+            contract_id = $2,
             date = $3,
             status = $4
         WHERE planning_id = $5
