@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {Planning} from "../classes/planning";
 import {planningQueries} from "../queries/planning-queries";
+import {Contract} from "../classes/contracts";
 
 export const getAllPlannings = async () => {
     return await execute<Planning[]>(planningQueries.getAllPlannings, [], "rows");
@@ -43,3 +44,13 @@ export const deletePlanningById = async (id: Planning['planning_id']) => {
     const rowCount = await execute<number>(planningQueries.deletePlanningById, [id], "rowCount");
     return rowCount > 0;
 };
+
+export const getPlanningByContractIdAndPeriod = async (contract: Contract) => {
+    const rowCount = await execute<number>(planningQueries.getPlanningByContractIdAndPeriod, [
+        contract.contract_id,
+        contract.start_date,
+        contract.end_date
+    ]);
+
+    return rowCount > 0;
+}
