@@ -2,8 +2,8 @@ import http from 'http';
 import express, {Express} from 'express';
 import {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
-import customerRoutes from './routes/customer-routes';
-import invoiceRoutes from './routes/invoice-routes';
+import customerRoutes from './routes/customer-routes'
+import invoiceRoutes from './routes/invoice-routes'
 import contractRoutes from './routes/contract-routes';
 import addressRoutes from './routes/address-routes';
 import employeeRoutes from './routes/employee-routes';
@@ -12,15 +12,12 @@ import planningRoutes from './routes/planning-routes';
 import tariffRoutes from './routes/tariff-routes';
 import supplierRoutes from './routes/supplier-routes';
 import ticketRoutes from './routes/ticket-routes';
-
 import * as DBConnector from './utils/mysql.connector';
-//import userRoutes from './routes/user-routes';
+import userRoutes from './routes/user-routes';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
 import bodyParser from 'body-parser';
-
 import cors from 'cors';
-
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
 
@@ -70,7 +67,7 @@ DBConnector.init();
 
 /** Routes */
 router.use('/api/',
-    //userRoutes,
+    userRoutes,
     authRoutes,
     testRoutes,
     customerRoutes,

@@ -1,8 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Customer, customerSchema} from '../classes/customer';
+import { customerSchema } from '../classes/customer';
+import * as customerValidation from '../validations/customer-validation';
 import * as customerService from '../services/customer-service';
-import {User, userSchema} from '../classes/user';
-import * as userService from '../services/user-service';
 import * as bcrypt from 'bcrypt';
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {
@@ -35,6 +34,21 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
     }
 };
 
+export const getCustomerContractsByID: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const customer = await customerService.getCustomersContractsByID(Number(req.params.id));
+
+        res.status(200).json({
+            customer
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching customer'
+        });
+    }
+};
+
 export const getCustomersContracts: RequestHandler = async (req: Request, res: Response) => {
     try {
         const customers = await customerService.getCustomersContracts();
@@ -52,94 +66,68 @@ export const getCustomersContracts: RequestHandler = async (req: Request, res: R
 
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usr = {
-            "RoleID": 1,
-            "FirstName": req.body.FirstName,
-            "LastName": req.body.LastName,
-            "BirthDate": req.body.BirthDate,
-            "AddressID": req.body.AddressID,
-            "Email": req.body.Email,
-            "PhoneNumber": req.body.PhoneNumber,
-            "Password": req.body.Password,
-        }
-        const addUserSchema = userSchema.fork('UserID', field => field.optional());
-        const validationResult = await addUserSchema.validateAsync(usr);
-        let user: User = validationResult;
+        const addCustomerSchema = customerSchema.fork(['customer_id'], field => field.optional());
+        const validatedCustomer = await addCustomerSchema.validateAsync(req.body);
 
-        if (Object.keys(await userService.getUserByEmail(user.Email)).length !== 0) {
-            throw new Error("User already exists");
+        const validationResult = await customerValidation.checkCustomerData(validatedCustomer.user_id);
+        if (validationResult != '') {
+            throw new Error(String(validationResult));
         }
 
-        //generate the salt to hash the password
         const salt = await bcrypt.genSalt(10);
-        user.Password = await bcrypt.hash(validationResult.Password,salt);
-        
-        //insert the user
-        const insertResult = await userService.insertUser(user);
-        const resul = await userService.getLastUserID();
-        const val = JSON.parse(JSON.stringify(resul));
-        
-        const cus = {
-            "CustomerID": Number(val[0].UserID),
-            "GasType": req.body.GasType,
-            "Electricitytype": req.body.Electricitytype
-        }
-        const customerValidationResult = await customerSchema.validateAsync(cus)
-        let customer: Customer = customerValidationResult;
+        validatedCustomer.password = await bcrypt.hash(validatedCustomer.password, salt);
 
-        //insert the customer
-        const result = await customerService.insertCustomer(customer);
-
+        const result = await customerService.insertCustomer(validatedCustomer);
         res.status(200).json({
             result
         });
-
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when adding new customer!'
+            message: error.message
         });
     }
 };
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usr = {
-            "UserID": req.body.UserID,
-            "RoleID": req.body.RoleID,
-            "FirstName": req.body.FirstName,
-            "LastName": req.body.LastName,
-            "BirthDate": req.body.BirthDate,
-            "AddressID": req.body.AddressID,
-            "Email": req.body.Email,
-            "PhoneNumber": req.body.PhoneNumber,
-            "Password": req.body.Password,
-        }
-
-        const userValidationResult = await userSchema.validateAsync(usr);
-        let user: User = userValidationResult;
-
-        //generate the salt to hash the password
-        const salt = await bcrypt.genSalt(10);
-        user.Password = await bcrypt.hash(userValidationResult.Password,salt);
-        
-        const uesrUpdateResult = await userService.UpdateUser(user);
-        if(uesrUpdateResult !== true)
-        {
-            throw new Error("Update failed!");
-        }
-
-        const cus = {
-            "CustomerID": Number(req.body.UserID),
-            "GasType": req.body.GasType,
-            "Electricitytype": req.body.Electricitytype
-        }
-        const customerValidationResult = await customerSchema.validateAsync(cus)
-        let customer: Customer = customerValidationResult;
-
-        //update customer
-        const result = await customerService.UpdateCustomer(customer);
-
+        // // const usr = {
+        // //     "user_id": req.body.user_id,
+        // //     "role_id": req.body.role_id,
+        // //     "first_name": req.body.first_name,
+        // //     "last_name": req.body.last_name,
+        // //     "birth_date": req.body.birth_date,
+        // //     "address_id": req.body.address_id,
+        // //     "email": req.body.email,
+        // //     "phone_number": req.body.phone_number,
+        // //     "password": req.body.password,
+        // // }
+        //
+        // const userValidationResult = await userSchema.validateAsync(req.body.user);
+        // let user: User = userValidationResult;
+        //
+        // //generate the salt to hash the password
+        // const salt = await bcrypt.genSalt(10);
+        // user.password = await bcrypt.hash(userValidationResult.password,salt);
+        //
+        // const uesrUpdateResult = await userService.UpdateUser(user);
+        // if(uesrUpdateResult !== true)
+        // {
+        //     throw new Error("Update failed!");
+        // }
+        //
+        // const cus = {
+        //     "customer_id": Number(req.body.user_id),
+        //     "gas_type": req.body.gas_type,
+        //     "electricity_type": req.body.electricity_type
+        // }
+        // const customerValidationResult = await customerSchema.validateAsync(cus)
+        // let customer: Customer = customerValidationResult;
+        //
+        // //update customer
+        // const result = await customerService.UpdateCustomer(customer);
+        const result = "hoi";
         res.status(200).json({
             result
         });
@@ -153,12 +141,10 @@ export const updateCustomer: RequestHandler = async (req: Request, res: Response
 
 export const DeleteCustomerById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usrRes = await userService.deleteUser(Number(req.body.id));
-        const result = await customerService.deleteCustomer(Number(req.params.id));
+        const userID = await customerService.deleteCustomer(Number(req.params.id));
 
         res.status(200).json({
-            usrRes,
-            result
+            "Delted user id : ":userID,
         });
     } catch (error) {
         console.log(error);

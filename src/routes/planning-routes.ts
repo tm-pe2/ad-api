@@ -1,12 +1,21 @@
 import express from 'express';
 import * as planningController from '../controllers/planning-controller';
+import * as auth from "../middleware/auth";
+import { UserRole } from '../models/userrole';
 
 const router = express.Router();
 
-router.get('/plannings', planningController.getAllPlannings);
-router.get('/plannings/:id', planningController.getPlanningById);
-router.put('/plannings', planningController.updatePlanning);
-router.delete('/plannings/:id', planningController.deletePlanningById);
-router.post('/plannings', planningController.addPlanning);
+// router.get('/plannings', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.getAllPlannings);
+// router.get('/plannings/employee/:id', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER, UserRole.MANAGER]), planningController.getPlanningByEmployeeId);
+// router.get('/plannings/:id', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.getPlanningById);
+// router.post('/plannings', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.addPlanning);
+// router.put('/plannings', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.updatePlanning);
+// router.delete('/plannings/:id', auth.authenticate([UserRole.ADMIN]),  planningController.deletePlanningById);
 
+router.get('/plannings',  planningController.getAllPlannings);
+router.get('/plannings/employee/:id',  planningController.getPlanningByEmployeeId);
+router.get('/plannings/:id',  planningController.getPlanningById);
+router.post('/plannings',  planningController.addPlanning);
+router.put('/plannings',  planningController.updatePlanning);
+router.delete('/plannings/:id', planningController.deletePlanningById);
 export = router;

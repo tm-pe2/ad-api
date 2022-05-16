@@ -1,21 +1,21 @@
 import * as Joi from 'joi';
 
 export interface Tariff {
-    TarifID: number,
-    SmallInd: number,
-    MediumInd: number,
-    BigInd: number,
-    SmallComp: number,
-    MediumComp: number,
-    BigComp: number
+    tariff_id: number,
+    small_ind: number,
+    medium_ind: number,
+    big_ind: number,
+    small_comp: number,
+    medium_comp: number,
+    big_comp: number
 }
 
 export const tariffSchema = Joi.object({
-    TarifID: Joi.number().integer().min(0).required(),
-    SmallInd: Joi.number().required(),
-    MediumInd: Joi.number().required(),
-    BigInd: Joi.number().required(),
-    SmallComp: Joi.number().required(),
-    MediumComp: Joi.number().required(),
-    BigComp: Joi.number().required()
+    tariff_id: Joi.number().integer().min(0).required(),
+    small_ind: Joi.number().required(),
+    medium_ind: Joi.number().required(),
+    big_ind: Joi.number().required(),
+    small_comp: Joi.number().required(),
+    medium_comp: Joi.number().required(),
+    big_comp: Joi.number().required()
 });

@@ -8,7 +8,8 @@ export const ticketQueries = {
     `,
 
     addTicket: `
-        INSERT INTO tickets SET $1
+        INSERT INTO tickets (issue_id, assigned_tech, title, description, date, status_id, is_employee)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
     `,
 
     updateTicket: `
@@ -19,8 +20,8 @@ export const ticketQueries = {
             title = $3,
             description = $4,
             date = $5,
-            status = $6,
-            employee = $7
+            status_id = $6,
+            is_employee = $7
         WHERE ticket_id = $8
     `,
 

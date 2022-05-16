@@ -1,18 +1,22 @@
 import * as Joi from 'joi';
-import {User} from '../classes/user';
+import {User, userSchema} from './user';
 
 export interface Employee extends User{
-    EmployeeID: number,
-    Departement: string
-    Permissions: number,
-    HireDate: Date,
-    Gender: number
+    employee_id: number,
+    department: string
+    permissions: number,
+    hire_date: Date,
+    gender: number,
+    salary: number,
+    user_id: number
 }
 
-export const employeeSchema = Joi.object({
-    EmployeeID: Joi.number().integer().min(0).required(),
-    Departement: Joi.string().required(),
-    Permissions: Joi.number().required(),
-    HireDate: Joi.date().min('1-1-1900').required(),
-    Gender: Joi.number().required()
+export const employeeSchema = userSchema.keys({
+    employee_id: Joi.number().integer().min(0).required(),
+    department: Joi.string().required(),
+    permissions: Joi.number().required(),
+    hire_date: Joi.date().min('1-1-1900').required(),
+    gender: Joi.number().required(),
+    salary: Joi.number().required(),
+    user_id: Joi.number().required()
 });

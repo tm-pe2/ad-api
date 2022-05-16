@@ -3,43 +3,59 @@ import {Invoice} from "../classes/invoice";
 import {invoiceQueries} from "../queries/invoice-queries";
 
 export const getAllInvoices = async () => {
-    let invoices = execute<{rows: Invoice[]}>(invoiceQueries.getAllInvoices, []);
-    console.log(invoices);
-    return (await invoices).rows;
+    return await execute<Invoice[]>(invoiceQueries.getAllInvoices, [], "rows");
 };
 
-export const getInvoiceById = async (id: Invoice['InvoiceID']) => {
-    let invoice = execute<{rows: Invoice}>(invoiceQueries.getInvoiceById, [id]);
-    console.log(invoice);
-    return (await invoice).rows;
+export const getInvoiceById = async (id: Invoice['invoice_id']) => {
+    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceById, [id], "rows");
+    return invoices[0];
+};
+
+export const getInvoiceByPeriod = async (id: Invoice['customer_id'],startDate: Invoice['start_date'], endDate: Invoice['end_date']) => {
+    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [startDate,endDate], "rows");
+    return invoices[0];
 };
 
 export const insertInvoice = async (invoice: Invoice) => {
-    const result = await execute<{ rowCount: number }>(invoiceQueries.addInvoice, [
-        invoice
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(invoiceQueries.addInvoice, [
+        invoice.customer_id,
+        invoice.supplier_id,
+        invoice.creation_date,
+        invoice.due_date,
+        invoice.status_id,
+        invoice.gas_amount,
+        invoice.electricity_type,
+        invoice.price,
+        invoice.tax,
+        invoice.start_date,
+        invoice.end_date
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const updateInvoice = async (invoice: Invoice) => {
-    const result = await execute<{ rowCount: number }>(invoiceQueries.updateInvoice, [
-        invoice.CustomerID,
-        invoice.SupplierID,
-        invoice.Date,
-        invoice.DueDate,
-        invoice.Status,
-        invoice.GasAmount,
-        invoice.ElectricityType,
-        invoice.Price,
-        invoice.Tax,
-        invoice.StartDate,
-        invoice.EndDate,
-        invoice.InvoiceID
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(invoiceQueries.updateInvoice, [
+        invoice.customer_id,
+        invoice.supplier_id,
+        invoice.creation_date,
+        invoice.due_date,
+        invoice.status_id,
+        invoice.gas_amount,
+        invoice.electricity_type,
+        invoice.price,
+        invoice.tax,
+        invoice.start_date,
+        invoice.end_date,
+
+        invoice.invoice_id
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
-export const deleteInvoiceById = async (id: Invoice['InvoiceID']) => {
-    const result = await execute<{ rowCount: number }>(invoiceQueries.deleteInvoiceById, [id]);
-    return result.rowCount > 0;
+export const deleteInvoiceById = async (id: Invoice['invoice_id']) => {
+    const rowCount = await execute<number>(invoiceQueries.deleteInvoiceById, [id], "rowCount");
+
+    return rowCount > 0;
 };

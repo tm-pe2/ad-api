@@ -7,8 +7,13 @@ export const planningQueries = {
         SELECT * FROM planning WHERE planning_id = $1
     `,
 
+    getPlanningByEmployeeId: `
+        SELECT * FROM planning WHERE employee_id = $1
+    `,
+
     addPlanning: `
-        INSERT INTO planning SET $1
+        INSERT INTO planning (employee_id, customer_id, date, status)
+            VALUES ($1, $2, $3, $4)
     `,
 
     updatePlanning: `

@@ -40,9 +40,9 @@ async function login(req: Request, res: Response, next: NextFunction) {
     const user = await userService.getUserByEmail(email);
 
     if (user) {
-        const tokenData = {'id': user.UserID.toString(), 'role': user.RoleID.toString()}
+        const tokenData = {'id': user.user_id.toString(), 'role': user.role_id.toString()}
         const accessToken = createAccessToken(tokenData);
-        const refreshToken = createRefreshToken(user.UserID.toString());
+        const refreshToken = createRefreshToken(user.user_id.toString());
 
         res.json({accessToken, refreshToken});
     }
@@ -50,7 +50,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
         res.status(401);
         res.send('Incorrect login attempt.');
     }
-};
+}
 
 async function refreshToken(req: Request, res: Response, next: NextFunction) {
     if (process.env.JWTSECRET == undefined) {
@@ -78,16 +78,16 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
         return res.sendStatus((500));
     }
 
-    const accessToken = createAccessToken({id: user.UserID.toString(), role: user.RoleID.toString()})
+    const accessToken = createAccessToken({id: user.user_id.toString(), role: user.role_id.toString()})
 
     res.json({accessToken});
-};
+}
 
 async function logout(req: Request, res: Response, next: NextFunction) {
     const rt = req.body.refreshToken;   //validation ?
     refreshTokens = refreshTokens.filter(t => t !== rt);
     res.sendStatus(200);
-};
+}
 
 const createAccessToken = (tokenData: AccessTokenData) => {
     if (process.env.JWTSECRET == undefined) {
