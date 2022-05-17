@@ -14,7 +14,7 @@ router.get('/:id',customerController.getCustomerById);
 router.get('/:id/addresses',customerController.getCustomerByUserId);
 router.get('/:id/contracts',customerController.getCustomerContractsByID);
 router.post('', customerController.addCustomer);
-router.put('/:type', customerController.updateCustomer);
+router.put('/', customerController.updateCustomer);
 router.delete('/:id', customerController.DeleteCustomerById);
 
 

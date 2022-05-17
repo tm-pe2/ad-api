@@ -53,7 +53,7 @@ export const execute = <T>(query: string, params: any[], option?: string): Promi
                 if(option)
                     resolve(results[option]);
                 else
-                    resolve(results);
+                    resolve(results.rows);
             });
         });
 

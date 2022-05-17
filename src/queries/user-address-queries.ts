@@ -20,6 +20,6 @@ export const userAdressQueries = {
     `,
 
     deleteUserAddress: `
-        DELETE FROM useraddress WHERE user_id = $1
+        DELETE FROM useraddress WHERE address_id = $1
     `
 }

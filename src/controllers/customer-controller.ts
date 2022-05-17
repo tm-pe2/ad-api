@@ -150,7 +150,7 @@ export const addCustomer: RequestHandler = async (req: Request, res: Response) =
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        if(await customerService.updateCustomer(req.params.type,Number(req.params.id))){
+        if(await customerService.updateCustomer(req.body.customer)){
             res.status(200).json({
                 message: "Customer updated succesfully!"
             });

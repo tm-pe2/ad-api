@@ -2,60 +2,140 @@ import {execute} from "../utils/mysql.connector";
 import {User} from "../classes/user";
 import {userQueries} from "../queries/users-queries";
 
-export const getAllUsers = async () => {
-    return await execute<User[]>(userQueries.getAllUsers, [], "rows");
+export function getAllUsers(): Promise<User[]> {
+    const promise = new Promise<User[]>((resolve,reject) => {
+        execute<User[]>(userQueries.getAllUsers, []).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No users!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getUserById = async (id: User['user_id']) => {
-    const users = await execute<User[]>(userQueries.getUserById, [id], "rows");
-    return users[0];
+export function getUserById(id: User['user_id']): Promise<User> {
+    const promise = new Promise<User>((resolve,reject) => {
+        execute<User>(userQueries.getUserById, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No users!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getUserByEmail = async (email: User['email']) => {
-    const result = await execute<User[]>(userQueries.getUserByEmail, [email], "rows")
-    return result[0];
+
+export function getUserByEmail(email: User['email']): Promise<User> {
+    const promise = new Promise<User>((resolve,reject) => {
+        execute<User>(userQueries.getUserByEmail, [email]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No users!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
 
-export const getUserByNationalNumber = async (nationalNumber: User['national_registry_number']) => {
-    const users = await execute<User[]>(userQueries.getUserByNationalNumber, [nationalNumber], "rows");
-
-    return users[0];
+export function getUserByNationalNumber(nationalNumber: User['email']): Promise<User> {
+    const promise = new Promise<User>((resolve,reject) => {
+        execute<User>(userQueries.getUserByNationalNumber, [nationalNumber]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No users!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const addUser = async (user: User) => {
-    const newUser = await execute<User[]>(userQueries.AddUser, [
-        user.role_id,
-        user.first_name,
-        user.last_name,
-        user.birth_date,
-        user.email,
-        user.phone_number,
-        user.password,
-        user.national_registry_number
-    ], "rows");
-
-    return newUser[0].user_id;
+export function addUser(user: User): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(userQueries.AddUser, [
+            user.role_id,
+            user.first_name,
+            user.last_name,
+            user.birth_date,
+            user.email,
+            user.phone_number,
+            user.password,
+            user.national_registry_number]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("User could not be added!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const updateUser = async (user: User) => {
-    const rowCount = await execute<number>(userQueries.UpdateUser, [
-        user.role_id,
-        user.first_name,
-        user.last_name,
-        user.birth_date,
-        user.email,
-        user.phone_number,
-        user.password,
-
-        user.user_id
-    ], "rowCount");
-
-    return rowCount > 0;
+export function updateUser(user: User): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(userQueries.UpdateUser, [
+            user.role_id,
+            user.first_name,
+            user.last_name,
+            user.birth_date,
+            user.email,
+            user.phone_number,
+            user.password,
+            user.national_registry_number,
+            user.user_id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("User could not be updated!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const deleteUser = async (id: User['user_id']) => {
-    const rowCount = await execute<number>(userQueries.DeleteUserById, [id], "rowCount");
-
-    return rowCount > 0;
+export function deleteUser(id: User['user_id']): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(userQueries.DeleteUserById, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("User could not be deleted!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };

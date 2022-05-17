@@ -2,47 +2,140 @@ import {execute} from "../utils/mysql.connector";
 import {Customer} from "../classes/customer";
 import {customerQueries} from "../queries/customer-queries";
 
-export const getAllCustomers = async () => {
-    return execute<Customer[]>(customerQueries.getAllCustomers, [], "rows");
+export function getAllCustomers(): Promise<Customer[]> {
+    const promise = new Promise<Customer[]>((resolve,reject) => {
+        execute<Customer[]>(customerQueries.getAllCustomers, []).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customers!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getCustomerById = async (id: Customer['customer_id']) => {
-    const customers = await execute<Customer[]>(customerQueries.getCustomerById, [id], "rows");
-    return customers[0];
+export function getCustomerById(id: Customer['customer_id']): Promise<Customer> {
+    const promise = new Promise<Customer>((resolve,reject) => {
+        execute<Customer>(customerQueries.getCustomerById, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customers!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getCustomerByUserId = async (id: Customer['user_id']) => {
-    const customers = await execute<Customer[]>(customerQueries.getCustomerByUserId, [id], "rows");
-    return customers;
+export function getCustomerByUserId(id: Customer['user_id']): Promise<Customer> {
+    const promise = new Promise<Customer>((resolve,reject) => {
+        execute<Customer>(customerQueries.getCustomerByUserId, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customers!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getCustomersContracts = async () => {
-    return execute<Customer[]>(customerQueries.getCustomersContracts, [], "rows");
+export function getCustomersContracts(): Promise<Customer[]> {
+    const promise = new Promise<Customer[]>((resolve,reject) => {
+        execute<Customer[]>(customerQueries.getCustomersContracts, []).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customers!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getCustomersContractsByID = async (id: Customer['customer_id']) => {
-    return execute<Customer[]>(customerQueries.getCustomersContractsByID, [id], "rows");
+export function getCustomersContractsByID(id: Customer['customer_id']): Promise<Customer[]> {
+    const promise = new Promise<Customer[]>((resolve,reject) => {
+        execute<Customer[]>(customerQueries.getCustomersContractsByID, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customers!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const insertCustomer = async (customer: Customer) => {
-    const rowCount = await execute<number>(customerQueries.AddCustomer, [
-        customer.user_id,
-        customer.customer_type,
-    ], "rowCount");
-
-    return rowCount > 0;
+export function insertCustomer(customer: Customer): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(customerQueries.AddCustomer, [customer.user_id,
+            customer.customer_type,]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Customer could not be added!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const updateCustomer = async (customer_type: Customer['customer_type'],customer_id: Customer['customer_id']) => {
-    const rowCount = await execute<number>(customerQueries.updateCustomer, [
-        customer_type,
-        customer_id
-    ], "rowCount");
-
-    return rowCount;
+export function updateCustomer(customer: Customer): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(customerQueries.updateCustomer, [customer.customer_type,
+            customer.customer_id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Customer could not be updated!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const deleteCustomer = async (id: Customer['customer_id']) => {
-    const rowCount = await execute<number>(customerQueries.DeleteCustomerById, [id], "rowCount");
-    return rowCount;
+export function deleteCustomer(id: Customer['customer_id']): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(customerQueries.DeleteCustomerById, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Customer could not be deleted!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };

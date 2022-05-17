@@ -2,36 +2,92 @@ import {execute} from "../utils/mysql.connector";
 import {Tariff} from "../classes/tariff";
 import {tariffQueries} from "../queries/tariff-queries";
 
-export const getAllTariffs = async () => {
-    return await execute<Tariff[]>(tariffQueries.getAllTariffs, [], "rows");
+export function getAllTariffs(): Promise<Tariff[]> {
+    const promise = new Promise<Tariff[]>((resolve,reject) => {
+        execute<Tariff[]>(tariffQueries.getAllTariffs, []).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No tariffs!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getTariffById = async (id: Tariff['tariff_id']) => {
-    const tariffs = await execute<Tariff[]>(tariffQueries.getTariffById, [id], "rows");
-    return tariffs[0];
+export function getTariffById(id: Tariff['tariff_id']): Promise<Tariff> {
+    const promise = new Promise<Tariff>((resolve,reject) => {
+        execute<Tariff>(tariffQueries.getTariffById, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No tariffs!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const insertTariff = async (tariff: Tariff) => {
-    const rowCount = await execute<number>(tariffQueries.addTariff, [
-        tariff.customer_type,
-        tariff.value
-    ], "rowCount");
-
-    return rowCount > 0;
+export function insertTariff(tariff: Tariff): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(tariffQueries.addTariff, [
+            tariff.customer_type,
+            tariff.value]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Tariff could not be added!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const updateTariff = async (tariff: Tariff) => {
-    const rowCount = await execute<number>(tariffQueries.updateTariff, [
-        tariff.customer_type,
-        tariff.value,
-
-        tariff.tariff_id
-    ], "rowCount");
-
-    return rowCount > 0;
+export function updateTariff(tariff: Tariff): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(tariffQueries.updateTariff, [
+            tariff.customer_type,
+            tariff.value,
+            tariff.tariff_id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Tariff could not be updated!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const deleteTariffById = async (id: Tariff['tariff_id']) => {
-    const rowCount = await execute<number>(tariffQueries.deleteTariffById, [id], "rowCount");
-    return rowCount > 0;
+export function deleteTariffById(id: Tariff['tariff_id']): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(tariffQueries.deleteTariffById, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Tariff could not be deleted!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };

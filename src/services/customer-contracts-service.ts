@@ -2,33 +2,89 @@ import {execute} from "../utils/mysql.connector";
 import {CustomerContracts} from '../classes/customer-contracts';
 import {customerContractsQueries} from '../queries/customer-contracts-queries';
 
-export const getAllCustomersContracts = async () => {
-    return await execute<CustomerContracts[]>(customerContractsQueries.getAllCustomerContracts, [], "rows");
+export function getAllCustomersContracts(): Promise<CustomerContracts[]> {
+    const promise = new Promise<CustomerContracts[]>((resolve,reject) => {
+        execute<CustomerContracts[]>(customerContractsQueries.getAllCustomerContracts, []).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customer-contract!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const getContractsByCustomerId = async (id: CustomerContracts['customer_id']) => {
-    return await execute<CustomerContracts[]>(customerContractsQueries.getContractsByCustomerId, [id], "rows");
+export function getContractsByCustomerId(id: CustomerContracts['customer_id']): Promise<CustomerContracts> {
+    const promise = new Promise<CustomerContracts>((resolve,reject) => {
+        execute<CustomerContracts>(customerContractsQueries.getContractsByCustomerId, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("No customer-contract!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const insertCustomerContract = async (customerContract: CustomerContracts) => {
-    const rowCount = await execute<number>(customerContractsQueries.addCustomerContract, [
-        customerContract.customer_id,
-        customerContract.contract_id
-    ], "rowCount");
-
-    return rowCount;
+export function insertCustomerContract(customerContract: CustomerContracts): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(customerContractsQueries.addCustomerContract, [customerContract.customer_id,
+            customerContract.contract_id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Customer-contract could not be added!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 };
 
-export const updateContractMeters = async (customerContract: CustomerContracts) => {
-    const rowCount = await execute<number>(customerContractsQueries.addCustomerContract, [
-        customerContract.customer_id,
-        customerContract.contract_id
-    ], "rowCount");
-
-    return rowCount;
+export function updateCustomerContract(customerContract: CustomerContracts): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(customerContractsQueries.updateCustomerContract, [customerContract.customer_id,
+            customerContract.contract_id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Customer-contract could not be updated!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 }
 
-export const deleteContractMeters = async (id: CustomerContracts['contract_id']) => {
-    const rowCount = await execute<number>(customerContractsQueries.deleteCustomerContractById, [id], "rowCount");
-    return rowCount > 0;
+export function deleteCustomerContract(id: CustomerContracts['contract_id']): Promise<number> {
+    const promise = new Promise<number>((resolve,reject) => {
+        execute<number>(customerContractsQueries.addCustomerContract, [id]).then((result) => {
+            if(result)
+                resolve(result);
+            else
+                reject("Customer-contract could not be deleted!");
+        })
+        .catch(error => {
+            console.log(error);
+            reject(error);
+        });
+    });
+    
+    return promise;
 }
