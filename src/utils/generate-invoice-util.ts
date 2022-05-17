@@ -157,10 +157,6 @@ const addMonths = (date: Date, amount: number) => {
         endDate.setDate(endDate.getDate() - 1);
     }
 
-    const endTimeZoneOffset = endDate.getTimezoneOffset();
-    const diff = endTimeZoneOffset - originalTimeZoneOffset;
-    const finalDate = diff ? endDate.setMinutes(endDate.getMinutes() - diff) : endDate;
-
     return new Date(endDate);
 }
 
