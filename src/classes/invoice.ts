@@ -20,9 +20,8 @@ export enum InvoiceStatus {
     sent,
     paid,
     overdue,
-    void,
-    writeOff,
-    draft 
+    generated,
+    notGenerated 
  }
 
 export const invoiceSchema = Joi.object({
