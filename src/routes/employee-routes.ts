@@ -10,5 +10,4 @@ router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), emp
 router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]),employeeController.addEmployee);
 router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), employeeController.updateEmployee);
 router.delete('/:id',auth.authenticate([UserRole.ADMIN]), employeeController.deleteEmployeeById);
-
 export = router;
