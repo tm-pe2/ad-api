@@ -1,12 +1,13 @@
-// import express from 'express';
-// import * as userController from '../controllers/user-controller';
+import express from 'express';
+import * as userController from '../controllers/user-controller';
+import * as auth from "../middleware/auth";
+import { UserRole } from '../models/userrole';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/users', userController.getAllUsers);
-// router.get('/users/:id', userController.getUserById);
-// router.put('/users/', userController.updateUser);
-// router.delete('/users/:id', userController.DeleteUserById);
-// router.post('/users', userController.addUser);
+router.get('/self', userController.getUserSelf);
+router.get('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]), userController.getAllUsers);
+router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]), userController.getUserById);
+//router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), userController.addUser);
 
-// export = router;
+export = router;

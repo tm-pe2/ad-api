@@ -35,14 +35,17 @@ export const getSupplierById: RequestHandler = async (req: Request, res: Respons
 export const addSupplier: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addSupplierSchema = supplierSchema.fork('SupplierID', field => field.optional());
+        const addSupplierSchema = supplierSchema.fork(['supplier_id','address_id'], field => field.optional());
         let supplier: Supplier = await addSupplierSchema.validateAsync(req.body);
 
-        const result = await supplierService.insertSupplier(supplier);
-
-        res.status(200).json({
-            result
-        });
+        if(await supplierService.insertSupplier(supplier))
+            res.status(200).json({
+                message: "Supplier inserted succesfully!"
+            });
+        else
+            res.status(401).json({
+                message: "An error occurred when inserting supplier!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -56,11 +59,14 @@ export const updateSupplier: RequestHandler = async (req: Request, res: Response
         //validate the request body
         let supplier: Supplier = await supplierSchema.validateAsync(req.body);
 
-        const result = await supplierService.updateSupplier(supplier);
-
-        res.status(200).json({
-            result
-        });
+        if(await supplierService.updateSupplier(supplier))
+            res.status(200).json({
+                message: "Supplier updated succesfully!"
+            });
+        else
+            res.status(401).json({
+                message: "An error occurred when updating supplier!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -71,11 +77,14 @@ export const updateSupplier: RequestHandler = async (req: Request, res: Response
 
 export const deleteSupplierById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await supplierService.deleteSupplierById(Number(req.params.id));
-
-        res.status(200).json({
-            result
-        });
+        if(await supplierService.deleteSupplierById(Number(req.params.id)))
+            res.status(200).json({
+                message: "Supplier deleted succesfully!"
+            });
+        else
+            res.status(401).json({
+                message: "An error occurred when deleting supplier!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({

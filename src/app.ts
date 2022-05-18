@@ -23,4 +23,4 @@ try {
     const PORT: any = process.env.PORT || 6060;
     httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
     
-});
+})();

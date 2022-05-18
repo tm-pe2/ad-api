@@ -1,29 +1,52 @@
 export const customerQueries = {
     getAllCustomers: `
-        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.customer_id
+        SELECT * FROM users as u 
+        INNER JOIN customers c ON u.user_id = c.user_id
+        INNER JOIN useraddress ua ON u.user_id = ua.user_id
+        INNER JOIN address a ON ua.address_id = a.address_id
     `,
 
     getCustomerById: `
-        SELECT * FROM users as u INNER JOIN customers c ON u.user_id = c.customer_id WHERE u.user_id = $1
+        SELECT * FROM users as u 
+        INNER JOIN customers c ON u.user_id = c.user_id
+        INNER JOIN useraddress ua ON u.user_id = ua.user_id
+        INNER JOIN address a ON ua.address_id = a.address_id
+        WHERE c.customer_id = $1
+    `,
+    
+    getCustomerByUserId: `
+        SELECT * FROM users as u
+        INNER JOIN customers c ON u.user_id = c.user_id
+        INNER JOIN useraddress ua ON u.user_id = ua.user_id
+        INNER JOIN address a ON ua.address_id = a.address_id
+        WHERE u.user_id = $1
     `,
 
     getCustomersContracts:`
-        SELECT u.user_id, u.first_name, u.last_name, u.role_id, c.contract_id FROM users as u LEFT JOIN customercontracts as c ON u.user_id = c.customer_id
+        SELECT u.user_id, u.first_name, u.last_name, c.customer_type, u.role_id, cc.contract_id FROM users as u 
+        INNER JOIN customers c ON u.user_id = c.user_id
+        LEFT JOIN customercontracts as cc ON c.customer_id = cc.customer_id
+    `,
+
+    getCustomersContractsByID:`
+        SELECT u.user_id, u.first_name, u.last_name, c.customer_type, u.role_id, cc.contract_id FROM users as u 
+        INNER JOIN customers c ON u.user_id = c.user_id
+        LEFT JOIN customercontracts as cc ON c.customer_id = cc.customer_id
+        WHERE c.customer_id = $1
     `,
 
     AddCustomer: `
-        INSERT INTO customers SET $1
+        INSERT INTO customers (user_id, customer_type) VALUES ($1, $2)
     `,
 
-    UpdateCustomer: `
-        UPDATE customers 
-        SET 
-            gas_type = $1,
-            electricity_type = $2
-        WHERE customer_id = $3
+    updateCustomer: `
+        UPDATE customers
+        SET
+            customer_type = $1
+        WHERE customer_id = $2
     `,
 
     DeleteCustomerById: `
-    DELETE FROM customers WHERE customer_id = $1
+        DELETE FROM customers WHERE customer_id = $1 RETURNING user_id
     `
 };

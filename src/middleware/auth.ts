@@ -18,12 +18,12 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
                         return res.status(401).send('Unauthorized.')
                     }
 
-                    if (decoded.role != undefined && decoded.id != undefined
-                        && roles.includes(decoded.role)) {
+                    if (decoded.role_id != undefined && decoded.id != undefined
+                        && roles.includes(decoded.role_id)) {
                         // TODO: check if okay practise to pass in body
                         // Pass decoded info into request body for later use in controllers
                         req.body.userId = decoded.id
-                        req.body.userRole = decoded.role
+                        req.body.userRole = decoded.role_id
                         next();
                     }
                     else {
@@ -37,7 +37,7 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
     }
 }
 
-function getToken(req: Request): Promise<string> {
+export function getToken(req: Request): Promise<string> {
     const promise = new Promise<string>((resolve, reject) => {
         const authHeader = req.headers.authorization;
         if (authHeader != undefined) {
@@ -51,4 +51,4 @@ function getToken(req: Request): Promise<string> {
     return promise;
 }
 
-export {authorize as authenticate}
+export {authorize as authenticate, getToken as getAccessToken}
