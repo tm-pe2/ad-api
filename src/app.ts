@@ -2,6 +2,9 @@ import dotenv from 'dotenv';
 import { httpServer } from './server'
 import { MailService } from './services/mail-service'
 import { Env } from './utils/env';
+import tryMeterUpdate from "./calc-consumption";
+
+tryMeterUpdate();
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
   dotenv.config();
