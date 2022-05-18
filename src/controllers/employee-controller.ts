@@ -11,9 +11,10 @@ export const getAllEmployees: RequestHandler = async (req: Request, res: Respons
     try {
         const employees = await employeeService.getAllEmployees();
 
-        res.status(200).json({
+        res.status(200).json(
             employees
-        });
+        );
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -26,9 +27,9 @@ export const getEmployeeById: RequestHandler = async (req: Request, res: Respons
     try {
         const employee = await employeeService.getEmployeeById(Number(req.params.id));
 
-        res.status(200).json({
+        res.status(200).json(
             employee
-        });
+        );
     } catch (error) {
         console.log(error);
         res.status(500).json({
