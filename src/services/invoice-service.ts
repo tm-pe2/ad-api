@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {Invoice, InvoiceStatus} from "../classes/invoice";
 import {invoiceQueries} from "../queries/invoice-queries";
+import { setInterval } from "timers";
 
 export const getAllInvoices = async () => {
     let invoices = execute<{rows: Invoice[]}>(invoiceQueries.getAllInvoices, []);
@@ -54,3 +55,11 @@ export const getOverdueInvoices = async () => {
     return invoicesSql.rows;
 };
 
+export async function setOverdue() {
+    const query = `UPDATE "invoices" SET "Statusid" = ${InvoiceStatus.overdue} WHERE "Statusid" = ${InvoiceStatus.sent} AND "DueDate" <= '${new Date().toISOString()}'` //AND  // "DueDate" <=  ${new Date().toISOString()
+    const invoicesSql = await execute<unknown>(query);
+}
+
+export async function startIntervalsOverdue() {
+    setInterval(setOverdue, 1000);
+}
