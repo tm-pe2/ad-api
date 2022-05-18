@@ -66,14 +66,14 @@ export class MailService {
             //TODO Get customer data from db
             const title = `Dear ${this.customer.firstName} ${this.customer.lastName}`;
             const body = [
-                `your invoice ${invoice.InvoiceID} of ${invoice.Price} is due at ${invoice.DueDate.toDateString()} Please pay this as soon as possible.`,
+                `your invoice ${invoice.invoice_id} of ${invoice.price} is due at ${invoice.due_date.toDateString()} Please pay this as soon as possible.`,
             "if you wish to see more details and/or pay please visit <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
         ];
         
         return this.transport.sendMail({
             from: this.from,
             to: this.customer.email,
-            subject: `Invoice: ${invoice.InvoiceID}`,
+            subject: `Invoice: ${invoice.invoice_id}`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
         }).catch((e) => { Logger.error(e); })
@@ -120,12 +120,12 @@ export class MailService {
         //info from db
         const title = `Dear ${Customer.firstName} ${Customer.lastName}`;
         const body = [
-            `Your invoice ${o.InvoiceID} is overdue`,
+            `Your invoice ${o.invoice_id} is overdue`,
             `Please pay the invoice at <a href="./invoice">this link</a>.`,
             `<br>`,
-            `Invoice: ${o.InvoiceID}`,
-            `date: ${o.Date}`,
-            `price: ${o.Price}`,
+            `Invoice: ${o.invoice_id}`,
+            `date: ${o.creation_date}`,
+            `price: ${o.price}`,
         ];
         
         console.log(o);
