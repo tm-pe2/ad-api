@@ -1,5 +1,6 @@
 {
   "name": "pe2-api",
+  "description": "PE2 project",
   "version": "0.0.1",
   "license": "MIT",
   "private": true,
@@ -46,7 +47,8 @@
     "pg": "^8.7.3",
     "types": "^0.1.1",
     "utf-8-validate": "^5.0.3",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
