@@ -47,6 +47,7 @@ export const execute = <T>(query: string, params: any[], option?: string): Promi
 
         return new Promise((resolve, reject) => {
             pool.query(query, params, (error, results: any) => {
+                console.log(results)
                 if (error)
                     reject(error);
 

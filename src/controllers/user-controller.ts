@@ -52,9 +52,9 @@ export const getUserSelf: RequestHandler = async (req: Request, res: Response) =
                 if (decoded.id != undefined) {
                     userService.getUserById(decoded.id)
                         .then((user) => {
-                            res.status(200).json({
+                            res.status(200).json(
                                 user
-                            });
+                            );
                         })
                         .catch((err) => {
                             res.status(500).json({
