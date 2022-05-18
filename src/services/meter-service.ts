@@ -29,7 +29,7 @@ export const insertMeter = async (meter: Meter) => {
         meter.meter_type,
         meter.physical_id
     ], "rows");
-    console.log(meterID);
+    
     return meterID[0].meter_id;
 };
 

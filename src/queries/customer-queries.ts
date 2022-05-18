@@ -34,6 +34,13 @@ export const customerQueries = {
         LEFT JOIN customercontracts as cc ON c.customer_id = cc.customer_id
         WHERE c.customer_id = $1
     `,
+    getCustomerIdByAddressID:`
+        SELECT c.customer_id FROM address a
+        INNER JOIN useraddress ua on a.address_id = ua.address_id
+        INNER JOIN users u ON u.user_id = ua.user_id
+        INNER JOIN customers c ON u.user_id = c.user_id
+        WHERE a.address_id = $1
+    `,
 
     AddCustomer: `
         INSERT INTO customers (user_id, customer_type) VALUES ($1, $2)

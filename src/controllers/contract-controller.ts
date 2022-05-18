@@ -1,8 +1,10 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Contract, contractSchema } from "../classes/contracts";
+import {Contract, contractSchema } from '../classes/contracts';
+import {estimateConsumption} from '../classes/estimation';
 import * as estimationServies from '../services/estimation-service';
 import * as contractService from '../services/contract-service';
-import * as contractValidation from '../validations/contract-validation'
+import * as customerContractServices from '../services/customer-contracts-service';
+import * as customerServices from '../services/customer-service';
 
 export const getAllContracts: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -38,8 +40,10 @@ export const addContract: RequestHandler = async (req: Request, res: Response) =
         // input validation
         const addContractSchema = contractSchema.fork(['contract_id','estimation_id'], field => field.optional());
         let contract = await addContractSchema.validateAsync(req.body);
-
+        const cusID = await customerServices.getCustomerIdByAddressId(contract.address_id);
+        
         //insert estimation
+        contract.estimated_consumption = estimateConsumption(contract);
         const estimationID = await estimationServies.insertEstimation(contract);
         contract.estimation_id = estimationID;
 
@@ -47,6 +51,7 @@ export const addContract: RequestHandler = async (req: Request, res: Response) =
         const contractID = await contractService.insertContract(contract);
         if(contractID)
         {
+            if(await customerContractServices.insertCustomerContract(cusID,contractID))
             res.status(200).json({
                 "contract_id": contractID
             });

@@ -12,6 +12,7 @@ export const getIndexValuesByMeterId = async (id: IndexValues['meter_id']) => {
 
 export const insertIndexValue = async (indexValues: IndexValues) => {
     const rowCount = await execute<number>(indexValuesQueries.addIndexValues, [
+        indexValues.meter_id,
         indexValues.date,
         indexValues.index_value
     ], "rowCount");
