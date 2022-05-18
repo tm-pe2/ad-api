@@ -1,38 +1,60 @@
 import {execute} from "../utils/mysql.connector";
 import {Planning} from "../classes/planning";
 import {planningQueries} from "../queries/planning-queries";
+import {Contract} from "../classes/contracts";
 
 export const getAllPlannings = async () => {
-    let plannings = execute<{rows: Planning[]}>(planningQueries.getAllPlannings, []);
-    console.log(plannings);
-    return (await plannings).rows;
+    return await execute<Planning[]>(planningQueries.getAllPlannings, [], "rows");
 };
 
-export const getPlanningById = async (id: Planning['PlanningID']) => {
-    let planning = execute<{rows: Planning}>(planningQueries.getPlanningById, [id]);
-    console.log(planning);
-    return (await planning).rows;
+export const getPlanningById = async (id: Planning['planning_id']) => {
+    const plannings = await execute<Planning[]>(planningQueries.getPlanningById, [id], "rows");
+    return plannings[0];
+};
+
+export const getPlanningByEmployeeId = async (id: Planning['employee_id']) => {
+    const plannings = await execute<Planning[]>(planningQueries.getPlanningByEmployeeId, [id], "rows");
+    return plannings[0];
+};
+
+export const getPlanningDetailsById = async (id: Planning['planning_id']) => {
+    return await execute<Planning[]>(planningQueries.getPlaningDetailsById, [id], "rows");
 };
 
 export const insertPlanning = async (planning: Planning) => {
-    const result = await execute<{ rowCount: number }>(planningQueries.addPlanning, [
-        planning
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(planningQueries.addPlanning, [
+        planning.employee_id,
+        planning.contract_id,
+        planning.date,
+        planning.status
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
 export const updatePlanning = async (planning: Planning) => {
-    const result = await execute<{ rowCount: number }>(planningQueries.updatePlanning, [
-        planning.EmployeeID,
-        planning.CustomerID,
-        planning.Date,
-        planning.Status,
-        planning.PlanningID
-    ]);
-    return result.rowCount > 0;
+    const rowCount = await execute<number>(planningQueries.updatePlanning, [
+        planning.employee_id,
+        planning.contract_id,
+        planning.date,
+        planning.status,
+
+        planning.planning_id
+    ], "rowCount");
+    return rowCount > 0;
 };
 
-export const deletePlanningById = async (id: Planning['PlanningID']) => {
-    const result = await execute<{ rowCount: number }>(planningQueries.deletePlanningById, [id]);
-    return result.rowCount > 0;
+export const deletePlanningById = async (id: Planning['planning_id']) => {
+    const rowCount = await execute<number>(planningQueries.deletePlanningById, [id], "rowCount");
+    return rowCount > 0;
 };
+
+export const getPlanningByContractIdAndPeriod = async (contract: Contract) => {
+    const rowCount = await execute<number>(planningQueries.getPlanningByContractIdAndPeriod, [
+        contract.contract_id,
+        contract.start_date,
+        contract.end_date
+    ]);
+
+    return rowCount > 0;
+}

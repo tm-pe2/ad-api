@@ -3,42 +3,59 @@ import {User} from "../classes/user";
 import {userQueries} from "../queries/users-queries";
 
 export const getAllUsers = async () => {
-    return execute<User[]>(userQueries.getAllUsers, []);
+    return await execute<User[]>(userQueries.getAllUsers, [], "rows");
 };
 
-export const getUserById = async (id: User['UserID']) => {
-    return execute<User>(userQueries.getUserById, [id]);
+export const getUserById = async (id: User['user_id']) => {
+    const users = await execute<User[]>(userQueries.getUserById, [id], "rows");
+    return users[0];
 };
 
-export const getUserByEmail = async (email: User['Email']) => {
-    return execute<User>(userQueries.getUserByEmail, [email]);
+export const getUserByEmail = async (email: User['email']) => {
+    const result = await execute<User[]>(userQueries.getUserByEmail, [email], "rows")
+    return result[0];
 };
 
-export const getLastUserID = async () => {
-    return execute<User>(userQueries.getLastID, []);
+
+export const getUserByNationalNumber = async (nationalNumber: User['national_registry_number']) => {
+    const users = await execute<User[]>(userQueries.getUserByNationalNumber, [nationalNumber], "rows");
+
+    return users[0];
 };
 
-export const insertUser = async (user: User) => {
-    const result = await execute<{ rowCount: number }>(userQueries.AddUser, [user]);
-    return result.rowCount > 0;
+export const addUser = async (user: User) => {
+    const newUser = await execute<User[]>(userQueries.AddUser, [
+        user.role_id,
+        user.first_name,
+        user.last_name,
+        user.birth_date,
+        user.email,
+        user.phone_number,
+        user.password,
+        user.national_registry_number
+    ], "rows");
+
+    return newUser[0].user_id;
 };
 
-export const UpdateUser = async (user: User) => {
-    const result = await execute<{ rowCount: number }>(userQueries.UpdateUser, [
-        user.RoleID,
-        user.FirstName,
-        user.LastName,
-        user.BirthDate,
-        user.AddressID,
-        user.Email,
-        user.PhoneNumber,
-        user.Password,
-        user.UserID
-    ]);
-    return result.rowCount > 0;
+export const updateUser = async (user: User) => {
+    const rowCount = await execute<number>(userQueries.UpdateUser, [
+        user.role_id,
+        user.first_name,
+        user.last_name,
+        user.birth_date,
+        user.email,
+        user.phone_number,
+        user.password,
+
+        user.user_id
+    ], "rowCount");
+
+    return rowCount > 0;
 };
 
-export const deleteUser = async (id: User['UserID']) => {
-    const result = await execute<{ rowCount: number }>(userQueries.DeleteUserById, [id]);
-    return result.rowCount > 0;
+export const deleteUser = async (id: User['user_id']) => {
+    const rowCount = await execute<number>(userQueries.DeleteUserById, [id], "rowCount");
+
+    return rowCount > 0;
 };

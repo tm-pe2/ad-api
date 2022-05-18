@@ -1,25 +1,26 @@
 import * as Joi from 'joi';
+import {estimationSchema} from './estimation';
 
-export interface Contract {
-    ContractID: number,
-    StartDate: Date,
-    EndDate: Date,
-    CustomerID: number,
-    CustomerType: string,
-    AdvancedPayement: number,
-    Price: number,
-    TarifID: number,
-    EstimatedID: number
+export interface Contract{
+    contract_id: number,
+    start_date: Date,
+    end_date: Date,
+    customer_type: string,
+    tariff_id: number,
+    estimation_id: number,
+    address_id: number,
+    service_type: number,
+    status: string
 }
 
-export const contractSchema = Joi.object({
-    ContractID: Joi.number().integer().min(0).required(),
-    StartDate: Joi.date().min('1-1-2000').required(),
-    EndDate:  Joi.date().min('1-1-2000').required(),
-    CustomerID:  Joi.number().integer().min(0).required(),
-    CustomerType:  Joi.string().required(),
-    AdvancedPayement:  Joi.number().required(),
-    Price: Joi.number().required(),
-    TarifID: Joi.number().integer().min(0).required(),
-    EstimatedID: Joi.number().integer().min(0).required()
+export const contractSchema = estimationSchema.keys({
+    contract_id: Joi.number().integer().min(0).required(),
+    start_date: Joi.date().required(),
+    end_date:  Joi.date().required(),
+    customer_type:  Joi.string().required(),
+    tariff_id: Joi.number().integer().min(0).required(),
+    estimation_id: Joi.number().integer().min(0).required(),
+    address_id: Joi.number().integer().min(0).required(),
+    service_type: Joi.number().integer().min(0).required(),
+    status: Joi.string().min(0).required()
 });

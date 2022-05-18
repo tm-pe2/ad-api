@@ -32,17 +32,37 @@ export const getEstimationById: RequestHandler = async (req: Request, res: Respo
     }
 };
 
+export const getEstimationByCustomerId: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const estimation = await estimationService.getEstimationByCustomerId(Number(req.params.id));
+
+        res.status(200).json({
+            estimation
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching estimation'
+        });
+    }
+};
+
 export const addEstimation: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        const addEstimationSchema = estimationSchema.fork('EstimatedID', field => field.optional());
+        const addEstimationSchema = estimationSchema.fork('estimation_id', field => field.optional());
         let estimation: Estimation = await addEstimationSchema.validateAsync(req.body);
 
-        const result = await estimationService.insertEstimation(estimation);
-
-        res.status(200).json({
-            result
-        });
+        if(await estimationService.insertEstimation(estimation)){
+            res.status(200).json({
+                message: "Esstimation inserted succesfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -55,12 +75,16 @@ export const updateEstimation: RequestHandler = async (req: Request, res: Respon
     try {
         //validate the request body
         let estimation: Estimation = await estimationSchema.validateAsync(req.body);
-
-        const result = await estimationService.updateEstimation(estimation);
-
-        res.status(200).json({
-            result
-        });
+        if(await estimationService.updateEstimation(estimation)){
+            res.status(200).json({
+                message: "Esstimation updated succesfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -71,11 +95,16 @@ export const updateEstimation: RequestHandler = async (req: Request, res: Respon
 
 export const deleteEstimationById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await estimationService.deleteEstimationById(Number(req.params.id));
-
-        res.status(200).json({
-            result
-        });
+        if(await estimationService.deleteEstimationById(Number(req.params.id))){
+            res.status(200).json({
+                message: "Esstimation deleted succesfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({

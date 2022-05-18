@@ -8,7 +8,7 @@ import { startIntervalsOverdue } from './services/invoice-service';
 import { Logger } from './utils/logger';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
-  dotenv.config();
+    dotenv.config();
 }
 
 try {
@@ -19,13 +19,10 @@ try {
 }
 
 (async () => {
-  const PORT: any = process.env.PORT ?? 6060;
-  httpServer.listen(PORT, () => console.log(`The server is running on http://localhost:${PORT}`));
-  startIntervalsOverdue();
-  /*try{
-  const ms = new MailService();
-  ms.testEmail()
-  } catch(e){
-    console.error(e);
-  }*/
+    console.log("run");
+
+    const PORT: any = process.env.PORT || 6060;
+    httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
+    //TODO move to schedule
+    startIntervalsOverdue();
 })();

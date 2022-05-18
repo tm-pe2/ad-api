@@ -1,8 +1,10 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Customer, customerSchema} from '../classes/customer';
+import { customerSchema } from '../classes/customer';
+import * as userServices from '../services/user-service';
+import * as userAddressService from '../services/user-address-service';
+import * as addressServices from '../services/address-service';
+import * as userValidation from '../validations/user-validation';
 import * as customerService from '../services/customer-service';
-import {User, userSchema} from '../classes/user';
-import * as userService from '../services/user-service';
 import * as bcrypt from 'bcrypt';
 
 export const getAllCustomers: RequestHandler = async (req: Request, res: Response) => {
@@ -35,6 +37,36 @@ export const getCustomerById: RequestHandler = async (req: Request, res: Respons
     }
 };
 
+export const getCustomerByUserId: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const customer = await customerService.getCustomerByUserId(Number(req.params.id));
+
+        res.status(200).json({
+            customer
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching customer'
+        });
+    }
+};
+
+export const getCustomerContractsByID: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const customer = await customerService.getCustomersContractsByID(Number(req.params.id));
+
+        res.status(200).json({
+            customer
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching contracts!'
+        });
+    }
+};
+
 export const getCustomersContracts: RequestHandler = async (req: Request, res: Response) => {
     try {
         const customers = await customerService.getCustomersContracts();
@@ -52,97 +84,82 @@ export const getCustomersContracts: RequestHandler = async (req: Request, res: R
 
 export const addCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usr = {
-            "RoleID": 1,
-            "FirstName": req.body.FirstName,
-            "LastName": req.body.LastName,
-            "BirthDate": req.body.BirthDate,
-            "AddressID": req.body.AddressID,
-            "Email": req.body.Email,
-            "PhoneNumber": req.body.PhoneNumber,
-            "Password": req.body.Password,
-        }
-        const addUserSchema = userSchema.fork('UserID', field => field.optional());
-        const validationResult = await addUserSchema.validateAsync(usr);
-        let user: User = validationResult;
+        
+        const addCustomerSchema = customerSchema.fork(['customer_id', 'user_id', 'address_id'], field => field.optional());
+        const validatedCustomer = await addCustomerSchema.validateAsync(req.body);
 
-        if (Object.keys(await userService.getUserByEmail(user.Email)).length !== 0) {
-            throw new Error("User already exists");
+        const validationResult = await userValidation.checkUserData(validatedCustomer);
+        if (validationResult != '') {
+            throw new Error(String(validationResult));
         }
 
-        //generate the salt to hash the password
+        //hash password
         const salt = await bcrypt.genSalt(10);
-        user.Password = await bcrypt.hash(validationResult.Password,salt);
-        
-        //insert the user
-        const insertResult = await userService.insertUser(user);
-        const resul = await userService.getLastUserID();
-        const val = JSON.parse(JSON.stringify(resul));
-        
-        const cus = {
-            "CustomerID": Number(val[0].UserID),
-            "GasType": req.body.GasType,
-            "Electricitytype": req.body.Electricitytype
+        validatedCustomer.password = await bcrypt.hash(validatedCustomer.password, salt);
+
+        //insert address
+        const addressID = await addressServices.insertAddress(validatedCustomer);
+        if(addressID){
+            validatedCustomer.address_id = addressID;
+
+            //insert user
+            const userID = await userServices.addUser(validatedCustomer);
+            if(userID){
+                
+                validatedCustomer.user_id = userID;
+                //insert user-addresses
+                if(await userAddressService.insertUserAddress(validatedCustomer)){
+                    
+                    //insert customer
+                    if(await customerService.insertCustomer(validatedCustomer)){
+                        
+                        res.status(200).json({
+                            message: "Customer inserted succesfully!"
+                        });
+                    }
+                    else{
+                        res.status(401).json({
+                            message: "An error occured while insering customer!"
+                        });
+                    }
+                }
+                else{
+                    res.status(401).json({
+                        message: "An error occured while insering user-address!"
+                    });
+                }
+            }
+            else{
+                res.status(401).json({
+                    message: "An error occured while insering user!"
+                });
+            }
         }
-        const customerValidationResult = await customerSchema.validateAsync(cus)
-        let customer: Customer = customerValidationResult;
-
-        //insert the customer
-        const result = await customerService.insertCustomer(customer);
-
-        res.status(200).json({
-            result
-        });
-
+        else{
+            res.status(401).json({
+                message: "An error occured while insering address!"
+            });
+        }   
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when adding new customer!'
+            message: 'There was an error when inserting customer'
         });
     }
 };
 
 export const updateCustomer: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usr = {
-            "UserID": req.body.UserID,
-            "RoleID": req.body.RoleID,
-            "FirstName": req.body.FirstName,
-            "LastName": req.body.LastName,
-            "BirthDate": req.body.BirthDate,
-            "AddressID": req.body.AddressID,
-            "Email": req.body.Email,
-            "PhoneNumber": req.body.PhoneNumber,
-            "Password": req.body.Password,
+        if(await customerService.updateCustomer(req.params.type,Number(req.params.id))){
+            res.status(200).json({
+                message: "Customer updated succesfully!"
+            });
         }
-
-        const userValidationResult = await userSchema.validateAsync(usr);
-        let user: User = userValidationResult;
-
-        //generate the salt to hash the password
-        const salt = await bcrypt.genSalt(10);
-        user.Password = await bcrypt.hash(userValidationResult.Password,salt);
-        
-        const uesrUpdateResult = await userService.UpdateUser(user);
-        if(uesrUpdateResult !== true)
-        {
-            throw new Error("Update failed!");
+        else{
+            res.status(401).json({
+                message: "An error occured while updating customer!"
+            });
         }
-
-        const cus = {
-            "CustomerID": Number(req.body.UserID),
-            "GasType": req.body.GasType,
-            "Electricitytype": req.body.Electricitytype
-        }
-        const customerValidationResult = await customerSchema.validateAsync(cus)
-        let customer: Customer = customerValidationResult;
-
-        //update customer
-        const result = await customerService.UpdateCustomer(customer);
-
-        res.status(200).json({
-            result
-        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -153,13 +170,18 @@ export const updateCustomer: RequestHandler = async (req: Request, res: Response
 
 export const DeleteCustomerById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const usrRes = await userService.deleteUser(Number(req.body.id));
-        const result = await customerService.deleteCustomer(Number(req.params.id));
+        if(await customerService.deleteCustomer(Number(req.params.id)))
+        {
+            res.status(200).json({
+                message: "Customer deleted succesfully!"
+            });
+        }
+        else{
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
 
-        res.status(200).json({
-            usrRes,
-            result
-        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
