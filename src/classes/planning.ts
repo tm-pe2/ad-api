@@ -1,7 +1,6 @@
 import * as Joi from 'joi';
-import { User } from './user';
 
-export interface Planning extends User {
+export interface Planning {
     planning_id: number,
     employee_id: number,
     contract_id: number,

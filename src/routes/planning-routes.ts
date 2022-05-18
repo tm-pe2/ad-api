@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.getAllPlannings);
 router.get('/employee/:id', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER, UserRole.MANAGER]), planningController.getPlanningByEmployeeId);
-router.get('/details/:id', planningController.getPlanninDetailsById);
+router.get('/details/:id', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER, UserRole.MANAGER]), planningController.getPlanninDetailsById);
 router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.getPlanningById);
 router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.addPlanning);
 router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.HR_MANAGER]), planningController.updatePlanning);

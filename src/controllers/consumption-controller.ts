@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Consumption, cunsumptionSchema } from "../classes/consumption";
+import {Consumption, consumptionSchema } from "../classes/consumption";
 import * as consumptionServices from '../services/consumption-service';
 
 export const getAllConsumptions: RequestHandler = async (req: Request, res: Response) => {
@@ -33,7 +33,7 @@ export const getConsumptionById: RequestHandler = async (req: Request, res: Resp
 
 export const addConsumption: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const addConsumptionSchema = cunsumptionSchema.fork(['consumption_id'],field => field.optional())
+        const addConsumptionSchema = consumptionSchema.fork(['consumption_id'],field => field.optional())
         const validatedConsumption = await addConsumptionSchema.validateAsync(req.body);
 
         if(await consumptionServices.insertConsumption(validatedConsumption)){
@@ -57,7 +57,7 @@ export const addConsumption: RequestHandler = async (req: Request, res: Response
 export const updateConsumption: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        let consumption: Consumption = await cunsumptionSchema.validateAsync(req.body);
+        let consumption: Consumption = await consumptionSchema.validateAsync(req.body);
 
         if(await consumptionServices.updateConsumption(consumption)){
             res.status(200).json({
