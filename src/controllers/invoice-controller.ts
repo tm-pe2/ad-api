@@ -91,17 +91,12 @@ export const getOverdueInvoices: RequestHandler = async (req: Request, res: Resp
         console.log("before 2");
 
         const invoice = await invoiceService.getOverdueInvoices();
-        console.log("before 3");
-
-        res.status(200).json({
-            invoice
-    });
+        res.status(200).json(invoice);
     } catch (error) {
-        console.log();
         
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when fetching estimations'
+            message: 'There was an error when fetching overdue invoices'
         });
     }
 };

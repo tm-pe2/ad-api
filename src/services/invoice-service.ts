@@ -44,17 +44,13 @@ export const deleteInvoiceById = async (id: Invoice['InvoiceID']) => {
     return result.rowCount > 0;
 };
 
+//this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue
 export const getOverdueInvoices = async () => {
-    console.log("start");
-    const invoicesSql = await execute<{rows: Invoice[]}>('SELECT * FROM invoices WHERE "DueDate" <= $1;', [new Date().toISOString()]).catch(e => console.log("catch", e));
-    console.log("overdue: 2");
+    const query = 'SELECT * FROM invoices WHERE "DueDate" <= $1;';
+    const invoicesSql = await execute<{rows: Invoice[]}>(query, [new Date().toISOString()])
+        .catch(e => console.log("overdue invoices error: ", e));
     if(!invoicesSql)
         return undefined
-    console.log(invoicesSql);
-    const invoices = invoicesSql.rows;
-    console.log("overdue: 3");
-    //this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue
-    invoices.forEach(e => e.Statusid = InvoiceStatus.overdue)
-    return invoices;
+    return invoicesSql.rows;
 };
 
