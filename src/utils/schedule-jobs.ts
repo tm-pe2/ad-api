@@ -1,6 +1,5 @@
 import {generateAdvanceInvoices, generateAnnualInvoices} from "./generate-invoice-util";
-
-const schedule = require('node-schedule');
+import schedule from 'node-schedule'
 
 export const scheduleInvoiceJobs = () => {
     const dailyRule = new schedule.RecurrenceRule();
