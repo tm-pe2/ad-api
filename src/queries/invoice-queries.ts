@@ -13,25 +13,43 @@ export const invoiceQueries = {
     `,
 
     addInvoice: `
-        INSERT INTO invoices (customer_id, supplier_id, creation_date, due_date, status_id, price, tax, start_date, end_date)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        INSERT INTO invoices (contract_id, supplier_id, creation_date, due_date, status_id, price, tax, period_start, period_end, tariff_rate)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     `,
 
     updateInvoice: `
         UPDATE invoices SET
-            customer_id = $1,
+            contract_id = $1,
             supplier_id = $2,
             creation_date = $3,
             due_date = $4,
             status_id = $5,
             price = $6,
             tax = $7,
-            start_date = $8,
-            end_date = $9
-        WHERE invoice_id = $10
+            period_start = $8,
+            period_end = $9,
+            tariff_rate = $10
+        WHERE invoice_id = $11
     `,
 
     deleteInvoiceById: `
         DELETE FROM invoices WHERE invoice_id = $1
+    `,
+
+    getInvoiceByIdAndContractPeriod: `
+        SELECT * FROM invoices 
+        WHERE contract_id = $1 AND period_start = $2 AND period_end = $3
+    `,
+
+    getInvoicePdfData: `
+        SELECT *
+        FROM invoices i
+            JOIN contracts co ON co.contract_id = i.contract_id
+            JOIN customercontracts cc ON cc.contract_id = co.contract_id
+            JOIN address a ON a.address_id = co.address_id
+            JOIN customers cu ON cc.customer_id = cu.customer_id
+            JOIN users u ON u.user_id = cu.user_id
+            JOIN estimations e ON e.estimation_id = co.estimation_id
+        WHERE i.invoice_id = $1
     `
 };

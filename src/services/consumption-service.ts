@@ -1,17 +1,18 @@
 import {execute} from "../utils/mysql.connector";
 import {Consumption} from '../classes/consumption';
-import {consumtionQueries} from '../queries/consumtion-queries';
+import {consumptionQueries} from '../queries/consumption-queries';
+import {Meter} from "../classes/meters";
 
 export const getAllConsumptions = async () => {
-    return await execute<Consumption[]>(consumtionQueries.getAllConsumptions, [], "rows");
+    return await execute<Consumption[]>(consumptionQueries.getAllConsumptions, [], "rows");
 };
 
 export const getConsumptionById = async (id: Consumption['consumption_id']) => {
-    return await execute<Consumption[]>(consumtionQueries.getConsumptionById, [id], "rows");
+    return await execute<Consumption[]>(consumptionQueries.getConsumptionById, [id], "rows");
 };
 
 export const insertConsumption = async (consumption: Consumption) => {
-    const rowCount = await execute<number>(consumtionQueries.addConsumption, [
+    const rowCount = await execute<number>(consumptionQueries.addConsumption, [
         consumption.meter_id,
         consumption.consumption,
         consumption.date
@@ -21,7 +22,7 @@ export const insertConsumption = async (consumption: Consumption) => {
 };
 
 export const updateConsumption = async (consumption: Consumption) => {
-    const rowCount = await execute<number>(consumtionQueries.updateConsumption, [
+    const rowCount = await execute<number>(consumptionQueries.updateConsumption, [
         consumption.meter_id,
         consumption.consumption,
         consumption.date,
@@ -32,6 +33,17 @@ export const updateConsumption = async (consumption: Consumption) => {
 }
 
 export const deleteConsumption = async (id: Consumption['consumption_id']) => {
-    const rowCount = await execute<number>(consumtionQueries.deleteConsumptionById, [id], "rowCount");
+    const rowCount = await execute<number>(consumptionQueries.deleteConsumptionById, [id], "rowCount");
+
     return rowCount > 0;
+}
+
+export const getConsumptionByMeterIdAndPeriod = async (meterId: Meter['meter_id'], period_start: Date, period_end: Date) => {
+    const result = await execute<Consumption[]>(consumptionQueries.getConsumptionByMeterIdAndPeriod, [
+        meterId,
+        period_start,
+        period_end
+    ], "rows");
+
+    return result[0];
 }

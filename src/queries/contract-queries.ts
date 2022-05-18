@@ -37,5 +37,11 @@ export const contractQueries = {
 
     deleteContractById: `
         DELETE FROM contracts WHERE contract_id = $1
-    `
+    `,
+
+    getAllActiveContracts: `
+        SELECT * FROM contracts
+         WHERE start_date <= $1 AND end_date >= $1
+    `,
+
 };

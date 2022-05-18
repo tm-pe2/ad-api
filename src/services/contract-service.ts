@@ -51,3 +51,7 @@ export const deleteContract = async (id: Contract['contract_id']) => {
 
     return rowCount > 0;
 };
+
+export const getAllActiveContracts = async () => {
+    return await execute<Contract[]>(contractQueries.getAllActiveContracts, [new Date()], "rows");
+};

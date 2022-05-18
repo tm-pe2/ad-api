@@ -1,6 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
 import {Invoice, invoiceSchema} from '../classes/invoice';
 import * as invoiceService from '../services/invoice-service';
+import * as pdfUtil from "../utils/invoice-to-pdf-util";
 
 export const getAllInvoices: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -96,6 +97,35 @@ export const deleteInvoiceById: RequestHandler = async (req: Request, res: Respo
         console.log(error);
         res.status(500).json({
             message: 'There was an error when deleting invoice'
+        });
+    }
+};
+
+export const getInvoicePdfById: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const fs = require('fs');
+        let file;
+
+        const invoiceId = Number(req.params.id);
+
+        if (!pdfUtil.fileExistsForInvoice(invoiceId))
+        {
+            await pdfUtil.generatePdf(invoiceId);
+        }
+
+        file = pdfUtil.getPathToInvoiceFile(invoiceId);
+
+        const stream = fs.createReadStream(file);
+        const filename = encodeURIComponent("invoice" + invoiceId + ".pdf");
+
+        res.setHeader('Content-disposition', 'inline; filename="' + filename + '"');
+        res.setHeader('Content-type', 'application/pdf');
+
+        stream.pipe(res);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching pdf of invoice'
         });
     }
 };

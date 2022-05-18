@@ -1,6 +1,7 @@
 import {execute} from "../utils/mysql.connector";
 import {Meter} from '../classes/meters';
 import {metersQueries} from '../queries/meters-queries';
+import {Contract} from "../classes/contracts";
 
 export const getAllMeters = async () => {
     return await execute<Meter[]>(metersQueries.getAllMeters, [], "rows");
@@ -45,4 +46,8 @@ export const updateMeter = async (meter: Meter) => {
 export const deleteMeter = async (id: Meter['meter_id']) => {
     const rowCount = await execute<number>(metersQueries.deleteMeter, [id], "rowCount");
     return rowCount > 0;
+}
+
+export const getMetersByContractId = async (contractId: number) => {
+    return await execute<Meter[]>(metersQueries.getMetersByContractId, [contractId], "rows");
 }

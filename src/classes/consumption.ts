@@ -7,7 +7,7 @@ export interface Consumption {
     date: Date
 }
 
-export const cunsumptionSchema = Joi.object({
+export const consumptionSchema = Joi.object({
     consumption_id: Joi.number().integer().min(0).required(),
     meter_id: Joi.number().integer().min(0).required(),
     consumtion: Joi.number().integer().min(0).required(),

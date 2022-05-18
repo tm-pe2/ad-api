@@ -40,5 +40,9 @@ export const planningQueries = {
 
     deletePlanningById: `
         DELETE FROM planning WHERE planning_id = $1
+    `,
+
+    getPlanningByContractIdAndPeriod: `
+        SELECT * FROM planning WHERE contract_id = $1 AND date > $2 AND date < $3
     `
 };

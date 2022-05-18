@@ -23,6 +23,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
 import { RefreshToken } from './classes/refreshtokens';
+import {scheduleInvoiceJobs} from "./utils/schedule-jobs";
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -115,3 +116,6 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 /** Server */
 export const httpServer = http.createServer(router);
 export default router;
+
+/** Schedule invoice jobs */
+scheduleInvoiceJobs();
