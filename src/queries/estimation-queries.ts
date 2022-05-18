@@ -17,6 +17,7 @@ export const estimationQueries = {
     addEstimation: `
         INSERT INTO estimations (service_type, address_id, building_type, family_size, past_consumption, equipments, estimated_consumption)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING estimation_id
     `,
 
     updateEstimation: `

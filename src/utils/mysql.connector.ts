@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
-
-const path = require('path')
+import path from 'path';
 
 if (process.env.NODE_ENV == 'test') {
     dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
@@ -49,7 +48,6 @@ export const execute = <T>(query: string, params: any[], option?: string): Promi
             pool.query(query, params, (error, results: any) => {
                 if (error)
                     reject(error);
-
                 if(option)
                     resolve(results[option]);
                 else

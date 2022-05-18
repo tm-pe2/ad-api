@@ -14,10 +14,9 @@ export const indexValuesQueries = {
     updateIndexValues: `
         UPDATE indexvalues
         SET
-            meter_id = $1
-            date = $2
-            index_values = $3
-        WHERE index_id = $4
+            date = $1
+            index_values = $2
+        WHERE index_id = $3
     `,
 
     deleteIndexValues: `

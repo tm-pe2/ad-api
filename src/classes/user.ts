@@ -23,5 +23,5 @@ export const userSchema = addressSchema.keys({
     email:  Joi.string().email(),
     phone_number: Joi.string().required(),
     password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,50}$')).required(),
-    national_registry_number: Joi.string().required()
+    national_registry_number: Joi.string().pattern(new RegExp('^[0-9]{11}$')).required()
 });

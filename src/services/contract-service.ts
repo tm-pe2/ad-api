@@ -16,17 +16,18 @@ export const getContractsByCustomerAndAddressID = async (customerID: number,serv
 };
 
 export const insertContract = async (contract: Contract) => {
-    const rowCount = await execute<number>(contractQueries.addContract, [
+    const rowCount = await execute<Contract[]>(contractQueries.addContract, [
         contract.start_date,
         contract.end_date,
         contract.customer_type,
         contract.tariff_id,
         contract.estimation_id,
         contract.address_id,
-        contract.service_type
-    ], "rowCount");
+        contract.service_type,
+        contract.status
+    ], "rows");
 
-    return rowCount > 0;
+    return rowCount[0].contract_id;
 };
 
 export const updateContract = async (contract: Contract) => {
@@ -37,6 +38,8 @@ export const updateContract = async (contract: Contract) => {
         contract.tariff_id,
         contract.estimation_id,
         contract.address_id,
+        contract.service_type,
+        contract.status,
         contract.contract_id
     ], "rowCount");
 

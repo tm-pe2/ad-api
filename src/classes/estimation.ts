@@ -19,5 +19,5 @@ export const estimationSchema = Joi.object({
     family_size: Joi.number().integer().min(1).required(),
     past_consumption: Joi.number().required(),
     equipments: Joi.string().required(),
-    estimated_consumption: Joi.number().integer().min(1).required()
+    estimated_consumption: Joi.number().min(1).required()
 });

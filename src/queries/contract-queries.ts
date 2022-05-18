@@ -16,8 +16,9 @@ export const contractQueries = {
     `,
 
     addContract: `
-        INSERT INTO contracts (start_date, end_date, customer_type, tariff_id, estimation_id, address_id, service_type)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO contracts (start_date, end_date, customer_type, tariff_id, estimation_id, address_id, service_type, status)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING contract_id
     `,
 
     updateContract: `
@@ -27,10 +28,11 @@ export const contractQueries = {
             end_date = $2,
             customer_type = $3,
             tariff_id = $4,
-            estimation_id = $5
-            address_id = $6
-            service_type = 7
-        WHERE contract_id = $8
+            estimation_id = $5,
+            address_id = $6,
+            service_type = $7,
+            status = $8
+        WHERE contract_id = $9
     `,
 
     deleteContractById: `

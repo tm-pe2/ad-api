@@ -11,16 +11,29 @@ export const getMeterById = async (id: Meter['meter_id']) => {
     return await execute<Meter[]>(metersQueries.getMeterById, [id], "rows");
 };
 
-export const insertMeter = async (meter: Meter) => {
-    const rowCount = await execute<number>(metersQueries.addMeter, [
-        meter.meter_type,
-        meter.physical_id
-    ], "rowCount");
-
-    return rowCount;
+export const getMeterByPhysicalId = async (id: Meter['physical_id']) => {
+    try {
+        const result = await execute<Meter[]>(metersQueries.getMeterByPhysicalId, [id], "rows");
+        if(result)
+        {
+            return result[0].physical_id;
+        }
+        return -1;
+    } catch (error) {
+        return -1;
+    }
 };
 
-export const updateContractMeters = async (meter: Meter) => {
+export const insertMeter = async (meter: Meter) => {
+    const meterID = await execute<Meter[]>(metersQueries.addMeter, [
+        meter.meter_type,
+        meter.physical_id
+    ], "rows");
+    console.log(meterID);
+    return meterID[0].meter_id;
+};
+
+export const updateMeter = async (meter: Meter) => {
     const rowCount = await execute<number>(metersQueries.addMeter, [
         meter.meter_type,
         meter.physical_id,
@@ -30,7 +43,7 @@ export const updateContractMeters = async (meter: Meter) => {
     return rowCount;
 }
 
-export const deleteContractMeters = async (id: Meter['meter_id']) => {
+export const deleteMeter = async (id: Meter['meter_id']) => {
     const rowCount = await execute<number>(metersQueries.deleteMeter, [id], "rowCount");
     return rowCount > 0;
 }

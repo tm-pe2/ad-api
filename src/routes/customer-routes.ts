@@ -5,18 +5,6 @@ import { UserRole } from '../models/userrole';
 
 const router = express.Router();
 
-// //static routes
-// router.get('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]), customerController.getAllCustomers);
-// router.get('/customers/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);
-
-// //parametrized routes
-// router.get('/customers/:id',customerController.getCustomerById);
-// router.get('/customers/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
-// router.post('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
-// router.put('/customers', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
-// router.delete('/customers/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
-
-
 //static routes
 router.get('', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getAllCustomers);
 router.get('/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);
@@ -25,7 +13,7 @@ router.get('/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),c
 router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
 router.get('/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
 router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.addCustomer);
-router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
+router.put('/:type', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
 router.delete('/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);
 
 export = router;

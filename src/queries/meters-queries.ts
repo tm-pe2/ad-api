@@ -7,9 +7,14 @@ export const metersQueries = {
         SELECT * FROM meters WHERE meter_id = $1
     `,
 
+    getMeterByPhysicalId: `
+        SELECT * FROM meters WHERE meter_id = $1
+    `,
+
     addMeter: `
         INSERT INTO meters (meter_type, physical_id) 
             VALUES ($1, $2)
+        RETURNING meter_id
     `,
 
     updateMeter: `

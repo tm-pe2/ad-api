@@ -27,8 +27,7 @@ export const employeeQueries = {
             hire_date = $3,
             gender = $4,
             salary = $5,
-            user_id = $6
-        WHERE employee_id = $7
+        WHERE employee_id = $6
     `,
 
     deleteEmployeeById: `

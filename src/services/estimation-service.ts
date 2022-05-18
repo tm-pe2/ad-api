@@ -17,7 +17,7 @@ export const getEstimationByCustomerId = async (id: number) => {
 };
 
 export const insertEstimation = async (estimation: Estimation) => {
-    const rowCount = await execute<number>(estimationQueries.addEstimation, [
+    const rowCount = await execute<Estimation[]>(estimationQueries.addEstimation, [
         estimation.service_type,
         estimation.address_id,
         estimation.building_type,
@@ -25,9 +25,9 @@ export const insertEstimation = async (estimation: Estimation) => {
         estimation.past_consumption,
         estimation.equipments,
         estimation.estimated_consumption
-    ], "rowCount");
+    ], "rows");
 
-    return rowCount > 0;
+    return rowCount[0].estimation_id;
 };
 
 export const updateEstimation = async (estimation: Estimation) => {

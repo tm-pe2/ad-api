@@ -1,5 +1,6 @@
 import {Request, RequestHandler, Response} from 'express';
 import {Contract, contractSchema } from "../classes/contracts";
+import * as estimationServies from '../services/estimation-service';
 import * as contractService from '../services/contract-service';
 import * as contractValidation from '../validations/contract-validation'
 
@@ -35,24 +36,31 @@ export const getContractById: RequestHandler = async (req: Request, res: Respons
 export const addContract: RequestHandler = async (req: Request, res: Response) => {
     try {
         // input validation
-        const addContractSchema = contractSchema.fork('contract_id', field => field.optional());
-        let contract: Contract = await addContractSchema.validateAsync(req.body);
+        const addContractSchema = contractSchema.fork(['contract_id','estimation_id'], field => field.optional());
+        let contract = await addContractSchema.validateAsync(req.body);
 
-        // contract logic validation
-        const validationResult = await contractValidation.checkContractData(contract);
-        if (validationResult != '') {
-            throw new Error(String(validationResult));
+        //insert estimation
+        const estimationID = await estimationServies.insertEstimation(contract);
+        contract.estimation_id = estimationID;
+
+        //insert contract
+        const contractID = await contractService.insertContract(contract);
+        if(contractID)
+        {
+            res.status(200).json({
+                "contract_id": contractID
+            });
         }
-
-        const result = await contractService.insertContract(contract);
-
-        res.status(200).json({
-            result
-        });
+        else
+        {
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: error.message
+            message: 'There was an error when inserting contract'
         });
     }
 };
@@ -62,26 +70,42 @@ export const updateContract: RequestHandler = async (req: Request, res: Response
         //validate the request body
         let contract: Contract = await contractSchema.validateAsync(req.body);
 
-        const result = await contractService.updateContract(contract);
-
-        res.status(200).json({
-            result
-        });
+        if(await contractService.updateContract(contract))
+        {
+            res.status(200).json({
+                message: "Contract updated succefully!"
+            });
+        }
+        else
+        {
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'There was an error when updating contract'
+            message: 'There was an error when updating contract!'
         });
     }
 };
 
 export const deleteContractById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await contractService.deleteContract(Number(req.params.id));
+        if(await contractService.deleteContract(Number(req.params.id)))
+        {
+            res.status(200).json({
+                message: "Contract delete succefully!"
+            });
+        }
+        else
+        {
+            res.status(401).json({
+                message: "An error occured!"
+            });
+        }
 
-        res.status(200).json({
-            result
-        });
     } catch (error) {
         console.log(error);
         res.status(500).json({

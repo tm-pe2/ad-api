@@ -38,11 +38,14 @@ export const addTicket: RequestHandler = async (req: Request, res: Response) => 
         const addTicketSchema = ticketSchema.fork('ticket_id', field => field.optional());
         let ticket: Ticket = await addTicketSchema.validateAsync(req.body);
 
-        const result = await ticketService.insertTicket(ticket);
-
-        res.status(200).json({
-            result
-        });
+        if(await ticketService.insertTicket(ticket))
+            res.status(200).json({
+                message: "Ticket inserted successfully!"
+            });
+        else
+            res.status(200).json({
+                message: "An error occurred while inserting ticket!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -56,11 +59,14 @@ export const updateTicket: RequestHandler = async (req: Request, res: Response) 
         //validate the request body
         let ticket: Ticket = await ticketSchema.validateAsync(req.body);
 
-        const result = await ticketService.updateTicket(ticket);
-
-        res.status(200).json({
-            result
-        });
+        if(await ticketService.updateTicket(ticket))
+            res.status(200).json({
+                message: "Ticket updated successfully!"
+            });
+        else
+            res.status(200).json({
+                message: "An error occurred while updating ticket!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -71,11 +77,14 @@ export const updateTicket: RequestHandler = async (req: Request, res: Response) 
 
 export const deleteTicketById: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result = await ticketService.deleteTicketById(Number(req.params.id));
-
-        res.status(200).json({
-            result
-        });
+        if(await ticketService.deleteTicketById(Number(req.params.id)))
+            res.status(200).json({
+                message: "Ticket deleted successfully!"
+            });
+        else
+            res.status(200).json({
+                message: "An error occurred while deleting ticket!"
+            });
     } catch (error) {
         console.log(error);
         res.status(500).json({

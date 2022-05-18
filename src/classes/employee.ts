@@ -20,3 +20,12 @@ export const employeeSchema = userSchema.keys({
     salary: Joi.number().required(),
     user_id: Joi.number().required()
 });
+
+export const updateEmployeeSchema = Joi.object({
+    employee_id: Joi.number().integer().min(0).required(),
+    department: Joi.string().required(),
+    permissions: Joi.number().required(),
+    hire_date: Joi.date().min('1-1-1900').required(),
+    gender: Joi.number().required(),
+    salary: Joi.number().required()
+});

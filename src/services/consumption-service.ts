@@ -34,6 +34,7 @@ export const updateConsumption = async (consumption: Consumption) => {
 
 export const deleteConsumption = async (id: Consumption['consumption_id']) => {
     const rowCount = await execute<number>(consumptionQueries.deleteConsumptionById, [id], "rowCount");
+
     return rowCount > 0;
 }
 

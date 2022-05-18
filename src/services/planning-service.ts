@@ -17,6 +17,10 @@ export const getPlanningByEmployeeId = async (id: Planning['employee_id']) => {
     return plannings[0];
 };
 
+export const getPlanningDetailsById = async (id: Planning['planning_id']) => {
+    return await execute<Planning[]>(planningQueries.getPlaningDetailsById, [id], "rows");
+};
+
 export const insertPlanning = async (planning: Planning) => {
     const rowCount = await execute<number>(planningQueries.addPlanning, [
         planning.employee_id,
