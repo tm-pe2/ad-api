@@ -10,7 +10,7 @@ export const checkMeter =async (meter: Meter) => {
     let errorVar: string = '';
     try 
     {
-        if(!await meterServices.getMeterByPhysicalId(meter.physical_id))
+        if(await meterServices.getMeterByPhysicalId(meter.physical_id) != -1)
         {
             errorVar = errorList.existingPhysicalID;
         }

@@ -36,21 +36,14 @@ export const getMeterById: RequestHandler = async (req: Request, res: Response) 
 
 export const addMeter: RequestHandler = async (req: Request, res: Response) => {
     try {
-
-        const addMeterSchema = meterSchema.fork(['meter_id', 'index_id'],field => field.optional())
+        const addMeterSchema = meterSchema.fork(['meter_id', 'index_id', 'physical_id', 'contract_id'],field => field.optional())
         const validatedMeter = await addMeterSchema.validateAsync(req.body);
-
-        const validationResult = await meterValidation.checkMeter(validatedMeter);
-        if( validationResult != '')
-        {
-            throw new Error(validationResult);
-        }
-
+        
         //insert meter
-        const meterID = await meterServies.insertMeter(validatedMeter);
+        const meterID = await meterServies.insertMeter(req.body);
         if(meterID){
             validatedMeter.meter_id = meterID;
-            // insert contract meter
+            //insert contract meter
             if(await contractMeterServices.insertContractMeters(validatedMeter)){
                 //insert meter index values 
                 if(await indexValuesServices.insertIndexValue(validatedMeter))

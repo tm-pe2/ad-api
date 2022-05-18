@@ -49,7 +49,6 @@ export const execute = <T>(query: string, params: any[], option?: string): Promi
             pool.query(query, params, (error, results: any) => {
                 if (error)
                     reject(error);
-
                 if(option)
                     resolve(results[option]);
                 else

@@ -11,6 +11,4 @@ router.post('/', auth.authenticate([UserRole.ADMIN, UserRole.CUSTOMER]), estimat
 router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.TECHNICIAN]), estimationController.updateEstimation);
 router.delete('/:id', auth.authenticate([UserRole.ADMIN]), estimationController.deleteEstimationById);
 
-
-
 export = router;

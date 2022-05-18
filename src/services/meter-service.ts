@@ -11,16 +11,25 @@ export const getMeterById = async (id: Meter['meter_id']) => {
 };
 
 export const getMeterByPhysicalId = async (id: Meter['physical_id']) => {
-    return await execute<Meter[]>(metersQueries.getMeterByPhysicalId, [id], "rows");
+    try {
+        const result = await execute<Meter[]>(metersQueries.getMeterByPhysicalId, [id], "rows");
+        if(result)
+        {
+            return result[0].physical_id;
+        }
+        return -1;
+    } catch (error) {
+        return -1;
+    }
 };
 
 export const insertMeter = async (meter: Meter) => {
-    const rowCount = await execute<Meter[]>(metersQueries.addMeter, [
+    const meterID = await execute<Meter[]>(metersQueries.addMeter, [
         meter.meter_type,
         meter.physical_id
     ], "rows");
-
-    return rowCount[0].meter_id;
+    console.log(meterID);
+    return meterID[0].meter_id;
 };
 
 export const updateMeter = async (meter: Meter) => {

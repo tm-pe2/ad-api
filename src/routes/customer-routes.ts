@@ -5,9 +5,6 @@ import { UserRole } from '../models/userrole';
 
 const router = express.Router();
 
-
-
-
 //static routes
 router.get('', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getAllCustomers);
 router.get('/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER]),customerController.getCustomersContracts);

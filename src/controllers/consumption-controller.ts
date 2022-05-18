@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Consumtion, cunsumtionSchema } from "../classes/consumption";
+import {Consumption, cunsumptionSchema } from "../classes/consumption";
 import * as consumptionServices from '../services/consumption-service';
 
 export const getAllConsumptions: RequestHandler = async (req: Request, res: Response) => {
@@ -31,9 +31,9 @@ export const getConsumptionById: RequestHandler = async (req: Request, res: Resp
     }
 };
 
-export const addMeter: RequestHandler = async (req: Request, res: Response) => {
+export const addConsumption: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const addConsumptionSchema = cunsumtionSchema.fork(['consumption_id'],field => field.optional())
+        const addConsumptionSchema = cunsumptionSchema.fork(['consumption_id'],field => field.optional())
         const validatedConsumption = await addConsumptionSchema.validateAsync(req.body);
 
         if(await consumptionServices.insertConsumption(validatedConsumption)){
@@ -54,10 +54,10 @@ export const addMeter: RequestHandler = async (req: Request, res: Response) => {
     }
 };
 
-export const updateMeter: RequestHandler = async (req: Request, res: Response) => {
+export const updateConsumption: RequestHandler = async (req: Request, res: Response) => {
     try {
         //validate the request body
-        let consumption: Consumtion = await cunsumtionSchema.validateAsync(req.body);
+        let consumption: Consumption = await cunsumptionSchema.validateAsync(req.body);
 
         if(await consumptionServices.updateConsumption(consumption)){
             res.status(200).json({
@@ -77,7 +77,7 @@ export const updateMeter: RequestHandler = async (req: Request, res: Response) =
     }
 };
 
-export const deleteMeterById: RequestHandler = async (req: Request, res: Response) => {
+export const deleteConsumptionById: RequestHandler = async (req: Request, res: Response) => {
     try {
         if(await consumptionServices.deleteConsumption(Number(req.params.id))){
             res.status(200).json({
