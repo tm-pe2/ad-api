@@ -2,8 +2,8 @@ import http from 'http';
 import express, {Express} from 'express';
 import {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
-import customerRoutes from './routes/customer-routes';
-import invoiceRoutes from './routes/invoice-routes';
+import customerRoutes from './routes/customer-routes'
+import invoiceRoutes from './routes/invoice-routes'
 import contractRoutes from './routes/contract-routes';
 import addressRoutes from './routes/address-routes';
 import employeeRoutes from './routes/employee-routes';
@@ -16,14 +16,11 @@ import * as DBConnector from './utils/mysql.connector';
 import userRoutes from './routes/user-routes';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
-import consumptionRoutes from './routes/consumption-routes';
-import meterRoutes from './routes/meter-routes';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
 import { RefreshToken } from './classes/refreshtokens';
-import {scheduleInvoiceJobs} from "./utils/schedule-jobs";
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -74,8 +71,6 @@ router.use('/auth/', authRoutes)
 router.use('/test/', testRoutes)
 
 router.use('/addresses/', addressRoutes)
-router.use('/consumptions/', consumptionRoutes)
-router.use('/meters/', meterRoutes)
 router.use('/contracts/', contractRoutes)
 router.use('/customers/', customerRoutes)
 router.use('/employees/', employeeRoutes)
@@ -116,6 +111,3 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 /** Server */
 export const httpServer = http.createServer(router);
 export default router;
-
-/** Schedule invoice jobs */
-scheduleInvoiceJobs();
