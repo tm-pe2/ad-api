@@ -1,16 +1,16 @@
 import {execute} from "../utils/mysql.connector";
-import {Consumtion} from '../classes/consumption';
+import {Consumption} from '../classes/consumption';
 import {consumtionQueries} from '../queries/consumtion-queries';
 
 export const getAllConsumptions = async () => {
-    return await execute<Consumtion[]>(consumtionQueries.getAllConsumptions, [], "rows");
+    return await execute<Consumption[]>(consumtionQueries.getAllConsumptions, [], "rows");
 };
 
-export const getConsumptionById = async (id: Consumtion['consumption_id']) => {
-    return await execute<Consumtion[]>(consumtionQueries.getConsumptionById, [id], "rows");
+export const getConsumptionById = async (id: Consumption['consumption_id']) => {
+    return await execute<Consumption[]>(consumtionQueries.getConsumptionById, [id], "rows");
 };
 
-export const insertConsumption = async (consumption: Consumtion) => {
+export const insertConsumption = async (consumption: Consumption) => {
     const rowCount = await execute<number>(consumtionQueries.addConsumption, [
         consumption.meter_id,
         consumption.consumption,
@@ -20,7 +20,7 @@ export const insertConsumption = async (consumption: Consumtion) => {
     return rowCount;
 };
 
-export const updateConsumption = async (consumption: Consumtion) => {
+export const updateConsumption = async (consumption: Consumption) => {
     const rowCount = await execute<number>(consumtionQueries.updateConsumption, [
         consumption.meter_id,
         consumption.consumption,
@@ -31,7 +31,7 @@ export const updateConsumption = async (consumption: Consumtion) => {
     return rowCount;
 }
 
-export const deleteConsumption = async (id: Consumtion['consumption_id']) => {
+export const deleteConsumption = async (id: Consumption['consumption_id']) => {
     const rowCount = await execute<number>(consumtionQueries.deleteConsumptionById, [id], "rowCount");
     return rowCount > 0;
 }
