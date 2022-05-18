@@ -23,7 +23,7 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
                         // TODO: check if okay practise to pass in body
                         // Pass decoded info into request body for later use in controllers
                         req.body.userId = decoded.id
-                        req.body.userRole = decoded.role
+                        req.body.userRole = decoded.role_id
                         next();
                     }
                     else {
