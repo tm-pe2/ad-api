@@ -51,5 +51,26 @@ export const invoiceQueries = {
             JOIN users u ON u.user_id = cu.user_id
             JOIN estimations e ON e.estimation_id = co.estimation_id
         WHERE i.invoice_id = $1
+    `,
+
+    getInvoiceByUserId: `
+        SELECT 
+            i.invoice_id,
+            i.contract_id, 
+            i.supplier_id, 
+            i.creation_date, 
+            i.due_date, 
+            i.status_id, 
+            i.price, 
+            i.tax, 
+            i.tariff_rate, 
+            i.period_start, 
+            i.period_end 
+        FROM invoices i
+            JOIN contracts co ON i.contract_id = co.contract_id
+            JOIN customercontracts cc ON co.contract_id = cc.contract_id
+            JOIN customers cu ON cu.customer_id = cc.customer_id
+            JOIN users u ON u.user_id = cu.user_id
+        WHERE cu.user_id = $1
     `
 };
