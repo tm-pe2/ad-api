@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { UserRole } from '../models/userrole';
 
-function authorize(roles: string[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
         if (process.env.JWTSECRET == undefined) {
             throw new Error('JWTSECRET undefined');

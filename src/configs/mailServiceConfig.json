@@ -1,0 +1,7 @@
+{
+    "port": 25,
+    "domain": "PE2022.com",
+    "host": "mailserver1.pe2022.com",
+    "secure": false,
+    "company": "PE2022"
+}

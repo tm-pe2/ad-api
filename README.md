@@ -11,8 +11,17 @@
 npm install
 ```
 
-Create a file `.env` in the project root:
-```
+Create `.env` file in root with content:
+
+you have to be connected to the vpn
+
+```md
+# .env
+
+## this is your vpn user login + mail password
+MAILSERVER_U=""
+MAILSERVER_P=""
+
 JWTSECRET=SomethingYouCanPickYourselfButSecure:)
 ```
 

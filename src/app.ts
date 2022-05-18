@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
+import { date } from 'joi';
+import { Invoice } from './classes/invoice';
 import { httpServer } from './server'
 import { MailService } from './services/mail-service'
 import { Env } from './utils/env';
-import { setOverdue, startIntervalsOverdue } from './services/invoice-service';
+import { startIntervalsOverdue } from './services/invoice-service';
+import { Logger } from './utils/logger';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
   dotenv.config();
@@ -11,7 +14,7 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
 try {
     Env.validateMandatoryKeys();
 } catch (err) {
-    console.error('.env not properly configured: ', err);
+    Logger.error('.env not properly configured: ', err);
     process.exit(-1);
 }
 
