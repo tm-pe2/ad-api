@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
-
-const path = require('path')
+import path from 'path';
 
 if (process.env.NODE_ENV == 'test') {
     dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
