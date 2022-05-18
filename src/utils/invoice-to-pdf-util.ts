@@ -14,30 +14,29 @@ const fs = require('fs');
 const PDFDocument = require("pdfkit");
 const resourcePath = path.join(path.resolve(__dirname), '..', 'resources');
 
-let doc = new PDFDocument({size: "A4", margin: 50});
+let doc: typeof PDFDocument;
 
 export const generatePdf = async (invoiceId: number) => {
     return new Promise<void> (async resolve => {
         const destinationPath = getPathToInvoiceFile(invoiceId);
+        doc = null;
+        doc = new PDFDocument({size: "A4", margin: 50});
 
         const invoicePdf: InvoicePdf = await invoiceService.getInvoicePdfData(invoiceId);
 
-        if (monthDiff(invoicePdf.period_start, invoicePdf.period_end) > 1) {
-            console.log("annual invoice");
+        if (invoicePdf !== undefined) {
+            if (monthDiff(invoicePdf.period_start, invoicePdf.period_end) > 1) {
+                const meterConsumptions = await getMeterConsumptions(invoicePdf);
+                generateAnnualInvoicePdf(invoicePdf, meterConsumptions);
+            } else {
+                generateAdvanceInvoicePdf(invoicePdf);
+            }
 
-            const meterConsumptions = await getMeterConsumptions(invoicePdf);
+            doc.end();
+            let b = doc.pipe(fs.createWriteStream(destinationPath));
 
-            generateAnnualInvoicePdf(invoicePdf, meterConsumptions);
+            b.on('finish', resolve);
         }
-        else {
-            console.log("advance invoice");
-            generateAdvanceInvoicePdf(invoicePdf);
-        }
-
-        doc.end();
-        let b = doc.pipe(fs.createWriteStream(destinationPath));
-
-        b.on('finish', resolve);
     });
 }
 
@@ -75,11 +74,10 @@ const generateAnnualInvoicePdf = (invoicePdf: InvoicePdf, meterConsumptions: Map
     const totalAdvances = invoicePdf.estimated_consumption * 11 * invoicePdf.tariff_rate;
     const totalAdvancesWithTax = totalAdvances + (totalAdvances * 0.21);
     const endTotal = consumptionWithTax - totalAdvancesWithTax;
-    console.log(endTotal);
 
     generateHeader();
     generateCustomerInformation(invoicePdf, endTotal);
-    generateInvoiceTableHeader(invoicePdf);
+    generateInvoiceTableHeader();
 
     let i = 0;
     let baseInvoiceTablePosition = 360
@@ -111,7 +109,7 @@ const generateAdvanceInvoicePdf = (invoicePdf: InvoicePdf) => {
 
     generateHeader();
     generateCustomerInformation(invoicePdf, endTotal);
-    generateInvoiceTableHeader(invoicePdf);
+    generateInvoiceTableHeader();
 
     generateAdvanceTableRow(360, invoicePdf);
 
@@ -141,18 +139,7 @@ const generateHeader = () => {
 }
 
 const generateCustomerInformation = (invoicePdf: InvoicePdf, endTotal: number) => {
-    let title = '';
-    let label = '';
-
-    if (endTotal > 0) {
-        title = "Invoice";
-        label = "Balance due:";
-    }
-    else
-    {
-        title = "Credit Note";
-        label = "Credit Note Total:"
-    }
+    const title: string = endTotal > 0 ? 'Invoice' : 'Credit Note';
 
     doc
         .fillColor("#444444")
@@ -199,7 +186,7 @@ const generateCustomerInformation = (invoicePdf: InvoicePdf, endTotal: number) =
     generateHr(customerInformationTop + 70);
 }
 
-const generateInvoiceTableHeader = (invoicePdf: InvoicePdf) => {
+const generateInvoiceTableHeader = () => {
     const invoiceTableTop = 330;
 
     doc.font("Helvetica-Bold");

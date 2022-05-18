@@ -1,7 +1,10 @@
 import dotenv from 'dotenv';
+import { date } from 'joi';
+import { Invoice } from './classes/invoice';
 import { httpServer } from './server'
 import { MailService } from './services/mail-service'
 import { Env } from './utils/env';
+import { Logger } from './utils/logger';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
   dotenv.config();
@@ -15,12 +18,9 @@ try {
 }
 
 (async () => {
-  const PORT: any = process.env.PORT ?? 6060;
-  httpServer.listen(PORT, () => console.log(`The server is running on http://localhost:${PORT}`));
-  /*try{
-  const ms = new MailService();
-  ms.testEmail()
-  } catch(e){
-    console.error(e);
-  }*/
+    console.log("run");
+
+    const PORT: any = process.env.PORT || 6060;
+    httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
+    
 })();

@@ -129,3 +129,18 @@ export const getInvoicePdfById: RequestHandler = async (req: Request, res: Respo
         });
     }
 };
+
+export const getInvoiceByUserId: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const invoice = await invoiceService.getInvoiceByUserId(Number(req.params.id));
+
+        res.status(200).json({
+            invoice
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching invoices'
+        });
+    }
+}

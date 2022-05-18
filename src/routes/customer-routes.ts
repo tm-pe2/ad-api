@@ -13,6 +13,7 @@ router.get('/contracts', customerController.getCustomersContracts);
 router.get('/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerById);
 router.get('/:id/addresses',customerController.getCustomerByUserId);
 router.get('/:id/contracts', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerContractsByID);
+router.get('/user/:id', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]),customerController.getCustomerByUserId);
 router.post('/', customerController.addCustomer); //this is not protected so that new customers ca register
 router.put('/', auth.authenticate([UserRole.ADMIN, UserRole.MANAGER, UserRole.CUSTOMER]), customerController.updateCustomer);
 router.delete('/:id', auth.authenticate([UserRole.ADMIN]), customerController.DeleteCustomerById);

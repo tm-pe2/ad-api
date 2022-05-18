@@ -75,3 +75,7 @@ export const getInvoicePdfData = async (id: Invoice['invoice_id']) => {
 
     return result[0];
 }
+
+export const getInvoiceByUserId = async (id: Invoice['invoice_id']) => {
+    return await execute<Invoice[]>(invoiceQueries.getInvoiceByUserId, [id], "rows");
+};
