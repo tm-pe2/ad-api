@@ -16,6 +16,7 @@ import * as DBConnector from './utils/mysql.connector';
 import userRoutes from './routes/user-routes';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
+import cityRoutes from './routes/city-routes';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -81,6 +82,7 @@ router.use('/suppliers/', supplierRoutes)
 router.use('/tariffs/', tariffRoutes)
 router.use('/tickets/', ticketRoutes)
 router.use('/users/', userRoutes)
+router.use('/cities/', cityRoutes);
 
 // RefreshToken.addRefreshToken(1, 'test').then(() => {
 //     console.log('added refresh token');
