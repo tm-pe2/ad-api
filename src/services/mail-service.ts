@@ -133,7 +133,7 @@ export class MailService {
         return this.transport.sendMail({
             from: this.from,
             to: this.customer.email,
-            subject: `Work order`,
+            subject: `Invoice: ${o.invoice_id}`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
         }).catch((e) => { Logger.error(e); });

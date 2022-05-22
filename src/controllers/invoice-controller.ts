@@ -146,12 +146,8 @@ export const getInvoiceByUserId: RequestHandler = async (req: Request, res: Resp
 };
 
 //TODO add authentication
-export const getOverdueInvoices: RequestHandler = async (req: Request, res: Response) => {
-    console.log("before 1");
-    
+export const getOverdueInvoices: RequestHandler = async (req: Request, res: Response) => {    
     try {
-        console.log("before 2");
-
         const invoice = await invoiceService.getOverdueInvoices();
         res.status(200).json(invoice);
     } catch (error) {

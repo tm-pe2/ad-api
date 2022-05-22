@@ -84,17 +84,13 @@ export const getInvoiceByUserId = async (id: Invoice['invoice_id']) => {
 
 //this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue
 export const getOverdueInvoices = async () => {
-    const query = `SELECT * FROM invoices WHERE "status_id" =  $1;`;
+    const query = `SELECT * FROM invoices WHERE status_id =  $1;`;
     const invoicesSql = await execute<{ rows: Invoice[] }>(query, [InvoiceStatus.overdue])
         .catch(e => console.log("overdue invoices error: ", e));
-    if (!invoicesSql)
+
+    if (!invoicesSql || !invoicesSql.rows)
         return undefined
     console.log(invoicesSql.rows.length)
-    const overdues = await getOverdueInvoices()
-    const ms = new MailService();
-    overdues?.forEach(o => {
-        ms.overdueInvoice(o)
-    })
     return invoicesSql.rows;
 };
 
@@ -102,12 +98,13 @@ export const getOverdueInvoices = async () => {
 export async function setOverdue() {
     const querySelect = `select * from "invoices" WHERE "status_id" = $1 AND "due_date" <= $2`;
     const queryUpdate = `UPDATE "invoices" SET "status_id" = $1 WHERE "status_id" = $2 AND "due_date" <= $3`
-    const invoices = await execute<{ rows: Invoice[] }>(querySelect, [InvoiceStatus.sent, new Date().toISOString()]);
+    const invoicesSql = await execute<{ rows: Invoice[] }>(querySelect, [InvoiceStatus.sent, new Date().toISOString()]);
+    if(!invoicesSql)
+        return undefined
     execute<unknown>(queryUpdate, [InvoiceStatus.overdue,InvoiceStatus.sent, new Date().toISOString()]).catch(e => console.log(e));
+    
     const ms = new MailService();
-
-    invoices.rows.forEach(o => ms.overdueInvoice(o));
-    //new 
+    invoicesSql.rows.forEach(o => ms.overdueInvoice(o));
 }
 
 export async function startIntervalsOverdue() {
