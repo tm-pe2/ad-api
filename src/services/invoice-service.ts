@@ -1,8 +1,10 @@
-import {execute} from "../utils/mysql.connector";
-import {Invoice} from "../classes/invoice";
-import {invoiceQueries} from "../queries/invoice-queries";
-import {Contract} from "../classes/contracts";
-import {InvoicePdf} from "../classes/invoice-pdf";
+import { execute } from "../utils/mysql.connector";
+import { Invoice, InvoiceStatus } from "../classes/invoice";
+import { invoiceQueries } from "../queries/invoice-queries";
+import { setInterval } from "timers";
+import { MailService } from "./mail-service";
+import { Contract } from "../classes/contracts";
+import { InvoicePdf } from "../classes/invoice-pdf";
 
 export const getAllInvoices = async () => {
     return await execute<Invoice[]>(invoiceQueries.getAllInvoices, [], "rows");
@@ -13,8 +15,8 @@ export const getInvoiceById = async (id: Invoice['invoice_id']) => {
     return invoices[0];
 };
 
-export const getInvoiceByPeriod = async (id: Invoice['contract_id'],periodStart: Invoice['period_start'], periodEnd: Invoice['period_end']) => {
-    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [periodStart,periodEnd], "rows");
+export const getInvoiceByPeriod = async (id: Invoice['contract_id'], periodStart: Invoice['period_start'], periodEnd: Invoice['period_end']) => {
+    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [periodStart, periodEnd], "rows");
     return invoices[0];
 };
 
@@ -79,3 +81,32 @@ export const getInvoicePdfData = async (id: Invoice['invoice_id']) => {
 export const getInvoiceByUserId = async (id: Invoice['invoice_id']) => {
     return await execute<Invoice[]>(invoiceQueries.getInvoiceByUserId, [id], "rows");
 };
+
+//this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue
+export const getOverdueInvoices = async () => {
+    const query = `SELECT * FROM invoices WHERE status_id =  $1;`;
+    const invoicesSql = await execute<{ rows: Invoice[] }>(query, [InvoiceStatus.overdue])
+        .catch(e => console.log("overdue invoices error: ", e));
+
+    if (!invoicesSql || !invoicesSql.rows)
+        return undefined
+    console.log(invoicesSql.rows.length)
+    return invoicesSql.rows;
+};
+
+//TODO use scheduler (invoice branch)
+export async function setOverdue() {
+    const querySelect = `select * from "invoices" WHERE "status_id" = $1 AND "due_date" <= $2`;
+    const queryUpdate = `UPDATE "invoices" SET "status_id" = $1 WHERE "status_id" = $2 AND "due_date" <= $3`
+    const invoicesSql = await execute<{ rows: Invoice[] }>(querySelect, [InvoiceStatus.sent, new Date().toISOString()]);
+    if(!invoicesSql)
+        return undefined
+    execute<unknown>(queryUpdate, [InvoiceStatus.overdue,InvoiceStatus.sent, new Date().toISOString()]).catch(e => console.log(e));
+    
+    const ms = new MailService();
+    invoicesSql.rows.forEach(o => ms.overdueInvoice(o));
+}
+
+export async function startIntervalsOverdue() {
+    setInterval(setOverdue, 10000);
+}

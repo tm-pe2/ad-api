@@ -14,6 +14,15 @@ export interface Invoice {
     period_end: Date
 }
 
+//move to db table?
+export enum InvoiceStatus {
+    sent,
+    paid,
+    overdue,
+    generated,
+    notGenerated 
+ }
+
 export const invoiceSchema = Joi.object({
     invoice_id: Joi.number().integer().min(0).required(),
     contract_id: Joi.number().integer().min(0).required(),

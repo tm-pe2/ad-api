@@ -26,14 +26,6 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
 }
 
-try {
-    Env.validateMandatoryKeys();
-} catch (err) {
-    console.error('.env not properly configured: ', err);
-    process.exit(-1);
-}
-
-
 const router: Express = express();
 
 /** Middleware for CORS */

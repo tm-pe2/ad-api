@@ -143,4 +143,19 @@ export const getInvoiceByUserId: RequestHandler = async (req: Request, res: Resp
             message: 'There was an error when fetching invoices'
         });
     }
-}
+};
+
+//TODO add authentication
+export const getOverdueInvoices: RequestHandler = async (req: Request, res: Response) => {    
+    try {
+        const invoice = await invoiceService.getOverdueInvoices();
+        res.status(200).json(invoice);
+    } catch (error) {
+        
+        console.log(error);
+        res.status(500).json({
+            message: 'There was an error when fetching overdue invoices'
+        });
+    }
+};
+

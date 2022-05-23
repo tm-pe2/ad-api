@@ -4,16 +4,17 @@ import { Invoice } from './classes/invoice';
 import { httpServer } from './server'
 import { MailService } from './services/mail-service'
 import { Env } from './utils/env';
+import { startIntervalsOverdue } from './services/invoice-service';
 import { Logger } from './utils/logger';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
-  dotenv.config();
+    dotenv.config();
 }
 
 try {
     Env.validateMandatoryKeys();
 } catch (err) {
-    console.error('.env not properly configured: ', err);
+    Logger.error('.env not properly configured: ', err);
     process.exit(-1);
 }
 
@@ -22,5 +23,6 @@ try {
 
     const PORT: any = process.env.PORT || 6060;
     httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
-    
+    //TODO move to schedule
+    startIntervalsOverdue();
 })();
