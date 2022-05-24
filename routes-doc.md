@@ -15,7 +15,6 @@ Remains as is
 
 GET:  
 - `users/self`
-- `users/:id/consumptions`
 
 Instead of DELETE a enable/disable method
 
@@ -51,8 +50,9 @@ Will contain user_id and address_id.
 ## Consumptions
 
 GET/POST/PUT:
-- `consumptions`
 - `consumptions/:meter_id`
+  - Unsure whats needed for manual meter readings etc.
+- `consumptions/self`
 
 Consumptions don't need to be updated, maybe no PUT?
 Or just delete and new post?
