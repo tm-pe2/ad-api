@@ -58,7 +58,7 @@ Or just delete and new post?
 
 ## Invoices
 
-GET/POST/PUT:
+GET:
 - `invoices`
 - `invoices/self`
 - ~~`invoices/:invoice_id`~~
