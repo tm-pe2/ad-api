@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import { RefreshToken } from '../classes/refreshtokens';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from '../models/userrole';
+import { UserRole } from '../models/user';
 
 const accessExpireTime = 1800; // 30 min
 const refreshExpireTime = 604800; // 7 days

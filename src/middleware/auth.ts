@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
-import { UserRole } from '../models/userrole';
+import { UserRole } from '../models/user';
 
 function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -20,10 +20,6 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
 
                     if (decoded.role_id != undefined && decoded.id != undefined
                         && roles.includes(decoded.role_id)) {
-                        // TODO: check if okay practise to pass in body
-                        // Pass decoded info into request body for later use in controllers
-                        req.body.userId = decoded.id
-                        req.body.userRole = decoded.role_id
                         next();
                     }
                     else {

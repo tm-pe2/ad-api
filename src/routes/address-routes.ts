@@ -1,6 +1,6 @@
 import express from 'express';
 import * as addressController from '../controllers/address-controller';
-import { UserRole } from '../models/userrole';
+import { UserRole } from '../models/user';
 import * as auth from "../middleware/auth"
 
 const router = express.Router();

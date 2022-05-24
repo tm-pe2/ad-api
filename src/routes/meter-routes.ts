@@ -1,7 +1,7 @@
 import express from 'express';
 import * as meterController from '../controllers/meter-controller';
 import * as auth from "../middleware/auth";
-import { UserRole } from '../models/userrole';
+import { UserRole } from '../models/user';
 
 const router = express.Router();
 

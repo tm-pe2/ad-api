@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 import * as auth from "../middleware/auth"
-import { UserRole } from '../models/userrole';
+import { UserRole } from '../models/user';
 
 /**Example route to protect a resource.
  * Use this route to test the authentication middleware.

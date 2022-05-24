@@ -1,7 +1,7 @@
 import express from 'express';
 import * as customerController from '../controllers/customer-controller';
 import * as auth from "../middleware/auth";
-import { UserRole } from '../models/userrole';
+import { UserRole } from '../models/user';
 
 const router = express.Router();
 
