@@ -40,16 +40,14 @@ export function end() {
 }
 
 
-export const execute = <T>(query: string, params: any[], option?: string): Promise<T> => {
+export const execute = <T>(query: string, params: any[] = []): Promise<T> => {
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
 
-        return new Promise((resolve, reject) => {
+        return new Promise<T>((resolve, reject) => {
             pool.query(query, params, (error, results: any) => {
                 if (error)
                     reject(error);
-                if(option)
-                    resolve(results[option]);
                 else
                     resolve(results);
             });
