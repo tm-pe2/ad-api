@@ -60,11 +60,12 @@ Or just delete and new post?
 
 GET/POST/PUT:
 - `invoices`
-- `invoices/:invoice_id`
-  - Unnecessary GET -> already inside /invoices
-  - PUT only updates the invoice if not yet sent
-  - No POST -> gets created inside API every month and year
 - `invoices/self`
+- ~~`invoices/:invoice_id`~~
+  - **Unnecessary GET** -> already inside /invoices
+  - We are only allowed to update the invoice if it has not yet been sent yet from a legal perspective.
+    - For sake of simplicity we will not allow this at all.
+  - **No POST** -> gets created inside API every month and year
 - ~~`invoices/:invoice_id/download`~~ -> Move to front-end
 - ~~`/overdue`~~ -> Move filter to front-end
 
