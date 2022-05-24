@@ -5,7 +5,6 @@ import morgan from 'morgan';
 import customerRoutes from './routes/customer-routes';
 import invoiceRoutes from './routes/invoice-routes';
 import contractRoutes from './routes/contract-routes';
-import addressRoutes from './routes/address-routes';
 import employeeRoutes from './routes/employee-routes';
 import estimationRoutes from './routes/estimation-routes';
 import planningRoutes from './routes/planning-routes';
@@ -24,6 +23,7 @@ import dotenv from 'dotenv';
 import { Env } from './utils/env';
 import { RefreshToken } from './classes/refreshtokens';
 import {scheduleInvoiceJobs} from "./utils/schedule-jobs";
+import { AddressController } from './controllers/address';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -62,22 +62,22 @@ DBConnector.init();
 
 
 /** Routes */
-router.use('/auth/', authRoutes)
-router.use('/test/', testRoutes)
+router.use('/auth', authRoutes)
+router.use('/test', testRoutes)
 
-router.use('/addresses/', addressRoutes)
-router.use('/consumptions/', consumptionRoutes)
-router.use('/meters/', meterRoutes)
-router.use('/contracts/', contractRoutes)
-router.use('/customers/', customerRoutes)
-router.use('/employees/', employeeRoutes)
-router.use('/estimations/', estimationRoutes)
-router.use('/invoices/', invoiceRoutes)
-router.use('/plannings/', planningRoutes)
-router.use('/suppliers/', supplierRoutes)
-router.use('/tariffs/', tariffRoutes)
-router.use('/tickets/', ticketRoutes)
-router.use('/users/', userRoutes)
+router.use('/addresses', AddressController.router())
+router.use('/consumptions', consumptionRoutes)
+router.use('/meters', meterRoutes)
+router.use('/contracts', contractRoutes)
+router.use('/customers', customerRoutes)
+router.use('/employees', employeeRoutes)
+router.use('/estimations', estimationRoutes)
+router.use('/invoices', invoiceRoutes)
+router.use('/plannings', planningRoutes)
+router.use('/suppliers', supplierRoutes)
+router.use('/tariffs', tariffRoutes)
+router.use('/tickets', ticketRoutes)
+router.use('/users', userRoutes)
 
 // RefreshToken.addRefreshToken(1, 'test').then(() => {
 //     console.log('added refresh token');
