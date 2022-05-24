@@ -2,28 +2,29 @@ import http from 'http';
 import express, {Express} from 'express';
 import {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
-import customerRoutes from './routes/customer-routes';
-import invoiceRoutes from './routes/invoice-routes';
-import contractRoutes from './routes/contract-routes';
-import addressRoutes from './routes/address-routes';
-import employeeRoutes from './routes/employee-routes';
-import estimationRoutes from './routes/estimation-routes';
-import planningRoutes from './routes/planning-routes';
-import tariffRoutes from './routes/tariff-routes';
-import supplierRoutes from './routes/supplier-routes';
-import ticketRoutes from './routes/ticket-routes';
 import * as DBConnector from './utils/mysql.connector';
-import userRoutes from './routes/user-routes';
 import authRoutes from './routes/auth-routes';
 import testRoutes from './routes/test-routes';
-import consumptionRoutes from './routes/consumption-routes';
-import meterRoutes from './routes/meter-routes';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
 import { RefreshToken } from './classes/refreshtokens';
 import {scheduleInvoiceJobs} from "./utils/schedule-jobs";
+import { AddressController } from './controllers/address';
+import { ConsumptionController } from './controllers/consumption';
+import { MeterController } from './controllers/meter';
+import { ContractController } from './controllers/contract';
+import { CustomerController } from './controllers/customer';
+import { EmployeeController } from './controllers/employee';
+import { EstimationController } from './controllers/estimation';
+import { InvoiceController } from './controllers/invoice';
+import { PlanningController } from './controllers/planning';
+import { SupplierController } from './controllers/supplier';
+import { TariffController } from './controllers/tariff';
+import { TicketController } from './controllers/ticket';
+import { UserController } from './controllers/user';
+
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -62,22 +63,22 @@ DBConnector.init();
 
 
 /** Routes */
-router.use('/auth/', authRoutes)
-router.use('/test/', testRoutes)
+router.use('/auth', authRoutes)
+router.use('/test', testRoutes)
 
-router.use('/addresses/', addressRoutes)
-router.use('/consumptions/', consumptionRoutes)
-router.use('/meters/', meterRoutes)
-router.use('/contracts/', contractRoutes)
-router.use('/customers/', customerRoutes)
-router.use('/employees/', employeeRoutes)
-router.use('/estimations/', estimationRoutes)
-router.use('/invoices/', invoiceRoutes)
-router.use('/plannings/', planningRoutes)
-router.use('/suppliers/', supplierRoutes)
-router.use('/tariffs/', tariffRoutes)
-router.use('/tickets/', ticketRoutes)
-router.use('/users/', userRoutes)
+router.use('/addresses', AddressController.router())
+router.use('/consumptions', ConsumptionController.router())
+router.use('/meters', MeterController.router())
+router.use('/contracts', ContractController.router())
+router.use('/customers', CustomerController.router())
+router.use('/employees', EmployeeController.router())
+router.use('/estimations', EstimationController.router())
+router.use('/invoices', InvoiceController.router())
+router.use('/plannings', PlanningController.router())
+router.use('/suppliers', SupplierController.router())
+router.use('/tariffs', TariffController.router())
+router.use('/tickets', TicketController.router())
+router.use('/users', UserController.router())
 
 // RefreshToken.addRefreshToken(1, 'test').then(() => {
 //     console.log('added refresh token');
