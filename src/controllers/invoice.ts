@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-class InvoiceController {
+export class InvoiceController {
     static router(): Router {
         return Router({caseSensitive: false})
         .get('/', (req, res, next) => {
