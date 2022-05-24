@@ -15,6 +15,7 @@ Remains as is
 
 GET:  
 - `users/self`
+- `users/:id/consumptions`
 
 Instead of DELETE a enable/disable method
 
@@ -22,7 +23,7 @@ Contains everything of a user except the password.
 For example addresses is also inside the user, no extra request.
 
 > DELETE will never be a method. Deactivating the user might be prefered.
-> 
+
 ## Employees
 
 GET/POST/PUT:  
@@ -58,7 +59,7 @@ Or just delete and new post?
 
 ## Invoices
 
-GET/POST/PUT:
+GET:
 - `invoices`
 - `invoices/self`
 - ~~`invoices/:invoice_id`~~
