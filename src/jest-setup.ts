@@ -1,6 +1,6 @@
 require('./src/server');
 
-import {execute} from './src/utils/mysql.connector';
+import {execute} from './utils/mysql.connector';
 
 module.exports = async () => {
     await execute<any>(truncateTablesQuery, []);
