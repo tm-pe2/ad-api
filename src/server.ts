@@ -9,7 +9,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Env } from './utils/env';
-import { RefreshToken } from './classes/refreshtokens';
 import {scheduleInvoiceJobs} from "./utils/schedule-jobs";
 import { AddressController } from './controllers/address';
 import { ConsumptionController } from './controllers/consumption';
@@ -24,6 +23,7 @@ import { SupplierController } from './controllers/supplier';
 import { TariffController } from './controllers/tariff';
 import { TicketController } from './controllers/ticket';
 import { UserController } from './controllers/user';
+import { AuthController } from './controllers/auth';
 
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
@@ -63,7 +63,7 @@ DBConnector.init();
 
 
 /** Routes */
-router.use('/auth', authRoutes)
+router.use('/auth', AuthController.router());
 router.use('/test', testRoutes)
 
 router.use('/addresses', AddressController.router())
