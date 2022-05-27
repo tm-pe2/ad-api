@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {Ticket} from "../classes/ticket";
 import {ticketQueries} from "../queries/ticket-queries";
 

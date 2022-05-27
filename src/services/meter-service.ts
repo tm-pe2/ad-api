@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {Meter} from '../classes/meters';
 import {metersQueries} from '../queries/meters-queries';
 import {Contract} from "../classes/contracts";

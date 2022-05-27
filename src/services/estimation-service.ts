@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {Estimation} from "../classes/estimation";
 import {estimationQueries} from "../queries/estimation-queries";
 

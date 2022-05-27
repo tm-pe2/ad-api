@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {Consumption} from '../classes/consumption';
 import {consumptionQueries} from '../queries/consumption-queries';
 import {Meter} from "../classes/meters";

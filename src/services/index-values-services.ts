@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {IndexValues} from '../classes/index-values';
 import {indexValuesQueries} from '../queries/index-values-queries';
 

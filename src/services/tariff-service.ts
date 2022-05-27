@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {Tariff} from "../classes/tariff";
 import {tariffQueries} from "../queries/tariff-queries";
 

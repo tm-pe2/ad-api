@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {CustomerContracts} from '../classes/customer-contracts';
 import {customerContractsQueries} from '../queries/customer-contracts-queries';
 import {AdvanceInvoiceData} from "../classes/invoice_generation/advance-invoice-data";

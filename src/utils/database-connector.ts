@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
 import path from 'path';
+import { Logger } from './logger';
 
 if (process.env.NODE_ENV == 'test') {
     dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
@@ -23,9 +24,9 @@ export function init() {
         };
 
         pool = new Pool(credentials);
-        console.log("Connection established succesfully");
+        Logger.info("Connection established succesfully");
     } catch (error) {
-        console.error("Error trying to connect: ", error);
+        Logger.error("Error trying to connect: ", error);
     }
 }
 
@@ -33,9 +34,9 @@ export function end() {
     try {
         pool.end()
 
-        console.log("Connection closed succesfully");
+        Logger.info("Connection closed succesfully");
     } catch (error) {
-        console.error("Error trying to end connection: ", error);
+        Logger.error("Error trying to end connection: ", error);
     }
 }
 
@@ -54,7 +55,7 @@ export const execute = <T>(query: string, params: any[] = []): Promise<T> => {
         });
 
     } catch (error) {
-        console.error('[mysql.connector][execute][Error]: ', error);
+        Logger.error('[Database connector][execute][Error]: ', error);
         throw new Error('failed to execute MySQL query');
     }
 }

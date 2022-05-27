@@ -1,4 +1,4 @@
-import { execute } from "../utils/mysql.connector";
+import { execute } from "../utils/database-connector";
 import { refreshtokenQueries } from "../queries/refreshtoken-queries";
 import { v4 as uuid } from 'uuid';
 import Joi from "joi";

@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {Supplier} from "../classes/supplier";
 import {supplierQueries} from "../queries/supplier-queries";
 

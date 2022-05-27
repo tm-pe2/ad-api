@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
-import Express from 'express';
+import express, {Express} from 'express';
+import * as DBConnector from './utils/database-connector';
 import { date } from 'joi';
 import { MailService } from './services/mail-service'
 import { Env } from './utils/env';
 import { startIntervalsOverdue } from './services/invoice-service';
 import { Logger } from './utils/logger';
 import { setRoutes } from './routes';
-import { createServer } from 'http';
+import { createServer, Server } from 'http';
 import settings from './configs/settings.json';
 import { scheduleInvoiceJobs } from './utils/schedule-jobs';
 
@@ -22,12 +23,26 @@ try {
 }
 
 (async () => {
-    const app = setRoutes(Express())
+    const app = setRoutes(express())
     const server = createServer(app);
 
     server.listen(process.env.PORT || settings.port, () => {
         Logger.info(`The server is running on port ${process.env.PORT || settings.port}`);
     });
+    
+    DBConnector.init();
 
-    scheduleInvoiceJobs();
+    process.on('SIGINT', () => {onClose(server)});
+    process.on('SIGTERM', () => {onClose(server)});
+      
+    // scheduleInvoiceJobs();
 })();
+
+function onClose(http: Server) {
+    Logger.warn('Closing http server and database connection...');
+    DBConnector.end();
+    http.close((err) => {
+        Logger.info('HTTP server closed.');
+        process.exit(err ? 1 : 0);
+    });
+}

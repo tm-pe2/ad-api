@@ -24,7 +24,7 @@ export function setRoutes(router: Express): Express {
     });
 
     // Setting routes
-    router.use('/auth', AuthController.router());
+    // router.use('/auth', AuthController.router());
 
     // Handle 404
     router.use((req: Request, res: Response, next: NextFunction) => {

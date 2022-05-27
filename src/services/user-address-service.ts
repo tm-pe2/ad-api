@@ -1,4 +1,4 @@
-import {execute} from "../utils/mysql.connector";
+import {execute} from "../utils/database-connector";
 import {UserAddress} from '../classes/user-addresses';
 import {userAdressQueries} from '../queries/user-address-queries';
 
