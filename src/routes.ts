@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { AuthController } from './controllers/auth';
+import { UserController } from './controllers/user';
 
 export function setRoutes(router: Express): Express {
     router.use(cors()); // enable CORS
@@ -25,6 +26,7 @@ export function setRoutes(router: Express): Express {
 
     // Setting routes
     // router.use('/auth', AuthController.router());
+    //router.use('/users', UserController.router());
 
     // Handle 404
     router.use((req: Request, res: Response, next: NextFunction) => {

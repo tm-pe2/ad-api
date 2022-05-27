@@ -24,14 +24,13 @@ export const getUserByNationalNumber = async (nationalNumber: User['national_reg
 };
 
 export const addUser = async (user: User) => {
+    // TODO : update
     const newUser = await execute<User[]>(userQueries.AddUser, [
-        user.role_id,
         user.first_name,
         user.last_name,
         user.birth_date,
         user.email,
         user.phone_number,
-        user.password,
         user.national_registry_number
     ]);
 
@@ -39,6 +38,7 @@ export const addUser = async (user: User) => {
 };
 
 export const updateUser = async (user: User) => {
+    // TODO: update
     const rowCount = await execute<number>(userQueries.UpdateUser, [
         user.id,
         user.first_name,
@@ -46,14 +46,13 @@ export const updateUser = async (user: User) => {
         user.birth_date,
         user.email,
         user.phone_number,
-
         user.id
     ]);
 
     return rowCount > 0;
 };
 
-export const deleteUser = async (id: User['user_id']) => {
+export const deleteUser = async (id: User['id']) => {
     const rowCount = await execute<number>(userQueries.DeleteUserById, [id]);
 
     return rowCount > 0;
