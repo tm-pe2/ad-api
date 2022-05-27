@@ -1,6 +1,4 @@
 import {Request, RequestHandler, Response} from 'express';
-import {userSchema} from '../classes/user';
-import {UserAddress} from '../classes/user-addresses';
 import * as userService from '../services/user-service';
 import { getAccessToken } from '../middleware/auth';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
