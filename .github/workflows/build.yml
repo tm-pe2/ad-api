@@ -27,5 +27,5 @@ jobs:
 
       - name: npm install and build
         run: |
-          npm ci
+          npm i
           npm run tsc
