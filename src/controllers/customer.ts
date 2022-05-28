@@ -14,7 +14,12 @@ export class CustomerController {
                 });
         })
         .get('/:id', (req, res, next) => {
-            getCustomerById(parseInt(req.params.id))
+            let id = parseInt(req.params.id);
+            if (isNaN(id)) {
+                res.sendStatus(400);
+                return;
+            }
+            getCustomerById(id)
                 .then((customer) => {
                     if (customer) {
                         res.send(customer);
