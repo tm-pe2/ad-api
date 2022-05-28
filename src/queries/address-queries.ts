@@ -1,4 +1,13 @@
 export const addressQueries = {
+    getAddressesByUserId: `
+    SELECT *
+    FROM address as a
+    INNER JOIN useraddress as ua
+    ON a.address_id = ua.address_id
+    WHERE ua.user_id = $1
+    `,
+
+
     getAllAddresses: `
         SELECT * FROM address
     `,

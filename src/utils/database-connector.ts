@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { Pool } from 'pg';
+import { Pool, QueryResult } from 'pg';
 import path from 'path';
 import { Logger } from './logger';
 
@@ -41,12 +41,12 @@ export function end() {
 }
 
 
-export const execute = <T>(query: string, params: any[] = []): Promise<T> => {
+export const execute = (query: string, params: any[] = []): Promise<QueryResult<any>> => {
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
 
-        return new Promise<T>((resolve, reject) => {
-            pool.query(query, params, (error, results: any) => {
+        return new Promise<QueryResult<any>>((resolve, reject) => {
+            pool.query(query, params, (error, results: QueryResult) => {
                 if (error)
                     reject(error);
                 else
