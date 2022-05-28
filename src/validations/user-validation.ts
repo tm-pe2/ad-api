@@ -1,6 +1,6 @@
 import {User} from '../classes/user';
-import * as addressServices from '../services/address-service';
-import * as userServices from '../services/user-service';
+import * as addressServices from '../services/address';
+import * as userServices from '../services/user';
 
 const errorList = {
     email:`A user with this email already exists!`,

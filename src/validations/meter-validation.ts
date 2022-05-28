@@ -1,5 +1,5 @@
 import {Meter} from '../classes/meters';
-import * as meterServices from '../services/meter-service';
+import * as meterServices from '../services/meter';
 
 const errorList = {
     existingPhysicalID: 'This meter is already registered!',

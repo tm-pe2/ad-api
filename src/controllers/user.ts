@@ -1,7 +1,7 @@
 import { Router } from "express";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { getAccessToken } from "../middleware/auth";
-import * as userService from "../services/user-service";
+import * as userService from "../services/user";
 
 export class UserController {
     static router(): Router {

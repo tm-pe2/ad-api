@@ -1,5 +1,5 @@
 import { SentMessageInfo } from "nodemailer";
-import { MailService } from "../services/mail-service";
+import { MailService } from "../services/mail";
 import dotenv from 'dotenv';
 
 dotenv.config()

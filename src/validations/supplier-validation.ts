@@ -1,6 +1,6 @@
 import { Supplier } from '../classes/supplier';
-import * as supplierServices from '../services/supplier-service';
-import * as addressServices from '../services/address-service';
+import * as supplierServices from '../services/supplier';
+import * as addressServices from '../services/address';
 
 const errorList = {
     address:`A supplier with this address already exists!`,

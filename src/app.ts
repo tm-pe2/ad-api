@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import express, {Express} from 'express';
 import * as DBConnector from './utils/database-connector';
 import { date } from 'joi';
-import { MailService } from './services/mail-service'
+import { MailService } from './services/mail'
 import { Env } from './utils/env';
-import { startIntervalsOverdue } from './services/invoice-service';
+import { startIntervalsOverdue } from './services/invoice';
 import { Logger } from './utils/logger';
 import { setRoutes } from './routes';
 import { createServer, Server } from 'http';

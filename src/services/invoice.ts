@@ -2,7 +2,7 @@ import { execute } from "../utils/database-connector";
 import { Invoice, InvoiceStatus } from "../classes/invoice";
 import { invoiceQueries } from "../queries/invoice-queries";
 import { setInterval } from "timers";
-import { MailService } from "./mail-service";
+import { MailService } from "./mail";
 import { Contract } from "../classes/contracts";
 import { InvoicePdf } from "../classes/invoice-pdf";
 

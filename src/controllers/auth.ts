@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as userService from '../services/user-service';
+import * as userService from '../services/user';
 import * as bcrypt from 'bcrypt';
 import { AccessToken } from "../classes/accesstokens";
 import { RefreshToken } from "../classes/refreshtokens";

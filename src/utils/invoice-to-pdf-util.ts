@@ -1,7 +1,7 @@
 import path from "path";
-import * as invoiceService from "../services/invoice-service";
-import * as consumptionService from "../services/consumption-service";
-import * as meterService from "../services/meter-service";
+import * as invoiceService from "../services/invoice";
+import * as consumptionService from "../services/consumption";
+import * as meterService from "../services/meter";
 
 import {Invoice} from "../classes/invoice";
 import {Meter} from "../classes/meters";
