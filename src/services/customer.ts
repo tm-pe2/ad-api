@@ -3,7 +3,7 @@ import {customerQueries} from "../queries/customer-queries";
 import { addressQueries } from "../queries/address-queries";
 import { Customer } from "../models/user";
 
-async function customerFromQueryResult(customer: any): Promise<Customer> {
+async function customerFromRowResult(customer: any): Promise<Customer> {
     let addresses = await execute(addressQueries.getAddressesByUserId, [customer.user_id]);
             
     return {
@@ -23,9 +23,9 @@ async function customerFromQueryResult(customer: any): Promise<Customer> {
 
 export async function getAllCustomers() {
     let res = await execute(customerQueries.getAllCustomers, []);
-    if (res.rows.length > 0) {
+    if (res.rowCount > 0) {
         let customers: Customer[] = await Promise.all(res.rows.map(async (customer) => {
-            return await customerFromQueryResult(customer);
+            return await customerFromRowResult(customer);
         }));
         return customers;
     }
@@ -36,10 +36,10 @@ export async function getAllCustomers() {
 
 export async function getCustomerById(id: number): Promise<Customer | null> {
     let res = await execute(customerQueries.getCustomerById, [id]);
-    if (res.rows.length > 0) {
+    if (res.rowCount > 0) {
         console.log(res.rows);
         let customer = res.rows[0];
-        return await customerFromQueryResult(customer);
+        return await customerFromRowResult(customer);
     }
     return null;
 }
