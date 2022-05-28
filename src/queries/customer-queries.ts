@@ -1,30 +1,26 @@
+// Edit this query for addresses with new DB
+// array_agg(tag_id) as tag_arr for roles later
+// https://stackoverflow.com/questions/31453151/in-postgres-select-return-a-column-subquery-as-an-array
+
+const getAllCustomers = `
+    SELECT
+        u.user_id,
+        u.role_id,
+        u.first_name,
+        u.last_name,
+        u.birth_date,
+        u.email,
+        u.phone_number,
+        u.national_registry_number,
+        c.customer_type
+    FROM users as u
+    RIGHT JOIN customers as c ON u.user_id = c.user_id
+    `;
+
 export const customerQueries = {
-    // Edit this query for addresses with new DB
-    // array_agg(tag_id) as tag_arr for roles later
-    // https://stackoverflow.com/questions/31453151/in-postgres-select-return-a-column-subquery-as-an-array
+    getAllCustomers: getAllCustomers,
 
-    getAllCustomers: `
-        SELECT
-            u.user_id,
-            u.role_id,
-            u.first_name,
-            u.last_name,
-            u.birth_date,
-            u.email,
-            u.phone_number,
-            u.national_registry_number,
-            c.customer_type
-        FROM users as u
-        RIGHT JOIN customers as c ON u.user_id = c.user_id
-    `,
-
-    // getCustomerById: `
-    //     SELECT * FROM users as u 
-    //     INNER JOIN customers c ON u.user_id = c.user_id
-    //     INNER JOIN useraddress ua ON u.user_id = ua.user_id
-    //     INNER JOIN address a ON ua.address_id = a.address_id
-    //     WHERE c.customer_id = $1
-    // `,
+    getCustomerById: getAllCustomers + `WHERE u.user_id = $1`,
     
     // getCustomerByUserId: `
     //     SELECT * FROM users as u

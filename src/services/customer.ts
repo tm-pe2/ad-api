@@ -3,25 +3,29 @@ import {customerQueries} from "../queries/customer-queries";
 import { addressQueries } from "../queries/address-queries";
 import { Customer } from "../models/user";
 
+async function customerFromQueryResult(customer: any): Promise<Customer> {
+    let addresses = await execute(addressQueries.getAddressesByUserId, [customer.user_id]);
+            
+    return {
+        id: customer.user_id,
+        first_name: customer.first_name,
+        last_name: customer.last_name,
+        gender: '',
+        birth_date: customer.birth_date,
+        email: customer.email,
+        phone_number: customer.phone_number,
+        national_registry_number: customer.national_registry_number,
+        addresses: addresses.rows,
+        role_ids: [customer.role_id],
+        type: customer.customer_type, // TODO PROPER TYPES HERE
+    }
+}
+
 export async function getAllCustomers() {
     let res = await execute(customerQueries.getAllCustomers, []);
     if (res.rows.length > 0) {
         let customers: Customer[] = await Promise.all(res.rows.map(async (customer) => {
-            let addresses = await execute(addressQueries.getAddressesByUserId, [customer.user_id]);
-            
-            return {
-                id: customer.user_id,
-                first_name: customer.first_name,
-                last_name: customer.last_name,
-                gender: '',
-                birth_date: customer.birth_date,
-                email: customer.email,
-                phone_number: customer.phone_number,
-                national_registry_number: customer.national_registry_number,
-                addresses: addresses.rows,
-                role_ids: [customer.role_id],
-                type: customer.customer_type, // TODO PROPER TYPES HERE
-            }
+            return await customerFromQueryResult(customer);
         }));
         return customers;
     }
@@ -29,6 +33,16 @@ export async function getAllCustomers() {
         return [];
     }
 };
+
+export async function getCustomerById(id: number): Promise<Customer | null> {
+    let res = await execute(customerQueries.getCustomerById, [id]);
+    if (res.rows.length > 0) {
+        console.log(res.rows);
+        let customer = res.rows[0];
+        return await customerFromQueryResult(customer);
+    }
+    return null;
+}
 
 // export const getCustomerById = async (id: Customer['customer_id']) => {
 //     const customers = await execute<Customer[]>(customerQueries.getCustomerById, [id], "rows");

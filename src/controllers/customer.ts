@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllCustomers } from "../services/customer";
+import { getAllCustomers, getCustomerById } from "../services/customer";
 import { Logger } from "../utils/logger";
 
 export class CustomerController {
@@ -13,5 +13,13 @@ export class CustomerController {
                     res.sendStatus(500);
                 });
         })
+        .get('/:id', (req, res, next) => {
+            getCustomerById(parseInt(req.params.id))
+                .then((customer) => res.send(customer))
+                .catch((err) => {
+                    Logger.error(err);
+                    res.sendStatus(500);
+                });
+        });
     }
 }
