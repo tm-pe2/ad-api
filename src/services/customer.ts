@@ -4,6 +4,7 @@ import { addressQueries } from "../queries/address-queries";
 import { Customer } from "../models/user";
 
 async function customerFromRowResult(customer: any): Promise<Customer> {
+    // TODO: do all addresses in one query instead of per user
     let addresses = await execute(addressQueries.getAddressesByUserId, [customer.user_id]);
             
     return {
