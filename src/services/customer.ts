@@ -20,7 +20,7 @@ export async function getAllCustomers() {
                 national_registry_number: customer.national_registry_number,
                 addresses: addresses.rows,
                 role_ids: [customer.role_id],
-                type: 0, // TODO PROPER TYPES HERE
+                type: customer.customer_type, // TODO PROPER TYPES HERE
             }
         }));
         return customers;

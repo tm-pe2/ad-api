@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getAllCustomers } from "../services/customer";
+import { Logger } from "../utils/logger";
 
 export class CustomerController {
     static router(): Router {
@@ -7,7 +8,10 @@ export class CustomerController {
         .get('/', (req, res, next) => {
             getAllCustomers()
                 .then((customers) => res.send(customers))
-                .catch((err) => res.sendStatus(500));
+                .catch((err) => {
+                    Logger.error(err);
+                    res.sendStatus(500);
+                });
         })
     }
 }
