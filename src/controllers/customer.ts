@@ -15,7 +15,13 @@ export class CustomerController {
         })
         .get('/:id', (req, res, next) => {
             getCustomerById(parseInt(req.params.id))
-                .then((customer) => res.send(customer))
+                .then((customer) => {
+                    if (customer) {
+                        res.send(customer);
+                    } else {
+                        res.sendStatus(404);
+                    }
+                })
                 .catch((err) => {
                     Logger.error(err);
                     res.sendStatus(500);
