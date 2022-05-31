@@ -14,7 +14,7 @@ export const addressQueries = {
     `,
 
     addAddress: `
-        INSERT INTO address (city, street, house_number, postal_code, country)
+        INSERT INTO address (street,house_number,city_id,country)
             VALUES ($1, $2, $3, $4, $5)
         RETURNING address_id
     `,
@@ -32,5 +32,8 @@ export const addressQueries = {
 
     deleteAddressById: `
         DELETE FROM address WHERE address_id = $1
+    `,
+    getCityIDByPostalCode: `
+        SELECT city_id FROM city WHERE postal_code = $1
     `
 };
