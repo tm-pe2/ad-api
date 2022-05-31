@@ -6,12 +6,17 @@ import { execute } from "../utils/database-connector";
 export class InvoiceController {
     static router(): Router {
         return Router({caseSensitive: false})
-        .get('/', (req, res, next) => {
-            res.send(this.getInvoices())
+        .get('/', async (req, res, next) => {
+            try{
+            const invoices = await this.getInvoices()
+            res.send(invoices)
+            } catch (e){
+                res.sendStatus(503) //service not available
+            }
         })
 
         .get('/self', (req, res, next) => {
-            
+            //get id from login
         })
     }
 
