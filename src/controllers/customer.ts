@@ -56,9 +56,9 @@ export class CustomerController {
                         address_id: addressID
                     }
 
-                    const addressInserted = await UserService.insertUserAddress(userAddress);
+                    const userAddressInserted = await UserService.insertUserAddress(userAddress);
                     //insert user-addresses
-                    if (!addressInserted) {
+                    if (!userAddressInserted) {
                         throw new Error("User-Address not inserted");
                     }
 
