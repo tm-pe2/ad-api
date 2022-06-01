@@ -10,7 +10,7 @@ export class CityController {
                 try {
                     const cities = await cityService.getAllCities();
                     res.status(200).json(
-                        cities
+                        cities.rows
                     );
                 }
                 catch (error) {

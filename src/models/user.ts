@@ -51,7 +51,7 @@ export interface RegisterCustomer {
 }
 
 export enum CustomerType {
-    PRIVATE = 0,
-    COMPANY = 1
+    PRIVATE = 1,
+    COMPANY = 2
 }
 

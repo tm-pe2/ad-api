@@ -16,7 +16,7 @@ export const addUser = async (user: RegisterUser) => {
         user.national_registry_number
     ]);
 
-    return newUser.rows[0].user_id;
+    return newUser.rows[0].id;
 };
 
 export const insertUserAddress = async (userAddress: UserAddress) => {

@@ -28,7 +28,7 @@ export class CustomerController {
                     const address: Address = {
                         street: req.body.street,
                         house_number: req.body.house_number,
-                        country: req.body.country,
+                        country: "Belgium",
                         city_id: cityID
                     }
                     // insert address
