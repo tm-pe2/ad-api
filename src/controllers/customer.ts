@@ -4,6 +4,7 @@ import * as bcrypt from "bcrypt";
 import * as AddressService from "../services/address";
 import { Address } from "../models/address";
 import * as UserService from "../services/user";
+import { errorMonitor } from "events";
 export class CustomerController {
     static router(): Router {
         return Router({ caseSensitive: false })
@@ -21,7 +22,6 @@ export class CustomerController {
 
                     user.password = pass
 
-                    //insert address
 
                     //get cityID by postal code
                     const cityID = await AddressService.getCityIDByPostalCode(req.body.city);
@@ -31,69 +31,62 @@ export class CustomerController {
                         country: req.body.country,
                         city_id: cityID
                     }
+                    // insert address
                     const addressID: number = await AddressService.insertAddress(address);
-                    if (addressID) {
-
-                        const addr = {
-                            id: addressID,
-                            street: address.street,
-                            house_number: address.house_number,
-                            country: address.country,
-                            city_id: address.city_id
-                        }
-
-                        user.addresses = [addr];
-                        //insert user
-                        const userID = await UserService.addUser(user);
-                        if (userID) {
-                            const userAddress = {
-                                user_id: userID,
-                                address_id: addressID
-                            }
-
-                            const addressInserted = await UserService.insertUserAddress(userAddress);
-                            //insert user-addresses
-                            if (addressInserted) {
-                                
-                                const customer: RegisterCustomer = {
-                                    id: userID,
-                                    type: req.body.customerType,
-                                }
-                                //insert customer
-                                if (await UserService.insertCustomer(customer)) {
-
-                                    res.status(200).json({
-                                        message: "Customer inserted succesfully!"
-                                    });
-                                }
-                                else {
-                                    res.status(401).json({
-                                        message: "An error occured while insering customer!"
-                                    });
-                                }
-                            }
-                            else {
-                                res.status(401).json({
-                                    message: "An error occured while insering user-address!"
-                                });
-                            }
-                        }
-                        else {
-                            res.status(401).json({
-                                message: "An error occured while insering user!"
-                            });
-                        }
+                    if (!addressID) {
+                        throw new Error("Address not inserted");
                     }
-                    else {
-                        res.status(401).json({
-                            message: "An error occured while insering address!"
-                        });
+
+                    const addr = {
+                        id: addressID,
+                        street: address.street,
+                        house_number: address.house_number,
+                        country: address.country,
+                        city_id: address.city_id
                     }
+
+                    user.addresses = [addr];
+                    //insert user
+                    const userID = await UserService.addUser(user);
+                    if (!userID) {
+                        throw new Error("User not inserted");
+                    }
+                    const userAddress = {
+                        user_id: userID,
+                        address_id: addressID
+                    }
+
+                    const addressInserted = await UserService.insertUserAddress(userAddress);
+                    //insert user-addresses
+                    if (!addressInserted) {
+                        throw new Error("User-Address not inserted");
+                    }
+
+                    const customer: RegisterCustomer = {
+                        id: userID,
+                        type: req.body.type,
+                    }
+                    //insert customer
+                    const customerInserted = await UserService.insertCustomer(customer)
+                    if (!customerInserted) {
+                        throw new Error("Customer not inserted");
+                    }
+
+                    res.status(200).json({
+                        message: "Customer inserted succesfully!"
+                    });
                 } catch (error) {
                     console.log(error);
-                    res.status(500).json({
-                        message: 'There was an error when inserting customer'
-                    });
+                    if(error instanceof Error){
+                        res.status(500).json({
+                            message: error.message
+                        });
+                    }
+                    else{
+                        res.status(500).json({
+                            message: "Unknown error"
+                        });
+                    }
                 }
 
             })
