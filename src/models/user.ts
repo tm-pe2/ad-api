@@ -55,3 +55,12 @@ export enum CustomerType {
     COMPANY = 2
 }
 
+<<<<<<< HEAD
+=======
+export interface UserAuthInfo {
+    id: number,
+    email: string,
+    password: string,
+    roles: UserRole[]
+}
+>>>>>>> rewriteApi

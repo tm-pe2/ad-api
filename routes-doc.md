@@ -57,6 +57,7 @@ Contains base of user information + customer specific information.
 - [ ] GET `/contracts/:user_id`
 - [ ] POST `/contracts/:user_id` // ?
 - [ ] PUT `/contracts/:user_id` // ?
+- [ ] GET `/contracts/self` //?
 
 Will contain user_id and address_id as well.
 
