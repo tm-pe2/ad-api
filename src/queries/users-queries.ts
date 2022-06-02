@@ -22,9 +22,9 @@ export const userQueries = {
     `,
 
     AddUser: `
-        INSERT INTO users (role_id, first_name, last_name, birth_date, email, phone_number, password, national_registry_number) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING user_id
+        INSERT INTO users (first_name, last_name, birth_date, email, password, phone_number ,national_registry_number) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING id
     `,
 
     UpdateUser: `
@@ -42,5 +42,11 @@ export const userQueries = {
 
     DeleteUserById: `
     DELETE FROM users WHERE user_id = $1
-    `
+    `,
+    addUserAddress: `
+    INSERT INTO users_addresses (user_id, address_id) VALUES($1, $2)
+    `,
+    AddCustomer: `
+    INSERT INTO customers (user_id, type_id) VALUES ($1, $2)
+    `,
 };

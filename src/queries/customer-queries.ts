@@ -35,9 +35,7 @@ export const customerQueries = {
         WHERE c.customer_id = $1
     `,
 
-    AddCustomer: `
-        INSERT INTO customers (user_id, customer_type) VALUES ($1, $2)
-    `,
+
 
     updateCustomer: `
         UPDATE customers

@@ -15,18 +15,25 @@ export enum UserRole {
     MANAGER = 10,
 }
 
+export interface UserAddress {
+    user_id: number;
+    address_id: number;
+}
+
+export interface RegisterUser extends User{
+    password: string;
+}
+
 export interface User {
-    id: number,
+    id?: number,
     first_name: string,
     last_name: string,
-    gender: string,
     birth_date: Date,
     email: string,
-    // no password, seperate query for auth
     phone_number: string,
     national_registry_number: string,
     role_ids: UserRole[],
-    addresses: Address[], //Address[]
+    addresses: Address[],
 }
 
 export interface Employee extends User {
@@ -38,8 +45,13 @@ export interface Employee extends User {
 export interface Customer extends User {
     type: CustomerType
 }
+export interface RegisterCustomer {
+    id: number,
+    type: CustomerType
+}
 
 export enum CustomerType {
-    PRIVATE = 0,
-    COMPANY = 1
+    PRIVATE = 1,
+    COMPANY = 2
 }
+

@@ -75,6 +75,10 @@ GET/POST:
 Consumptions don't need to be updated, maybe no PUT?
 Or just delete and new post?
 
+## Estimations
+
+- [ ] POST `/estimations/self`
+
 ## Invoices
 
 Should be easy
