@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { AccessTokenData } from '../classes/accesstokens';
 import { UserRole } from '../models/user';
 
 function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
-        if (process.env.JWTSECRET == undefined) {
-            throw new Error('JWTSECRET undefined');
-        }
         
         getToken(req)
             .then((token) => {
@@ -23,7 +21,7 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
                         next();
                     }
                     else {
-                        return res.status(403).send('Forbidden: Resource access denied, insufficient rights.')
+                        return res.status(401).send('Unauthorized.')
                     }
                 })
             })
@@ -45,6 +43,36 @@ export function getToken(req: Request): Promise<string> {
         }
     });
     return promise;
+}
+
+export function authSelf(): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+    return async (req: Request, res: Response, next: NextFunction) => {   
+        getToken(req)
+            .then((token) => {
+                jwt.verify(token, process.env.JWTSECRET!, (err: any, decoded: any) => { //change any?
+                    if (err) {
+                        if (err instanceof TokenExpiredError) {
+                            return res.status(401).send('Unauthorized: Access token expired.')
+                        }
+                        return res.status(401).send('Unauthorized.')
+                    }
+
+                    if (decoded.role_id != undefined && decoded.id != undefined) {
+                            req.body.tokenData = {
+                                id: decoded.id,
+                                role_id: decoded.role_id
+                            } as AccessTokenData
+                        next();
+                    }
+                    else {
+                        return res.status(401).send('Unauthorized.')
+                    }
+                })
+            })
+            .catch((err) => {
+                return res.status(401).send(err); // unauthorized
+            })
+    }
 }
 
 export {authorize as authenticate, getToken as getAccessToken}

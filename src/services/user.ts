@@ -2,7 +2,10 @@ import {execute} from "../utils/database-connector";
 import {Customer, RegisterCustomer, RegisterUser, User, UserAddress} from "../models/user";
 import {userQueries} from "../queries/users-queries";
 
-
+export const getUserById = async (id: User['id']) => {
+    const users = await (await execute(userQueries.getUserById, [id])).rows as User[];
+    return users[0];
+};
 
 export const addUser = async (user: RegisterUser) => {
     // TODO : update
