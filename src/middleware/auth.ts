@@ -5,6 +5,9 @@ import { UserRole } from '../models/user';
 
 function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
+        if (process.env.JWTSECRET == undefined) {
+            throw new Error('JWTSECRET undefined');
+        }
         
         getToken(req)
             .then((token) => {
@@ -16,12 +19,12 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
                         return res.status(401).send('Unauthorized.')
                     }
 
-                    if (decoded.role_id != undefined && decoded.id != undefined
+                    if (decoded.id != undefined
                         && roles.some((role) => { decoded.roles.includes(role) })) { // TODO: test
                         next();
                     }
                     else {
-                        return res.status(401).send('Unauthorized.')
+                        return res.status(403).send('Forbidden: Resource access denied, insufficient rights.')
                     }
                 })
             })
@@ -44,7 +47,6 @@ export function getToken(req: Request): Promise<string> {
     });
     return promise;
 }
-
 export function authSelf(): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {   
         getToken(req)
@@ -57,10 +59,11 @@ export function authSelf(): (req: Request, res: Response, next: NextFunction) =>
                         return res.status(401).send('Unauthorized.')
                     }
 
-                    if (decoded.role_id != undefined && decoded.id != undefined) {
+                    if (decoded.id != undefined
+                        && decoded.roles.length != 0) { // TODO: test
                             req.body.tokenData = {
                                 id: decoded.id,
-                                role_id: decoded.role_id
+                                roles: decoded.roles
                             } as AccessTokenData
                         next();
                     }
@@ -74,5 +77,6 @@ export function authSelf(): (req: Request, res: Response, next: NextFunction) =>
             })
     }
 }
+
 
 export {authorize as authenticate, getToken as getAccessToken}

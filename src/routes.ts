@@ -27,8 +27,8 @@ export function setRoutes(router: Express): Express {
     });
 
     // Setting routes
-    // router.use('/auth', AuthController.router());
-    //router.use('/users', UserController.router());
+    router.use('/auth', AuthController.router());
+    router.use('/users', UserController.router());
     router.use('/cities', CityController.router());
     router.use('/customers', CustomerController.router());
 

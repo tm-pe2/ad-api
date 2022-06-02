@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Customer, RegisterCustomer, RegisterUser, User } from "../models/user";
+import { Customer, RegisterCustomer, RegisterUser, User, UserIdRole, UserRole } from "../models/user";
 import * as bcrypt from "bcrypt";
 import * as AddressService from "../services/address";
 import { Address } from "../models/address";
@@ -71,7 +71,17 @@ export class CustomerController {
                     if (!customerInserted) {
                         throw new Error("Customer not inserted");
                     }
+                    
+                    const userRole: UserIdRole = {
+                        id: userID,
+                        role: UserRole.CUSTOMER
+                    }
 
+                    const userRoleInserted = await UserService.insertUserRole(userRole);
+                    
+                    if(!userRoleInserted){
+                        throw new Error("User-Role not inserted");
+                    }
                     res.status(200).json({
                         message: "Customer inserted succesfully!"
                     });

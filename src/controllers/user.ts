@@ -12,10 +12,14 @@ export class UserController {
         return Router({ caseSensitive: false })
             .get('/self', authSelf(), (req, res, next) => {
                 userService.getUserById(req.body.tokenData.id)
-                    .then((user: User) => {
-                        res.status(200).json(
-                            user
-                        );
+                    .then((user: User | null) => {
+                        if (user === null) {
+                            res.status(404).send("User not found");
+                        } else {                           
+                            res.status(200).json(
+                                user
+                            );
+                        }
                     })
                     .catch((err) => {
                         res.status(500).json({
@@ -32,4 +36,4 @@ export class UserController {
 }
 
 
-   
+
