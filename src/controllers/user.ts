@@ -40,21 +40,4 @@ export class UserController {
         }
      
  
-        //TODO move to auth?
-    static async verifyToken(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) : Promise<AccessTokenData>{
-        return new Promise((resolve, reject) => {
-            getAccessToken(req)
-                .then((token) => {
-                    jwt.verify(token, process.env.JWTSECRET!, (err: any, decoded: any) => {
-                        if (err) {
-                            if (err instanceof TokenExpiredError) {
-                                reject('Unauthorized: Access token expired.')
-                            }
-                            reject('Unauthorized.')
-                        }
-                        resolve(decoded as AccessTokenData);
-                    })
-                })
-        })
-    }
 }
