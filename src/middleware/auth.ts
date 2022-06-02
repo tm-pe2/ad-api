@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { AccessTokenData } from '../classes/accesstokens';
 import { UserRole } from '../models/user';
 
 function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
@@ -45,6 +46,23 @@ export function getToken(req: Request): Promise<string> {
         }
     });
     return promise;
+}
+
+export async function verifyToken(req: Request) : Promise<AccessTokenData>{
+    return new Promise((resolve, reject) => {
+        getToken(req)
+            .then((token) => {
+                jwt.verify(token, process.env.JWTSECRET!, (err: any, decoded: any) => {
+                    if (err) {
+                        if (err instanceof TokenExpiredError) {
+                            reject('Unauthorized: Access token expired.')
+                        }
+                        reject('Unauthorized.')
+                    }
+                    resolve(decoded as AccessTokenData);
+                })
+            })
+    })
 }
 
 export {authorize as authenticate, getToken as getAccessToken}
