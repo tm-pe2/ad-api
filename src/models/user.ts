@@ -43,3 +43,10 @@ export enum CustomerType {
     PRIVATE = 0,
     COMPANY = 1
 }
+
+export interface UserAuthInfo {
+    id: number,
+    email: string,
+    password: string,
+    roles: UserRole[]
+}

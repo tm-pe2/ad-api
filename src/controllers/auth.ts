@@ -1,11 +1,11 @@
 import { Router } from "express";
 import * as userService from '../services/user';
 import * as bcrypt from 'bcrypt';
-import { AccessToken } from "../classes/accesstokens";
+import { AccessToken, AccessTokenData } from "../classes/accesstokens";
 import { RefreshToken } from "../classes/refreshtokens";
+import { Logger } from "../utils/logger";
 
-// TODO: update the way roles work when DB is updated
-// TODO: test with front-end
+// TODO: Testing!
 
 export class AuthController {
     static router(): Router {
@@ -18,16 +18,21 @@ export class AuthController {
             const email = req.body.email;
             const password = req.body.password;
         
-            const user = await userService.getUserByEmail(email);
+            const user = await userService.getUserAuthInfoByEmail(email);
+
+            if (!user) {
+                res.status(401).send('Invalid credentials');
+                return;
+            }
             
             bcrypt.compare(password, user.password, (err, result) => {
                 if (err) {
                     return res.sendStatus(500);
                 }
                 if (result) {
-                    const tokenData = {'id': user.user_id, 'role_id': user.role_id}
+                    const tokenData: AccessTokenData = {id: user.id, roles: user.roles}
                     const accessToken = AccessToken.create(tokenData);
-                    const refreshToken = RefreshToken.create(user.user_id);
+                    const refreshToken = RefreshToken.create(user.id);
         
                     res.json({accessToken, refreshToken});
                 } else {
@@ -66,9 +71,16 @@ export class AuthController {
                     }
                     
                     // Valid refresh token -> refresh token
-                    userService.getUserById(rt.userId)
+                    userService.getUserAuthInfoById(rt.userId)
                     .then((user) => {
-                        const accessToken = AccessToken.create({id: user.user_id, role_id: user.role_id})
+                        if (!user) {
+                            Logger.error('User not found from existing refresh token');
+                            return res.sendStatus(500);
+                        }
+                        const accessToken = AccessToken.create({
+                            id: user.id,
+                            roles: user.roles
+                        })
                         res.json({accessToken});
                     })
                     .catch((err) => {

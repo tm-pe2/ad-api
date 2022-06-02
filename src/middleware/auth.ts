@@ -19,7 +19,7 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
                     }
 
                     if (decoded.role_id != undefined && decoded.id != undefined
-                        && roles.includes(decoded.role_id)) {
+                        && roles.some((role) => { decoded.roles.includes(role) })) { // TODO: test
                         next();
                     }
                     else {
