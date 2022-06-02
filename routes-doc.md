@@ -51,13 +51,24 @@ Contains base of user information + employee specific information.
 
 Contains base of user information + customer specific information.
 
+## Supplier
+
+- [ ] GET `/suppliers`
+- [ ] GET `/suppliers/:user_id`
+- [ ] POST `/suppliers`
+- [ ] PUT `/suppliers/:user_id`
+
+*No delete! -> front-end disable user instead*
+
 ## Contracts
+
+*Needs discussion*
 
 - [ ] GET `/contracts`
 - [ ] GET `/contracts/:user_id`
-- [ ] POST `/contracts/:user_id` // ?
-- [ ] PUT `/contracts/:user_id` // ?
-- [ ] GET `/contracts/self` //?
+- [ ] POST `/contracts/:user_id`
+- [ ] PUT `/contracts/:user_id`
+- [ ] GET `/contracts/self`
 
 Will contain user_id and address_id as well.
 
