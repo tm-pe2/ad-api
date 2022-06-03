@@ -1,5 +1,23 @@
+// select user rows, user addresses as an array, user roles as an array by id
 const getUserById = `
-    SELECT * FROM users WHERE id = $1
+        SELECT 
+            user.id,
+            user.first_name,
+            user.last_name,
+            user.birth_date,
+            user.email,
+            user.password,
+            user.phone_number,
+            user.national_registry_number,
+            array_agg(addresses.id) as addresses,
+            array_agg(roles.id) as roles
+        FROM users
+        LEFT JOIN user_addresses ON user.id = user_addresses.user_id
+        LEFT JOIN addresses ON user_address.address_id = addresses.id
+        LEFT JOIN users_roles ON user.id = users_roles.user_id
+        LEFT JOIN roles ON users_roles.role_id = roles.id
+        WHERE user.id = $1
+        GROUP BY user.id
     `;
 
 const getUserAuthInfo = `
