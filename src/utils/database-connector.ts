@@ -41,7 +41,7 @@ export function end() {
 }
 
 
-export const execute = (query: string, params: any[] = []): Promise<QueryResult<any>> => {
+export const execute = (query: string, params: any[] = []): Promise<QueryResult<any>> => { // TODO change any to T of table
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
 

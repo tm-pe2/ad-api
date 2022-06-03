@@ -17,7 +17,7 @@ export class RefreshToken {
         expirationDate.setSeconds(expirationDate.getSeconds() + refreshExpireTime);
 
         return new Promise<void>((resolve, reject) => {
-            execute<{ rowCount: number }>(refreshtokenQueries.addToken, [
+            execute(refreshtokenQueries.addToken, [
                 refreshToken,
                 userId,
                 expirationDate,
@@ -34,7 +34,7 @@ export class RefreshToken {
 
     static get(token: string): Promise<RefreshTokenData> {
         return new Promise<RefreshTokenData>((resolve, reject) => {
-            execute<{ rows: RefreshTokenData[] }>(refreshtokenQueries.getTokenByToken, [token])
+            execute(refreshtokenQueries.getTokenByToken, [token])
                 .then((result) => {
                     if (result.rows.length > 0) {
                         resolve(result.rows[0]);
@@ -51,7 +51,7 @@ export class RefreshToken {
 
     static delete(token: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            execute<{ rowCount: number }>(refreshtokenQueries.deleteToken, [token])
+            execute(refreshtokenQueries.deleteToken, [token])
                 .then(() => {
                     resolve();
                 })
