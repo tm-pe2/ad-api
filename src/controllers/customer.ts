@@ -1,5 +1,7 @@
 import { Router } from "express";
 import {  RegisterCustomer, RegisterUser,UserIdRole, UserRole } from "../models/user";
+import { getAllCustomers, getCustomerById } from "../services/customer";
+import { Logger } from "../utils/logger";
 import * as bcrypt from "bcrypt";
 import * as AddressService from "../services/address";
 import { Address } from "../models/address";
@@ -8,9 +10,33 @@ import {begin,commit,rollback} from "../utils/database-connector";
 
 export class CustomerController {
     static router(): Router {
-        return Router({ caseSensitive: false })
+        return Router({caseSensitive: false})
             .get('/', (req, res, next) => {
-
+                getAllCustomers()
+                    .then((customers) => res.send(customers))
+                    .catch((err) => {
+                        Logger.error(err);
+                        res.sendStatus(500);
+                    });
+            })
+            .get('/:id', (req, res, next) => {
+                let id = parseInt(req.params.id);
+                if (isNaN(id)) {
+                    res.sendStatus(400);
+                    return;
+                }
+                getCustomerById(id)
+                    .then((customer) => {
+                        if (customer) {
+                            res.send(customer);
+                        } else {
+                            res.sendStatus(404);
+                        }
+                    })
+                    .catch((err) => {
+                        Logger.error(err);
+                        res.sendStatus(500);
+                    });
             })
             .post('/', async (req, res, next) => {
                 const client = await begin()

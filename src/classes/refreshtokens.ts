@@ -1,8 +1,8 @@
-import { execute } from "../utils/database-connector";
-import { refreshtokenQueries } from "../queries/refreshtoken-queries";
+import { commit, execute, rollback } from "../utils/database-connector";
 import { v4 as uuid } from 'uuid';
 import Joi from "joi";
-import { PoolClient } from "pg";
+import { DatabaseError, PoolClient } from "pg";
+import { refreshtokenQueries } from "../queries/refreshtoken";
 
 export interface RefreshTokenData {
     refreshToken: string,
@@ -37,10 +37,13 @@ export class RefreshToken {
         return new Promise<RefreshTokenData>((resolve, reject) => {
             execute(client,refreshtokenQueries.getTokenByToken, [token])
                 .then((result) => {
+
                     if (result.rows.length > 0) {
+                        commit(client);
                         resolve(result.rows[0]);
                     }
                     else {
+                        rollback(client)
                         reject("No refresh token found");
                     }
                 })

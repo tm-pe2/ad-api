@@ -1,6 +1,6 @@
 import {execute} from "../utils/database-connector";
-import {addressQueries} from "../queries/address-queries";
 import { PoolClient, QueryResult } from "pg";
+import {addressQueries} from "../queries/address";
 import { Address } from "../models/address";
 
 
