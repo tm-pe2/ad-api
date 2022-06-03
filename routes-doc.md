@@ -72,6 +72,8 @@ Contains base of user information + customer specific information.
 
 Will contain user_id and address_id as well.
 
+**Gets activated when the first meter value submission gets made by an employee.**
+
 ## Consumptions
 
 **In need of clarification:**
