@@ -28,7 +28,7 @@ export class CustomerController {
                     res.sendStatus(400);
                     return;
                 }
-                const client = await begin();
+                const client = await connectClient();
                 getCustomerById(client,id)
                     .then((customer) => {
                         if (customer) {
