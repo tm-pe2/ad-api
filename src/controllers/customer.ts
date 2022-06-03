@@ -6,26 +6,30 @@ import * as bcrypt from "bcrypt";
 import * as AddressService from "../services/address";
 import { Address } from "../models/address";
 import * as UserService from "../services/user";
-import {begin,commit,rollback} from "../utils/database-connector";
+import {begin,commit,connectClient,rollback} from "../utils/database-connector";
 
 export class CustomerController {
     static router(): Router {
         return Router({caseSensitive: false})
-            .get('/', (req, res, next) => {
-                getAllCustomers()
-                    .then((customers) => res.send(customers))
+            .get('/', async (req, res, next) => {
+                const client = await connectClient();
+                getAllCustomers(client)
+                    .then((customers) => {
+                        res.send(customers)
+                    })
                     .catch((err) => {
                         Logger.error(err);
                         res.sendStatus(500);
                     });
             })
-            .get('/:id', (req, res, next) => {
+            .get('/:id', async (req, res, next) => {
                 let id = parseInt(req.params.id);
                 if (isNaN(id)) {
                     res.sendStatus(400);
                     return;
                 }
-                getCustomerById(id)
+                const client = await begin();
+                getCustomerById(client,id)
                     .then((customer) => {
                         if (customer) {
                             res.send(customer);

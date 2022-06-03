@@ -30,6 +30,10 @@ export function init() {
     }
 }
 
+export async function connectClient(): Promise<PoolClient> {
+    return await pool.connect();
+}
+
 export function end() {
     try {
         pool.end()
@@ -63,7 +67,7 @@ export const execute = (client: PoolClient,query: string, params: any[] = []): P
 export async function begin() {
     try {
         if (!pool) throw new Error('Pool was not created. Ensure pool is created when running the app.');
-        const client = await pool.connect()
+        const client = await connectClient();
         return new Promise<PoolClient>((resolve, reject) => {
             client.query('BEGIN', (error, results: QueryResult) => {
                 if (error)

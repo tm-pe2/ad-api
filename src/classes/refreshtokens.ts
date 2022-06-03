@@ -70,9 +70,11 @@ export class RefreshToken {
             const token = uuid();
             RefreshToken.add(client,userId, token)
                 .then(() => {
+                    commit(client);
                     resolve(token);
                 })
                 .catch((err) => {
+                    rollback(client);
                     reject(err);
                 });
         });
