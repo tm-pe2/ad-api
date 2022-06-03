@@ -2,6 +2,7 @@ import { execute } from "../utils/database-connector";
 import { refreshtokenQueries } from "../queries/refreshtoken-queries";
 import { v4 as uuid } from 'uuid';
 import Joi from "joi";
+import { PoolClient } from "pg";
 
 export interface RefreshTokenData {
     refreshToken: string,
@@ -12,12 +13,12 @@ export interface RefreshTokenData {
 const refreshExpireTime = 604800; // 7 days
 
 export class RefreshToken {
-    static add(userId: number, refreshToken: string): Promise<void> {
+    static add(client:PoolClient, userId: number, refreshToken: string): Promise<void> {
         let expirationDate = new Date();
         expirationDate.setSeconds(expirationDate.getSeconds() + refreshExpireTime);
 
         return new Promise<void>((resolve, reject) => {
-            execute(refreshtokenQueries.addToken, [
+            execute(client,refreshtokenQueries.addToken, [
                 refreshToken,
                 userId,
                 expirationDate,
@@ -32,9 +33,9 @@ export class RefreshToken {
         });
     }
 
-    static get(token: string): Promise<RefreshTokenData> {
+    static get(client:PoolClient,token: string): Promise<RefreshTokenData> {
         return new Promise<RefreshTokenData>((resolve, reject) => {
-            execute(refreshtokenQueries.getTokenByToken, [token])
+            execute(client,refreshtokenQueries.getTokenByToken, [token])
                 .then((result) => {
                     if (result.rows.length > 0) {
                         resolve(result.rows[0]);
@@ -49,9 +50,9 @@ export class RefreshToken {
         });
     };
 
-    static delete(token: string): Promise<void> {
+    static delete(client:PoolClient,token: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            execute(refreshtokenQueries.deleteToken, [token])
+            execute(client,refreshtokenQueries.deleteToken, [token])
                 .then(() => {
                     resolve();
                 })
@@ -61,10 +62,10 @@ export class RefreshToken {
         });
     }
 
-    static create(userId: number): Promise<string> {
+    static create(client:PoolClient,userId: number): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const token = uuid();
-            RefreshToken.add(userId, token)
+            RefreshToken.add(client,userId, token)
                 .then(() => {
                     resolve(token);
                 })

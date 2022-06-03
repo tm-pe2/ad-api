@@ -1,16 +1,17 @@
 import {execute} from "../utils/database-connector";
 import {Customer, RegisterCustomer, RegisterUser, User, UserAddress, UserAuthInfo, UserIdRole, UserRole} from "../models/user";
 import {userQueries} from "../queries/users";
+import { PoolClient } from "pg";
 
-export async function getUserById(id: User['id']): Promise<User | null> {
-    const res = await execute(userQueries.getUserById, [id]);
+export async function getUserById(client: PoolClient,id: User['id']): Promise<User | null> {
+    const res = await execute(client,userQueries.getUserById, [id]);
     if(res.rowCount === 0) return null
     return res.rows[0] as User;
 };
 
-export async function addUser(user: RegisterUser): Promise<User['id'] | null> {
+export async function addUser(client:PoolClient, user: RegisterUser): Promise<User['id'] | null> {
     // TODO : update
-    const res = await execute(userQueries.AddUser, [
+    const res = await execute(client,userQueries.AddUser, [
         user.first_name,
         user.last_name,
         user.birth_date,
@@ -23,15 +24,15 @@ export async function addUser(user: RegisterUser): Promise<User['id'] | null> {
     return res.rows[0].id;
 };
 
-export async function insertUserAddress (userAddress: UserAddress): Promise<boolean> {
-    const result = await execute(userQueries.AddUserAddress, [
+export async function insertUserAddress (client: PoolClient,userAddress: UserAddress): Promise<boolean> {
+    const result = await execute(client,userQueries.AddUserAddress, [
         userAddress.user_id,
         userAddress.address_id
     ]);
     return result.rowCount > 0;
 };
-export async function insertCustomer(customer: RegisterCustomer): Promise<boolean>{
-    const result = await execute(userQueries.AddCustomer, [
+export async function insertCustomer(client:PoolClient,customer: RegisterCustomer): Promise<boolean>{
+    const result = await execute(client, userQueries.AddCustomer, [
         customer.id,
         customer.type,
     ]);
@@ -39,8 +40,8 @@ export async function insertCustomer(customer: RegisterCustomer): Promise<boolea
     return result.rowCount > 0;
 };
 
-export async function getUserAuthInfoById(id: number): Promise<UserAuthInfo | null> {
-    const res = await execute(userQueries.getUserAuthInfoById, [id]);
+export async function getUserAuthInfoById(client:PoolClient,id: number): Promise<UserAuthInfo | null> {
+    const res = await execute(client,userQueries.getUserAuthInfoById, [id]);
     if (res.rowCount === 0) return null;
     return {
         id: res.rows[0].id,
@@ -50,8 +51,8 @@ export async function getUserAuthInfoById(id: number): Promise<UserAuthInfo | nu
     }
 }
 
-export async function getUserAuthInfoByEmail(email: string): Promise<UserAuthInfo | null> {
-    const res = await execute(userQueries.getUserAuthInfoByEmail, [email]);
+export async function getUserAuthInfoByEmail(client:PoolClient,email: string): Promise<UserAuthInfo | null> {
+    const res = await execute(client,userQueries.getUserAuthInfoByEmail, [email]);
     if (res.rowCount === 0) return null;
     return {
         id: res.rows[0].id,
@@ -60,8 +61,8 @@ export async function getUserAuthInfoByEmail(email: string): Promise<UserAuthInf
         roles: res.rows[0].roles
     }
 }
-export async function insertUserRole(userRole: UserIdRole): Promise<boolean> {
-    const res = await execute(userQueries.InsertUserRole, [userRole.id, userRole.role]);
+export async function insertUserRole(client:PoolClient,userRole: UserIdRole): Promise<boolean> {
+    const res = await execute(client,userQueries.InsertUserRole, [userRole.id, userRole.role]);
     return res.rowCount > 0;
 }
 

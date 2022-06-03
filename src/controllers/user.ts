@@ -6,12 +6,14 @@ import { AccessTokenData } from "../classes/accesstokens";
 import { authSelf, getAccessToken } from "../middleware/auth";
 import { User } from "../models/user";
 import * as userService from "../services/user";
+import { begin } from "../utils/database-connector";
 
 export class UserController {
     static router(): Router {
         return Router({ caseSensitive: false })
-            .get('/self', authSelf(), (req, res, next) => {
-                userService.getUserById(req.body.tokenData.id)
+            .get('/self', authSelf(), async (req, res, next) => {
+                const client = await begin();
+                userService.getUserById(client,req.body.tokenData.id)
                     .then((user: User | null) => {
                         if (user === null) {
                             res.status(404).send("User not found");

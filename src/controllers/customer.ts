@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { Customer, RegisterCustomer, RegisterUser, User, UserIdRole, UserRole } from "../models/user";
+import {  RegisterCustomer, RegisterUser,UserIdRole, UserRole } from "../models/user";
 import * as bcrypt from "bcrypt";
 import * as AddressService from "../services/address";
 import { Address } from "../models/address";
 import * as UserService from "../services/user";
-import { errorMonitor } from "events";
+import {begin,commit,rollback} from "../utils/database-connector";
+
 export class CustomerController {
     static router(): Router {
         return Router({ caseSensitive: false })
@@ -12,7 +13,9 @@ export class CustomerController {
 
             })
             .post('/', async (req, res, next) => {
+                const client = await begin()
                 try {
+                    
 
                     const user: RegisterUser = req.body
 
@@ -24,7 +27,7 @@ export class CustomerController {
 
 
                     //get cityID by postal code
-                    const cityID = await AddressService.getCityIDByPostalCode(req.body.city);
+                    const cityID = await AddressService.getCityIDByPostalCode(client,req.body.city);
                     const address: Address = {
                         street: req.body.street,
                         house_number: req.body.house_number,
@@ -32,22 +35,16 @@ export class CustomerController {
                         city_id: cityID
                     }
                     // insert address
-                    const addressID: number = await AddressService.insertAddress(address);
+                    const addressID: number = await AddressService.insertAddress(client, address);
                     if (!addressID) {
                         throw new Error("Address not inserted");
                     }
 
-                    const addr = {
-                        id: addressID,
-                        street: address.street,
-                        house_number: address.house_number,
-                        country: address.country,
-                        city_id: address.city_id
-                    }
+                    address.id = addressID;
 
-                    user.addresses = [addr];
+                    user.addresses = [address];
                     //insert user
-                    const userID = await UserService.addUser(user);
+                    const userID = await UserService.addUser(client,user);
                     if (!userID) {
                         throw new Error("User not inserted");
                     }
@@ -56,7 +53,7 @@ export class CustomerController {
                         address_id: addressID
                     }
 
-                    const userAddressInserted = await UserService.insertUserAddress(userAddress);
+                    const userAddressInserted = await UserService.insertUserAddress(client,userAddress);
                     //insert user-addresses
                     if (!userAddressInserted) {
                         throw new Error("User-Address not inserted");
@@ -67,7 +64,7 @@ export class CustomerController {
                         type: req.body.type,
                     }
                     //insert customer
-                    const customerInserted = await UserService.insertCustomer(customer)
+                    const customerInserted = await UserService.insertCustomer(client,customer)
                     if (!customerInserted) {
                         throw new Error("Customer not inserted");
                     }
@@ -77,16 +74,18 @@ export class CustomerController {
                         role: UserRole.CUSTOMER
                     }
 
-                    const userRoleInserted = await UserService.insertUserRole(userRole);
+                    const userRoleInserted = await UserService.insertUserRole(client,userRole);
                     
                     if(!userRoleInserted){
                         throw new Error("User-Role not inserted");
                     }
+
+                    commit(client)
                     res.status(200).json({
                         message: "Customer inserted succesfully!"
                     });
                 } catch (error) {
-                    console.log(error);
+                    rollback(client)
                     if(error instanceof Error){
                         res.status(500).json({
                             message: error.message

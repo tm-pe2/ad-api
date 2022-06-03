@@ -1,12 +1,12 @@
 import {execute} from "../utils/database-connector";
 import {addressQueries} from "../queries/address-queries";
-import { QueryResult } from "pg";
+import { PoolClient, QueryResult } from "pg";
 import { Address } from "../models/address";
 
 
 
-export const insertAddress = async (address: Address) => {
-    const newAddress = await execute(addressQueries.addAddress, [
+export const insertAddress = async (client:PoolClient, address: Address) => {
+    const newAddress = await execute(client,addressQueries.addAddress, [
         address.street,
         address.house_number,
         address.city_id,
@@ -16,7 +16,7 @@ export const insertAddress = async (address: Address) => {
     return newAddress.rows[0].id;
 };
 
-export const getCityIDByPostalCode = async (postalCode: string) => {
-    const cityID = await execute(addressQueries.getCityIDByPostalCode, [postalCode]);
+export const getCityIDByPostalCode = async (client: PoolClient, postalCode: string) => {
+    const cityID = await execute(client,addressQueries.getCityIDByPostalCode, [postalCode]);
     return cityID.rows[0].id;
 }
