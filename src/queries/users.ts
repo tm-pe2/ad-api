@@ -1,23 +1,32 @@
-// select user rows, user addresses as an array, user roles as an array by id
+
 const getUserById = `
         SELECT 
-            user.id,
-            user.first_name,
-            user.last_name,
-            user.birth_date,
-            user.email,
-            user.password,
-            user.phone_number,
-            user.national_registry_number,
-            array_agg(addresses.id) as addresses,
+            users.id,
+            users.first_name,
+            users.last_name,
+            users.birth_date,
+            users.email,
+            users.password,
+            users.phone_number,
+            users.national_registry_number,
+            json_agg(
+                json_build_object(
+                    'id', addresses.id, 
+                    'street', addresses.street,
+                    'house_number', addresses.house_number, 
+                    'city_name',cities_postalcodes.city_name, 
+                    'postal_code',cities_postalcodes.postal_code, 
+                    'country',addresses.country)
+                ) as addresses,
             array_agg(roles.id) as roles
         FROM users
-        LEFT JOIN user_addresses ON user.id = user_addresses.user_id
-        LEFT JOIN addresses ON user_address.address_id = addresses.id
-        LEFT JOIN users_roles ON user.id = users_roles.user_id
-        LEFT JOIN roles ON users_roles.role_id = roles.id
-        WHERE user.id = $1
-        GROUP BY user.id
+        JOIN users_addresses ON users.id = users_addresses.user_id
+        JOIN addresses ON users_addresses.address_id = addresses.id
+        JOIN users_roles ON users.id = users_roles.user_id
+        JOIN roles ON users_roles.role_id = roles.id
+        JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
+        WHERE users.id = $1
+        GROUP BY users.id
     `;
 
 const getUserAuthInfo = `

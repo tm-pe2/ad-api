@@ -5,8 +5,6 @@ import {userQueries} from "../queries/users";
 export async function getUserById(id: User['id']): Promise<User | null> {
     const res = await execute(userQueries.getUserById, [id]);
     if(res.rowCount === 0) return null
-
-    console.log(res.rows[0])
     return res.rows[0] as User;
 };
 

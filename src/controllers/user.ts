@@ -22,6 +22,9 @@ export class UserController {
                         }
                     })
                     .catch((err) => {
+                        if(err instanceof Error){
+                            console.log(err.stack)
+                        }
                         res.status(500).json({
                             message: 'There was an error when fetching user'
                         });
