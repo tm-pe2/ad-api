@@ -29,6 +29,31 @@
 }
 ```
 
+## GET /id
+
+### OK response
+
+```ts
+{
+    id: number,
+    first_name: string,
+    last_name: string,
+    birth_date: Date,
+    email: string,
+    phone_number: string,
+    national_registry_number: string,
+    role_ids: UserRole[],
+    addresses: [
+        {
+            id: number,
+            street: string,
+            city_id: number,
+            country: string, // Only Belgium
+        }
+    ],
+}
+```
+
 ## POST /
 
 ### Request body

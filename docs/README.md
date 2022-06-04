@@ -31,8 +31,6 @@ For example addresses is also inside the user, no extra request.
 
 ## Employees
 
-**In need of clarification in terms of registration**
-
 GET/POST/PUT:  
 - `/employees`
 - `/employees/:user_id`
@@ -41,10 +39,9 @@ Contains base of user information + employee specific information.
 
 ## [Customers](customers.md)
 
-**In need of clarification in terms of registration**
-
 - [X] GET `/customers`
 - [X] GET `/customers/:user_id`
+- [X] POST `/customers`
 
 Contains base of user information + customer specific information.
 
