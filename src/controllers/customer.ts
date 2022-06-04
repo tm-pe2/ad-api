@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {  RegisterCustomer, RegisterUser,UserIdRole, UserRole } from "../models/user";
+import {  Customer, RegisterUser,UserIdRole, UserRole } from "../models/user";
 import { getAllCustomers, getCustomerById } from "../services/customer";
 import { Logger } from "../utils/logger";
 import * as bcrypt from "bcrypt";
@@ -45,72 +45,59 @@ export class CustomerController {
             .post('/', async (req, res, next) => {
                 const client = await begin()
                 try {
-                    
-
-                    const user: RegisterUser = req.body
+                    const customer: Customer = req.body
+                    // TODO: Create function that takes registerCustomer and validates it
 
                     //hash password
+                    if (!customer.password) {
+                        res.sendStatus(400);
+                        return;
+                    }
                     const salt = await bcrypt.genSalt(10);
-                    const pass = await bcrypt.hash(user.password, salt);
-
-                    user.password = pass
-
-
-                    //get cityID by postal code
-                    const cityID = await AddressService.getCityIDByPostalCode(client,req.body.city);
-                    const address: Address = {
-                        street: req.body.street,
-                        house_number: req.body.house_number,
-                        country: "Belgium",
-                        city_id: cityID
-                    }
-                    // insert address
-                    const addressID: number = await AddressService.insertAddress(client, address);
-                    if (!addressID) {
-                        throw new Error("Address not inserted");
+                    const pass = await bcrypt.hash(customer.password, salt);
+                    customer.password = pass;
+                    
+                    if (!customer.addresses) {
+                        res.sendStatus(400);
+                        return;
                     }
 
-                    address.id = addressID;
-
-                    user.addresses = [address];
                     //insert user
-                    const userID = await UserService.addUser(client,user);
+                    const userID = await UserService.addUser(client, customer);
                     if (!userID) {
                         throw new Error("User not inserted");
                     }
-                    const userAddress = {
-                        user_id: userID,
-                        address_id: addressID
+                    customer.id = userID;
+
+                    for (let i = 0; i < customer.addresses.length; i++) {
+                        const address: Address = customer.addresses[i];
+                        address.country = "Belgium"; // We assume only Belgium
+                        const addressId = await AddressService.insertAddress(client, address);
+                        if (!addressId) {
+                            throw new Error("Address not inserted, possibly invalid city id");
+                        }
+                        customer.addresses[i].id = addressId;
+
+                        const userAddressInserted = await UserService.insertUserAddress(client, customer.id, addressId);
+                        //insert user-addresses
+                        if (!userAddressInserted) {
+                            throw new Error("User-Address not inserted");
+                        }
                     }
 
-                    const userAddressInserted = await UserService.insertUserAddress(client,userAddress);
-                    //insert user-addresses
-                    if (!userAddressInserted) {
-                        throw new Error("User-Address not inserted");
-                    }
-
-                    const customer: RegisterCustomer = {
-                        id: userID,
-                        type: req.body.type,
-                    }
                     //insert customer
-                    const customerInserted = await UserService.insertCustomer(client,customer)
+                    const customerInserted = await UserService.insertCustomer(client,customer.id, customer.type_id);
                     if (!customerInserted) {
                         throw new Error("Customer not inserted");
                     }
                     
-                    const userRole: UserIdRole = {
-                        id: userID,
-                        role: UserRole.CUSTOMER
-                    }
-
-                    const userRoleInserted = await UserService.insertUserRole(client,userRole);
-                    
+                    const userRoleInserted = await UserService.insertUserRole(client,customer.id, UserRole.CUSTOMER);
                     if(!userRoleInserted){
                         throw new Error("User-Role not inserted");
                     }
 
-                    commit(client)
+                    commit(client);
+
                     res.status(200).json({
                         message: "Customer inserted succesfully!"
                     });

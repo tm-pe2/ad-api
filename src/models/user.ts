@@ -15,11 +15,6 @@ export enum UserRole {
     ADMIN = 9,
 }
 
-export interface UserAddress {
-    user_id: number;
-    address_id: number;
-}
-
 export interface RegisterUser extends User{
     password: string;
 }
@@ -32,8 +27,9 @@ export interface User {
     email: string,
     phone_number: string,
     national_registry_number: string,
-    role_ids: UserRole[],
-    addresses: Address[],
+    role_ids?: UserRole[],
+    addresses?: Address[],
+    password?: string,
 }
 
 export interface Employee extends User {
@@ -44,10 +40,6 @@ export interface Employee extends User {
 
 export interface Customer extends User {
     type_id: CustomerType
-}
-export interface RegisterCustomer {
-    id: number,
-    type: CustomerType
 }
 
 export enum CustomerType {

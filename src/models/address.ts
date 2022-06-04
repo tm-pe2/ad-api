@@ -3,6 +3,6 @@ export interface Address{
     street: string,
     city_id: number,
     house_number: string,
-    country: string, // Only belgium
+    country?: string, // Only belgium
 }
 

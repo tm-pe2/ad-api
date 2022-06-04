@@ -1,5 +1,5 @@
 import {execute} from "../utils/database-connector";
-import {Customer, RegisterCustomer, RegisterUser, User, UserAddress, UserAuthInfo, UserIdRole, UserRole} from "../models/user";
+import { User, UserAuthInfo, UserIdRole} from "../models/user";
 import {userQueries} from "../queries/users";
 import { PoolClient } from "pg";
 
@@ -9,7 +9,7 @@ export async function getUserById(client: PoolClient,id: User['id']): Promise<Us
     return res.rows[0] as User;
 };
 
-export async function addUser(client:PoolClient, user: RegisterUser): Promise<User['id'] | null> {
+export async function addUser(client:PoolClient, user: User): Promise<User['id'] | null> {
     // TODO : update
     const res = await execute(client,userQueries.AddUser, [
         user.first_name,
@@ -24,18 +24,12 @@ export async function addUser(client:PoolClient, user: RegisterUser): Promise<Us
     return res.rows[0].id;
 };
 
-export async function insertUserAddress (client: PoolClient,userAddress: UserAddress): Promise<boolean> {
-    const result = await execute(client,userQueries.AddUserAddress, [
-        userAddress.user_id,
-        userAddress.address_id
-    ]);
+export async function insertUserAddress (client: PoolClient, user_id: number, address_id: number): Promise<boolean> {
+    const result = await execute(client,userQueries.AddUserAddress, [user_id, address_id]);
     return result.rowCount > 0;
 };
-export async function insertCustomer(client:PoolClient,customer: RegisterCustomer): Promise<boolean>{
-    const result = await execute(client, userQueries.AddCustomer, [
-        customer.id,
-        customer.type,
-    ]);
+export async function insertCustomer(client:PoolClient, user_id: number, type_id: number): Promise<boolean>{
+    const result = await execute(client, userQueries.AddCustomer, [user_id, type_id]);
 
     return result.rowCount > 0;
 };
@@ -61,8 +55,8 @@ export async function getUserAuthInfoByEmail(client:PoolClient,email: string): P
         roles: res.rows[0].roles
     }
 }
-export async function insertUserRole(client:PoolClient,userRole: UserIdRole): Promise<boolean> {
-    const res = await execute(client,userQueries.InsertUserRole, [userRole.id, userRole.role]);
+export async function insertUserRole(client:PoolClient, user_id: number, role_id: number): Promise<boolean> {
+    const res = await execute(client,userQueries.InsertUserRole, [user_id, role_id]);
     return res.rowCount > 0;
 }
 
