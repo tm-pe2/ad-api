@@ -35,9 +35,18 @@ export class AuthController {
                 if (result) {
                     console.log("There is a result")
                     const tokenData: AccessTokenData = {id: user.id, roles: user.roles}
-                    const accessToken = AccessToken.create(tokenData);
-                    const refreshToken = RefreshToken.create(client, user.id);
-                    res.json({accessToken, refreshToken});
+                    const accessToken: string = AccessToken.create(tokenData);
+                    RefreshToken.create(client, user.id)
+                        .then(refreshToken => {
+                            res.json({
+                                accessToken: accessToken,
+                                refreshToken: refreshToken,
+                            });
+                        })
+                        .catch((err) => {
+                            Logger.error(err);
+                            res.sendStatus(500);
+                        });
                 } else {
                     res.status(401).send('Invalid credentials');
                 }
