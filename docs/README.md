@@ -9,17 +9,14 @@ We want to minimize the calls frontend needs to make
 For example in the previous design `addresses` was a seperate route. It would be preferable to have this included in other routes.
 This way the end-user doesn't need to call addresses seperately. This also simplifies protecting routes.
 
-## Auth
+## [Auth](auth.md)
 
 Easy peasy:
-- [ ] POST `/login`
+- [X] POST `/login`
   - Seperate query for login information
 - [X] POST `/logout`
-- [ ] POST `/token`
+- [X] POST `/token`
   - Refactor for multiple roles
-
-**Unsure how we will handle the registration**
-- [ ] POST `/register`
 
 ## Users
 
