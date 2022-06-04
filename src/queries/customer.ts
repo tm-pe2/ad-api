@@ -12,6 +12,7 @@ const selectCustomerQuery = `
             users.password,
             users.phone_number,
             users.national_registry_number,
+            customers.type_id,
             json_agg(
                 json_build_object(
                     'id', addresses.id, 
@@ -22,13 +23,13 @@ const selectCustomerQuery = `
                     'country',addresses.country)
                 ) as addresses,
             array_agg(roles.id) as roles
-        FROM users
-        JOIN users_addresses ON users.id = users_addresses.user_id
-        JOIN addresses ON users_addresses.address_id = addresses.id
-        JOIN users_roles ON users.id = users_roles.user_id
-        JOIN roles ON users_roles.role_id = roles.id
-        JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
-        JOIN customers ON users.id = customers.user_id
+        FROM customers
+        LEFT JOIN users ON customers.user_id = users.id
+        LEFT JOIN users_addresses ON users.id = users_addresses.user_id
+        LEFT JOIN addresses ON users_addresses.address_id = addresses.id
+        LEFT JOIN users_roles ON users.id = users_roles.user_id
+        LEFT JOIN roles ON users_roles.role_id = roles.id
+        LEFT JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
 `;
 
 export const customerQueries = {
