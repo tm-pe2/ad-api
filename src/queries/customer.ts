@@ -34,11 +34,11 @@ const selectCustomerQuery = `
 
 export const customerQueries = {
     getAllCustomers: selectCustomerQuery + `
-        GROUP BY users.id
+        GROUP BY users.id, customers.type_id
     `,
 
     getCustomerById:  selectCustomerQuery + `
         WHERE users.id = $1
-        GROUP BY users.id
+        GROUP BY users.id, customers.type_id
     `,
 };

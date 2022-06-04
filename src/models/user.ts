@@ -43,7 +43,7 @@ export interface Employee extends User {
 }
 
 export interface Customer extends User {
-    type: CustomerType
+    type_id: CustomerType
 }
 export interface RegisterCustomer {
     id: number,
