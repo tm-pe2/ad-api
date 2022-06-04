@@ -39,7 +39,7 @@ GET/POST/PUT:
 
 Contains base of user information + employee specific information.
 
-## Customers
+## [Customers](customers.md)
 
 **In need of clarification in terms of registration**
 

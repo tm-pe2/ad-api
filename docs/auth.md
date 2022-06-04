@@ -1,4 +1,5 @@
 [< All routes](README.md)
+
 # Auth routes /auth
 
 ## POST /login
