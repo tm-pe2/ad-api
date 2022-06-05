@@ -68,12 +68,12 @@
     national_registry_number: string,
     addresses: [
         {
-            id: number,
             street: string,
             city_id: number,
             country: string, // Only belgium
         }
     ],
+    type_id: CustomerType,
     password: string,
 }
 ```
