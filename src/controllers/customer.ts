@@ -45,7 +45,8 @@ export class CustomerController {
             .post('/', async (req, res, next) => {
                 const client = await begin()
                 try {
-                    
+                    console.log(req.body)
+
 
                     const user: RegisterUser = req.body
 
