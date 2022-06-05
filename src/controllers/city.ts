@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response, Router } from 'express';
-import * as cityService from '../services/city-service';
+import * as cityService from '../services/city';
 import { City } from '../models/city';
 
 export class CityController {

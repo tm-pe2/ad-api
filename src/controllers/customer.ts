@@ -45,15 +45,8 @@ export class CustomerController {
             .post('/', async (req, res, next) => {
                 const client = await begin()
                 try {
-<<<<<<< HEAD
-                    console.log(req.body)
-
-
-                    const user: RegisterUser = req.body
-=======
                     const customer: Customer = req.body
                     // TODO: Create function that takes registerCustomer and validates it
->>>>>>> 4b73e57dfb59e9847f562eca25822df8a9bdecae
 
                     //hash password
                     if (!customer.password) {

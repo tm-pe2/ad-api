@@ -1,4 +1,4 @@
-import { cityQueries } from "../queries/city-queries";
+import { cityQueries } from "../queries/city";
 import { begin, execute } from "../utils/database-connector";
 
 export const getAllCities = async () => {
