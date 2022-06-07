@@ -27,4 +27,7 @@ export const contractQueries = {
     getContractById: selectContractQuery + `
         WHERE contracts.id = $1
     `,
+    getContractByUserId: selectContractQuery + `
+        WHERE users.id = $1
+    `
 }

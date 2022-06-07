@@ -16,3 +16,9 @@ export async function getContractById(client:PoolClient, id: number): Promise<Co
     if (res.rowCount === 0) return null;
     return res.rows[0] as Contract;
 }
+
+export async function getContractByUserId(client:PoolClient, user_id: number): Promise<Contract | null> {
+    let res = await execute(client,contractQueries.getContractByUserId, [user_id]);
+    if (res.rowCount === 0) return null;
+    return res.rows[0] as Contract;
+}

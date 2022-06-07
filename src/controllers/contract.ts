@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { getAllContracts, getContractById } from "../services/contract";
+import { authSelf } from "../middleware/auth";
+import { getAllContracts, getContractById, getContractByUserId } from "../services/contract";
 import {begin,commit,connectClient,rollback} from "../utils/database-connector";
 import { Logger } from "../utils/logger";
 
@@ -25,6 +26,22 @@ export class ContractController {
             }
             const client = await connectClient();
             getContractById(client, id)
+                .then((contracts) => {
+                    if (contracts) {
+                        res.send(contracts);
+                    }
+                    else {
+                        res.sendStatus(404);
+                    }
+                })
+                .catch((err) => {
+                    Logger.error(err);
+                    res.sendStatus(500);
+                });
+        })
+        .get('/self', authSelf(), async (req, res, next) => {
+            const client = await connectClient();
+            getContractByUserId(client, req.body.tokenData.id)
                 .then((contracts) => {
                     if (contracts) {
                         res.send(contracts);
