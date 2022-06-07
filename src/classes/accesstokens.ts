@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 export interface AccessTokenData {
     id: number,
-    role_id: UserRole
+    roles: UserRole[]
 }
 
 const accessExpireTime = 1800; // 30 min
