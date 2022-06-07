@@ -48,9 +48,7 @@ const getUserAuthInfoByEmail = getUserAuthInfo + `
 const addUserAddress = `
     INSERT INTO users_addresses (user_id, address_id) VALUES($1, $2)
     `
-const AddCustomer = `
-    INSERT INTO customers (user_id, type_id) VALUES ($1, $2)
-    `
+
 
 const AddUser = `
         INSERT INTO users (first_name, last_name, birth_date, email, password, phone_number ,national_registry_number) 
@@ -67,7 +65,6 @@ export const userQueries = {
     getUserAuthInfoById: getUserAuthInfoById,
     getUserAuthInfoByEmail: getUserAuthInfoByEmail,
     AddUserAddress: addUserAddress,
-    AddCustomer: AddCustomer,
     AddUser: AddUser,
     InsertUserRole: InsertUserRole
 
