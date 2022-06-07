@@ -27,7 +27,7 @@ export interface User {
     email: string,
     phone_number: string,
     national_registry_number: string,
-    role_ids?: UserRole[],
+    roles?: UserRole[],
     addresses?: Address[],
     password?: string,
 }
