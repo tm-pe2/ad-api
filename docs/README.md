@@ -52,10 +52,10 @@ Contains base of user information + customer specific information.
 
 *No delete! -> front-end disable user instead*
 
-## Contracts
+## [Contracts](customers.md)
 
-- [ ] GET `/contracts`
-- [ ] GET `/contracts/:user_id`
+- [X] GET `/contracts`
+- [X] GET `/contracts/:user_id`
 - [ ] POST `/contracts/:user_id`
 - [ ] GET `/contracts/self`
 
