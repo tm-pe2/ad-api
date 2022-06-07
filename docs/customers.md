@@ -29,7 +29,7 @@
 }
 ```
 
-## GET /id
+## GET /user_id
 
 ### OK response
 
