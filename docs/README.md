@@ -18,11 +18,9 @@ Easy peasy:
 - [X] POST `/token`
   - Refactor for multiple roles
 
-## Users
+## [Users](users.md)
 
-- [ ] GET `/users/self`
-
-(Instead of DELETE a enable/disable method?)
+- [X] GET `/users/self`
 
 Contains everything of a user except the password.  
 For example addresses is also inside the user, no extra request.
@@ -107,11 +105,9 @@ Should be easy
 - `/planning`
 - `/planning/:id`
 
-## Cities
+## [Cities](city.md)
 
-Easy peasy:
-- [ ] GET `/cities`
-  - Simply receive all postalcodes for selection in front-end
+- [X] GET `/cities`
 
 ## ~~Tickets~~
 
