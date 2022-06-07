@@ -54,17 +54,16 @@ Contains base of user information + customer specific information.
 
 ## Contracts
 
-*Needs discussion*
-
 - [ ] GET `/contracts`
 - [ ] GET `/contracts/:user_id`
 - [ ] POST `/contracts/:user_id`
-- [ ] PUT `/contracts/:user_id`
 - [ ] GET `/contracts/self`
 
 Will contain user_id and address_id as well.
 
-**Gets activated when the first meter value submission gets made by an employee.**
+**Gets activated when the first meter value submission gets made by an employee.**  
+-> No PUT or PATCH needed, will be done in function
+- [ ] Adjust status with function
 
 ## Consumptions
 
