@@ -9,7 +9,6 @@ const selectCustomerQuery = `
             users.last_name,
             users.birth_date,
             users.email,
-            users.password,
             users.phone_number,
             users.national_registry_number,
             customers.type_id,
