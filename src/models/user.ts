@@ -5,28 +5,31 @@ import { Address } from "./address";
 */
 export enum UserRole {
     CUSTOMER = 1,
-    ADMIN = 3,
-    SUPPLIER = 4,
+    SUPPLIER = 2,
+    EMPLOYEE = 3,
+    ACCOUNTANT = 4,
     TECHNICIAN = 5,
-    HR_MANAGER = 6,
-    EMPLOYEE = 7,
-    ACCOUNTANT = 8,
-    SUPPORT = 9,
-    MANAGER = 10,
+    SUPPORT = 6,
+    MANAGER = 7,
+    HR_MANAGER = 8,
+    ADMIN = 9,
+}
+
+export interface RegisterUser extends User{
+    password: string;
 }
 
 export interface User {
-    id: number,
+    id?: number,
     first_name: string,
     last_name: string,
-    gender: string,
     birth_date: Date,
     email: string,
-    // no password, seperate query for auth
     phone_number: string,
     national_registry_number: string,
-    role_ids: UserRole[],
-    addresses: Address[], //Address[]
+    role_ids?: UserRole[],
+    addresses?: Address[],
+    password?: string,
 }
 
 export interface Employee extends User {
@@ -36,12 +39,12 @@ export interface Employee extends User {
 }
 
 export interface Customer extends User {
-    type: CustomerType
+    type_id: CustomerType
 }
 
 export enum CustomerType {
-    PRIVATE = 0,
-    COMPANY = 1
+    PRIVATE = 1,
+    COMPANY = 2
 }
 
 export interface UserAuthInfo {
@@ -49,4 +52,9 @@ export interface UserAuthInfo {
     email: string,
     password: string,
     roles: UserRole[]
+}
+
+export interface UserIdRole {
+    id: number,
+    role: UserRole
 }
