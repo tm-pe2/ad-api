@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { AuthController } from './controllers/auth';
 import { UserController } from './controllers/user';
+import { CityController } from './controllers/city';
+import { CustomerController } from './controllers/customer';
 
 export function setRoutes(router: Express): Express {
     router.use(cors()); // enable CORS
@@ -25,8 +27,10 @@ export function setRoutes(router: Express): Express {
     });
 
     // Setting routes
-    // router.use('/auth', AuthController.router());
-    //router.use('/users', UserController.router());
+    router.use('/auth', AuthController.router());
+    router.use('/users', UserController.router());
+    router.use('/cities', CityController.router());
+    router.use('/customers', CustomerController.router());
 
     // Handle 404
     router.use((req: Request, res: Response, next: NextFunction) => {
