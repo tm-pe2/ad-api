@@ -18,14 +18,9 @@ export class ContractController {
                     res.sendStatus(500);
                 });
         })
-        .get('/:id', async (req, res, next) => {
-            const id = parseInt(req.params.id);
-            if (isNaN(id)) {
-                res.sendStatus(400);
-                return;
-            }
+        .get('/self', authSelf(), async (req, res, next) => {
             const client = await connectClient();
-            getContractById(client, id)
+            getContractByUserId(client, req.body.tokenData.id)
                 .then((contracts) => {
                     if (contracts) {
                         res.send(contracts);
@@ -39,9 +34,14 @@ export class ContractController {
                     res.sendStatus(500);
                 });
         })
-        .get('/self', authSelf(), async (req, res, next) => {
+        .get('/:id', async (req, res, next) => {
+            const id = parseInt(req.params.id);
+            if (isNaN(id)) {
+                res.sendStatus(400);
+                return;
+            }
             const client = await connectClient();
-            getContractByUserId(client, req.body.tokenData.id)
+            getContractById(client, id)
                 .then((contracts) => {
                     if (contracts) {
                         res.send(contracts);
