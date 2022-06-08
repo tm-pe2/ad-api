@@ -9,23 +9,18 @@ We want to minimize the calls frontend needs to make
 For example in the previous design `addresses` was a seperate route. It would be preferable to have this included in other routes.
 This way the end-user doesn't need to call addresses seperately. This also simplifies protecting routes.
 
-## Auth
+## [Auth](auth.md)
 
 Easy peasy:
-- [ ] POST `/login`
+- [X] POST `/login`
   - Seperate query for login information
 - [X] POST `/logout`
-- [ ] POST `/token`
+- [X] POST `/token`
   - Refactor for multiple roles
 
-**Unsure how we will handle the registration**
-- [ ] POST `/register`
+## [Users](users.md)
 
-## Users
-
-- [ ] GET `/users/self`
-
-(Instead of DELETE a enable/disable method?)
+- [X] GET `/users/self`
 
 Contains everything of a user except the password.  
 For example addresses is also inside the user, no extra request.
@@ -34,20 +29,17 @@ For example addresses is also inside the user, no extra request.
 
 ## Employees
 
-**In need of clarification in terms of registration**
-
 GET/POST/PUT:  
 - `/employees`
 - `/employees/:user_id`
 
 Contains base of user information + employee specific information.
 
-## Customers
-
-**In need of clarification in terms of registration**
+## [Customers](customers.md)
 
 - [X] GET `/customers`
 - [X] GET `/customers/:user_id`
+- [X] POST `/customers`
 
 Contains base of user information + customer specific information.
 
@@ -62,15 +54,16 @@ Contains base of user information + customer specific information.
 
 ## Contracts
 
-*Needs discussion*
-
 - [ ] GET `/contracts`
 - [ ] GET `/contracts/:user_id`
 - [ ] POST `/contracts/:user_id`
-- [ ] PUT `/contracts/:user_id`
 - [ ] GET `/contracts/self`
 
 Will contain user_id and address_id as well.
+
+**Gets activated when the first meter value submission gets made by an employee.**  
+-> No PUT or PATCH needed, will be done in function
+- [ ] Adjust status with function
 
 ## Consumptions
 
@@ -111,11 +104,9 @@ Should be easy
 - `/planning`
 - `/planning/:id`
 
-## Cities
+## [Cities](city.md)
 
-Easy peasy:
-- [ ] GET `/cities`
-  - Simply receive all postalcodes for selection in front-end
+- [X] GET `/cities`
 
 ## ~~Tickets~~
 
