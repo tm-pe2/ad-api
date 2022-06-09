@@ -1,37 +1,38 @@
 // TODO: verify interfaces and types
 
 export interface EstimationRegistration {
-    address_id: number,
     family_size: number,
+    address_id: number,
     building_type: BuildingType,
     past_consumption: number,
     service_type: ServiceType,
-    meters: [
-        {
-            meter_type: MeterType
-            //...
-        }
-    ]
-    equipment: EquipmentType[]
+    meters: Meter[],
+    equipment: EquipmentType[],
 }
 
-enum ServiceType {
-    // shrug
-}
-
-enum EquipmentType {
-    WASHINGMACHINE,
-    //...
+interface Meter {
+    id?: number,
+    physical_id?: number,
+    meter_type: string, // TODO: Specify type
+    value: number,
 }
 
 enum BuildingType {
-    APPARTMENT,
-    HOUSE,
-    //...
+    APARTMENT = 0,
+    CLOSED = 1,
+    SEMI_DETACHED = 2,
+    OPEN = 3,
 }
 
-enum MeterType {
-    GAS,
-    ELECTRICITY,
-    // ...
+enum ServiceType {
+    ELECTRICITY = 0,
+    GAS = 1,
+}
+
+enum EquipmentType {
+    OVEN_STOVE = 1,
+    DISHWATER = 2,
+    WASHING_MACHINE = 3,
+    DRYING_MACHINE = 4,
+    HAIR_DRYER = 5,
 }

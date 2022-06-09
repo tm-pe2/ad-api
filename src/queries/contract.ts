@@ -22,6 +22,17 @@ const selectContractQuery = `
     LEFT JOIN users ON customers_contracts.user_id = users.id
 `
 
+const insertContractQuery = `
+    INSERT INTO contracts (
+        user_id,
+        start_date,
+        end_date,
+        tariff_id,
+        estimation_id,
+        address_id
+    ) VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING id
+`
 export const contractQueries = {
     getAllContracts: selectContractQuery,
     getContractById: selectContractQuery + `
@@ -29,5 +40,6 @@ export const contractQueries = {
     `,
     getContractByUserId: selectContractQuery + `
         WHERE users.id = $1
-    `
+    `,
+    insertContract: insertContractQuery,
 }

@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { authSelf } from "../middleware/auth";
+import { Contract, ContractPost } from "../models/contract";
 import { getAllContracts, getContractById, getContractByUserId } from "../services/contract";
 import {begin,commit,connectClient,rollback} from "../utils/database-connector";
 import { Logger } from "../utils/logger";
+import * as ContractService from '../services/contract';
 
 export class ContractController {
     static router(): Router {
@@ -55,5 +57,26 @@ export class ContractController {
                     res.sendStatus(500);
                 });
         })
+        .post('/', async (req, res, next) => {
+            const client = await begin();
+            try {
+                const contract: ContractPost = req.body;
+
+                // TODO: validate
+
+                const contractID = await ContractService.addContract(client, contract);
+                if (!contractID) {
+                    throw new Error("Contract not inserted");
+                }
+
+                commit(client);
+            }
+            catch (err) {
+                Logger.error(err);
+                rollback(client);
+                res.sendStatus(500);
+            }
+        })
+
     }
 }
