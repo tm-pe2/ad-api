@@ -80,9 +80,10 @@ GET/POST:
 Consumptions don't need to be updated, maybe no PUT?
 Or just delete and new post?
 
-## Estimations
+## [Estimations](estimations.md)
 
-- [ ] POST `/estimations/self`
+- [X] GET `/estimations`
+- [X] POST `/estimations`
 
 ## Invoices
 
