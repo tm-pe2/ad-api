@@ -41,6 +41,15 @@ export class EmployeeController {
                     if (!currentEmployee) {
                         throw new Error("Employee not found");
                     }
+                    if (!employee.password) {
+                        res.sendStatus(400);
+                        return;
+                    }
+ 
+                    const salt = await bcrypt.genSalt(10);
+                    const pass = await bcrypt.hash(employee.password, salt);
+                    employee.password = pass;
+
                     const employeeEdited = await EmployeeService.modifyEmployee(client, employee);
 
                     if(!employeeEdited){

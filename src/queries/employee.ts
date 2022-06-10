@@ -46,7 +46,7 @@ const modifyEmployee = `
     UPDATE employees SET salary = $2 WHERE user_id = $1;
 `
 const modifyUser = `
-    UPDATE users SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7 WHERE id = $1;
+    UPDATE users SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7, password = $8 WHERE id = $1;
    
 `
 const modifyUserRoles = `
