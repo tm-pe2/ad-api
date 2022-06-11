@@ -30,7 +30,9 @@ const selectCustomerQuery = `
         LEFT JOIN roles ON users_roles.role_id = roles.id
         LEFT JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
 `;
-
+const AddCustomer = `
+    INSERT INTO customers (user_id, type_id) VALUES ($1, $2)
+    `
 export const customerQueries = {
     getAllCustomers: selectCustomerQuery + `
         GROUP BY users.id, customers.type_id
@@ -40,4 +42,5 @@ export const customerQueries = {
         WHERE users.id = $1
         GROUP BY users.id, customers.type_id
     `,
+    addCustomer: AddCustomer,
 };

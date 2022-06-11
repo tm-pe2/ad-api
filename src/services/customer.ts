@@ -15,3 +15,8 @@ export async function getCustomerById(client:PoolClient, id: number): Promise<Cu
     if (res.rowCount === 0) return null;
     return res.rows[0] as Customer;
 }
+export async function insertCustomer(client:PoolClient, user_id: number, type_id: number): Promise<boolean>{
+    const result = await execute(client, customerQueries.addCustomer, [user_id, type_id]);
+
+    return result.rowCount > 0;
+};

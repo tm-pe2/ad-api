@@ -7,6 +7,8 @@ import { AuthController } from './controllers/auth';
 import { UserController } from './controllers/user';
 import { CityController } from './controllers/city';
 import { CustomerController } from './controllers/customer';
+import { RolesController } from './controllers/roles';
+import { EmployeeController } from './controllers/employee';
 
 export function setRoutes(router: Express): Express {
     router.use(cors()); // enable CORS
@@ -31,6 +33,8 @@ export function setRoutes(router: Express): Express {
     router.use('/users', UserController.router());
     router.use('/cities', CityController.router());
     router.use('/customers', CustomerController.router());
+    router.use('/roles', RolesController.router());
+    router.use('/employees', EmployeeController.router());
 
     // Handle 404
     router.use((req: Request, res: Response, next: NextFunction) => {
