@@ -63,7 +63,7 @@ export const employeeQueries = {
 
     getEmployeeById: selectEmployeeQuery + `
         WHERE e.user_id = $1
-        
+        GROUP BY u.id, e.hire_date, e.salary
     `,
 
     modifyEmployee: modifyEmployee,
