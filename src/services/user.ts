@@ -28,11 +28,7 @@ export async function insertUserAddress (client: PoolClient, user_id: number, ad
     const result = await execute(client,userQueries.AddUserAddress, [user_id, address_id]);
     return result.rowCount > 0;
 };
-export async function insertCustomer(client:PoolClient, user_id: number, type_id: number): Promise<boolean>{
-    const result = await execute(client, userQueries.AddCustomer, [user_id, type_id]);
 
-    return result.rowCount > 0;
-};
 
 export async function getUserAuthInfoById(client:PoolClient,id: number): Promise<UserAuthInfo | null> {
     const res = await execute(client,userQueries.getUserAuthInfoById, [id]);
