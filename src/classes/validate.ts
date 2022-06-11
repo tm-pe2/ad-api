@@ -47,7 +47,6 @@ export class Validate {
     static isEmployee(employee: Employee): boolean {
         return (
             this.isUser(employee) &&
-            this.isName(employee.department) &&
             this.isOlder(employee.birth_date, 18)
         );
     }

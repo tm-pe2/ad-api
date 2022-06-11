@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {  Customer, RegisterUser,UserIdRole, UserRole } from "../models/user";
 import { getAllCustomers, getCustomerById } from "../services/customer";
+import * as CustomerService from "../services/customer";
 import { Logger } from "../utils/logger";
 import * as bcrypt from "bcrypt";
 import * as AddressService from "../services/address";
@@ -46,7 +47,7 @@ export class CustomerController {
                 const client = await begin()
                 try {
                     const customer: Customer = req.body
-                    // TODO: Create function that takes registerCustomer and validates it
+                    // TODO: Create function that takes Customer and validates it
 
                     //hash password
                     if (!customer.password) {
@@ -86,7 +87,7 @@ export class CustomerController {
                     }
 
                     //insert customer
-                    const customerInserted = await UserService.insertCustomer(client,customer.id, customer.type_id);
+                    const customerInserted = await CustomerService.insertCustomer(client,customer.id, customer.type_id);
                     if (!customerInserted) {
                         throw new Error("Customer not inserted");
                     }

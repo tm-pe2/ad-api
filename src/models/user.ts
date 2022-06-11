@@ -33,7 +33,6 @@ export interface User {
 }
 
 export interface Employee extends User {
-    department: string, // id to other table?
     hire_date: Date,
     salary: number,
 }
