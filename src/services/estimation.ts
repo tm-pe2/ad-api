@@ -9,9 +9,15 @@ export async function getAllEstimations(client: PoolClient): Promise<Estimation[
     return res.rows as Estimation[];
 }
 
+// TODO: change TODO to real values after database change
 export async function insertEstimation(client: PoolClient, estimation: EstimationRegistration, estimated_consumption: number): Promise<boolean> {
     const res = await execute(client, estimationQueries.insertEstimation, [
+        estimation.service_type,
+        estimation.building_type,
         estimation.address_id,
+        estimation.family_size,
+        //estimation.equipment,
+        "TODO",
         estimation.past_consumption,
         estimated_consumption,
     ]);
@@ -69,13 +75,13 @@ export function calculateEstimation(estimation: EstimationRegistration): number 
     }
 
     //the amount of kWh consumed in a day from an appliance is added to the estimated consumption
-    estimation.equipment.forEach(app => {
-        if (app == EquipmentType.OVEN_STOVE) { calc_estimation += 1 }
-        if (app == EquipmentType.DISHWATER) { calc_estimation += 0.20 }
-        if (app == EquipmentType.WASHING_MACHINE) { calc_estimation += 0.36 }
-        if (app == EquipmentType.DRYING_MACHINE) { calc_estimation += 0.30 }
-        if (app == EquipmentType.HAIR_DRYER) { calc_estimation += 1.07 }
-    });
+    for (let i = 0; i < estimation.equipment.length; i++) {
+        if (estimation.equipment[i] == EquipmentType.OVEN_STOVE) { calc_estimation += 1 }
+        if (estimation.equipment[i] == EquipmentType.DISHWATER) { calc_estimation += 0.20 }
+        if (estimation.equipment[i] == EquipmentType.WASHING_MACHINE) { calc_estimation += 0.36 }
+        if (estimation.equipment[i] == EquipmentType.DRYING_MACHINE) { calc_estimation += 0.30 }
+        if (estimation.equipment[i] == EquipmentType.HAIR_DRYER) { calc_estimation += 1.07 }
+    }
 
     return calc_estimation;
 }

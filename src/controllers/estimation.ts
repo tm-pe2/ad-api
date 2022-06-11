@@ -23,6 +23,7 @@ export class EstimationController {
             const client = await begin();
             try {
                 const input: EstimationRegistration = req.body;
+                console.log(input);
                 // TODO validate
     
                 const calc_estimation = calculateEstimation(input);
