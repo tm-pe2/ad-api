@@ -34,8 +34,8 @@ export enum BuildingType {
 }
 
 export enum ServiceType {
-    ELECTRICITY = 0,
-    GAS = 1,
+    ELECTRICITY = "Electricity",
+    GAS = "Gas",
 }
 
 export enum EquipmentType {

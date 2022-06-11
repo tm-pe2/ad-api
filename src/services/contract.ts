@@ -7,7 +7,7 @@ import { Contract, ContractPost } from "../models/contract";
 
 export async function getAllContracts(client: PoolClient): Promise<Contract[] | null> {
     let res = await execute(client, contractQueries.getAllContracts);
-    if (res.rowCount === 0) return null;
+    if (res.rowCount === 0) return [];
     return res.rows as Contract[];
 };
 
