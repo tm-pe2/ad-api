@@ -52,12 +52,12 @@ Contains base of user information + customer specific information.
 
 *No delete! -> front-end disable user instead*
 
-## Contracts
+## [Contracts](contract.md)
 
-- [ ] GET `/contracts`
-- [ ] GET `/contracts/:user_id`
-- [ ] POST `/contracts/:user_id`
-- [ ] GET `/contracts/self`
+- [X] GET `/contracts`
+- [X] GET `/contracts/:user_id`
+- [X] POST `/contracts`
+- [X] GET `/contracts/self`
 
 Will contain user_id and address_id as well.
 
@@ -80,9 +80,10 @@ GET/POST:
 Consumptions don't need to be updated, maybe no PUT?
 Or just delete and new post?
 
-## Estimations
+## [Estimations](estimations.md)
 
-- [ ] POST `/estimations/self`
+- [X] GET `/estimations`
+- [X] POST `/estimations`
 
 ## Invoices
 
