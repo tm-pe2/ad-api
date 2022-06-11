@@ -1,6 +1,4 @@
-// Edit this query for addresses with new DB
-// array_agg(tag_id) as tag_arr for roles later
-// https://stackoverflow.com/questions/31453151/in-postgres-select-return-a-column-subquery-as-an-array
+import { TABLES } from "./tables";
 
 const selectCustomerQuery = `
         SELECT 
@@ -11,36 +9,36 @@ const selectCustomerQuery = `
             users.email,
             users.phone_number,
             users.national_registry_number,
-            customers.type_id,
+            c.type_id,
             json_agg(
                 json_build_object(
-                    'id', addresses.id, 
-                    'street', addresses.street,
-                    'house_number', addresses.house_number, 
-                    'city_name',cities_postalcodes.city_name, 
-                    'postal_code',cities_postalcodes.postal_code, 
-                    'country',addresses.country)
-                ) as addresses,
-            array_agg(roles.id) as roles
-        FROM customers
-        LEFT JOIN users ON customers.user_id = users.id
-        LEFT JOIN users_addresses ON users.id = users_addresses.user_id
-        LEFT JOIN addresses ON users_addresses.address_id = addresses.id
-        LEFT JOIN users_roles ON users.id = users_roles.user_id
-        LEFT JOIN roles ON users_roles.role_id = roles.id
-        LEFT JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
+                    'id', a.id, 
+                    'street', a.street,
+                    'house_number', a.house_number, 
+                    'city_name',ci.city_name, 
+                    'postal_code',ci.postal_code, 
+                    'country',a.country)
+                ) as a,
+            array_agg(r.id) as roles
+        FROM ${TABLES.CUSTOMERS} as c
+        LEFT JOIN ${TABLES.USERS} as u ON c.user_id = u.id
+        LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON u.id = ua.user_id
+        LEFT JOIN ${TABLES.ADDRESSES} as ON ua.address_id = a.id
+        LEFT JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
+        LEFT JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
+        LEFT JOIN ${TABLES.CITIES} as ci ON a.city_id = ci.id
 `;
 const AddCustomer = `
-    INSERT INTO customers (user_id, type_id) VALUES ($1, $2)
+    INSERT INTO ${TABLES.CUSTOMERS} as c (user_id, type_id) VALUES ($1, $2)
     `
 export const customerQueries = {
     getAllCustomers: selectCustomerQuery + `
-        GROUP BY users.id, customers.type_id
+        GROUP BY u.id, c.type_id
     `,
 
     getCustomerById:  selectCustomerQuery + `
-        WHERE users.id = $1
-        GROUP BY users.id, customers.type_id
+        WHERE u.id = $1
+        GROUP BY u.id, c.type_id
     `,
     addCustomer: AddCustomer,
 };

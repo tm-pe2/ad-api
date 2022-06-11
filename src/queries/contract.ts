@@ -1,29 +1,31 @@
+import { TABLES } from "./tables"
+
 /* TODO: Estimation needed? */ 
 const selectContractQuery = `
     SELECT
-        contracts.id,
+        c.id,
         users.id as user_id,
-        contracts.start_date,
-        contracts.end_date,
-        contracts.tariff_id,
-        contracts.estimation_id,
+        c.start_date,
+        c.end_date,
+        c.tariff_id,
+        c.estimation_id,
         json_build_object(
-            'id', addresses.id,
-            'street', addresses.street,
-            'house_number', addresses.house_number,
-            'city_name', cities_postalcodes.city_name,
-            'postal_code', cities_postalcodes.postal_code,
-            'country', addresses.country
+            'id', a.id,
+            'street', a.street,
+            'house_number', a.house_number,
+            'city_name', ci.city_name,
+            'postal_code', ci.postal_code,
+            'country', a.country
         ) as address
-    FROM contracts
-    LEFT JOIN addresses ON contracts.address_id = addresses.id
-    LEFT JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
-    LEFT JOIN customers_contracts ON contracts.id = customers_contracts.contract_id
-    LEFT JOIN users ON customers_contracts.user_id = users.id
+    FROM ${TABLES.CONTRACTS} as c
+    LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
+    LEFT JOIN ${TABLES.CITIES} as ci ON a.city_id = ci.id
+    LEFT JOIN ${TABLES.CUSTOMERS_CONTRACTS} as cc ON c.id = cc.contract_id
+    LEFT JOIN ${TABLES.USERS} as u ON cc.user_id = u.id
 `
 
 const insertContractQuery = `
-    INSERT INTO contracts (
+    INSERT INTO ${TABLES.CONTRACTS} as c (
         user_id,
         start_date,
         end_date,
@@ -36,7 +38,7 @@ const insertContractQuery = `
 export const contractQueries = {
     getAllContracts: selectContractQuery,
     getContractById: selectContractQuery + `
-        WHERE contracts.id = $1
+        WHERE c.id = $1
     `,
     getContractByUserId: selectContractQuery + `
         WHERE users.id = $1
