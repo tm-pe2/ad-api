@@ -1,28 +1,30 @@
+import { TABLES } from "./tables";
+
 const getUserById = `
         SELECT 
-            users.id,
-            users.first_name,
-            users.last_name,
-            users.birth_date,
-            users.email,
-            users.phone_number,
-            users.national_registry_number,
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.birth_date,
+            u.email,
+            u.phone_number,
+            u.national_registry_number,
             json_agg(
                 json_build_object(
-                    'id', addresses.id, 
-                    'street', addresses.street,
-                    'house_number', addresses.house_number, 
-                    'city_name',cities_postalcodes.city_name, 
-                    'postal_code',cities_postalcodes.postal_code, 
-                    'country',addresses.country)
+                    'id', a.id, 
+                    'street', a.street,
+                    'house_number', a.house_number, 
+                    'city_name',c.city_name, 
+                    'postal_code',c.postal_code, 
+                    'country',a.country)
                 ) as addresses,
-            array_agg(roles.id) as roles
-        FROM users
-        JOIN users_addresses ON users.id = users_addresses.user_id
-        JOIN addresses ON users_addresses.address_id = addresses.id
-        JOIN users_roles ON users.id = users_roles.user_id
-        JOIN roles ON users_roles.role_id = roles.id
-        JOIN cities_postalcodes ON addresses.city_id = cities_postalcodes.id
+            array_agg(r.id) as roles
+        FROM ${TABLES.USERS} as u
+        JOIN ${TABLES.USERS_ADDRESSES} as ua ON users.id = ua.user_id
+        JOIN ${TABLES.ADDRESSES} as a ON ua.address_id = addresses.id
+        JOIN ${TABLES.USERS_ROLES} as ur ON users.id = ur.user_id
+        JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
+        JOIN ${TABLES.CITIES} as c ON addresses.city_id = c.id
         WHERE users.id = $1
         GROUP BY users.id
     `;
@@ -33,8 +35,8 @@ const getUserAuthInfo = `
         u.email,
         u.password,
         array_agg(r.id) as roles
-    FROM users as u
-    JOIN users_roles as ur ON u.id = ur.user_id
+    FROM ${TABLES.USERS} as u
+    JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
     JOIN roles as r ON ur.role_id = r.id`
 
 
@@ -45,20 +47,20 @@ const getUserAuthInfoById = getUserAuthInfo + `
 const getUserAuthInfoByEmail = getUserAuthInfo + `
     WHERE u.email = $1
     GROUP BY u.id, u.email`
+
 const addUserAddress = `
-    INSERT INTO users_addresses (user_id, address_id) VALUES($1, $2)
+    INSERT INTO ${TABLES.USERS_ADDRESSES} (user_id, address_id) VALUES($1, $2)
     `
 
-
 const AddUser = `
-        INSERT INTO users (first_name, last_name, birth_date, email, password, phone_number ,national_registry_number) 
+        INSERT INTO ${TABLES.USERS} (first_name, last_name, birth_date, email, password, phone_number ,national_registry_number) 
             VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING id
     `
+
 const InsertUserRole = `
     INSERT INTO users_roles (user_id, role_id) VALUES ($1, $2)
     `
-
 
 export const userQueries = {
     getUserById: getUserById,
