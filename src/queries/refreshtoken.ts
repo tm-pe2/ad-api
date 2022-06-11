@@ -2,7 +2,8 @@ import { TABLES } from "./tables";
 
 export const refreshtokenQueries = {
     getTokenByToken: `
-        SELECT * FROM ${TABLES.REFRESHTOKENS} WHERE token = $1
+        SELECT id, token, expiry_date, user_id
+        FROM ${TABLES.REFRESHTOKENS} WHERE token = $1
     `,
 
     addToken: `

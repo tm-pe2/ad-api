@@ -14,6 +14,7 @@ const selectEmployeeQuery = `
         u.email,
         u.phone_number,
         u.national_registry_number,
+        u.active,
         json_agg(
             json_build_object(
                 'id', a.id,
@@ -62,7 +63,7 @@ export const employeeQueries = {
 
     getEmployeeById: selectEmployeeQuery + `
         WHERE e.user_id = $1
-        GROUP BY u.id, u.first_name, u.last_name, u.birth_date, u.email, u.phone_number, u.national_registry_number, e.hire_date, e.salary;
+        
     `,
 
     modifyEmployee: modifyEmployee,

@@ -69,7 +69,8 @@ export class EmployeeController {
                 const client = await begin();
                 try {
                     const employee: Employee = req.body;
-
+                    employee.active = true;
+                    
                     //hash password
                     if (!employee.password) {
                         res.sendStatus(400);
