@@ -39,7 +39,6 @@ export class EstimationController {
                     res.status(403).send("Address not owned by user");
                     return;
                 }
-                console.log(1)
                 // Insert estimation
                 const calc_estimation = calculateEstimation(input);
 
@@ -48,7 +47,6 @@ export class EstimationController {
                     throw new Error("Could not insert estimation");
                 }
 
-                console.log(2)
                 // Add new contract
                 const contractId = await addNewContract(client,
                     req.body.tokenData.id, input.service_type, estimationId, input.address_id);
@@ -57,7 +55,6 @@ export class EstimationController {
                     throw new Error("Could not add contract");
                 }
 
-                console.log(3) 
                 // Add meters
                 for (const meter of input.meters) {
                     const meterId = await addNewMeter(client, contractId, meter.meter_type);
@@ -67,6 +64,7 @@ export class EstimationController {
                 }
 
                 commit(client);
+                res.sendStatus(200);
             }
             catch (err) {
                 Logger.error(err);
