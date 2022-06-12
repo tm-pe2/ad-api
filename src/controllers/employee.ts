@@ -49,8 +49,9 @@ export class EmployeeController {
                     if (employee.password) {
                         const salt = await bcrypt.genSalt(10);
                         const pass = await bcrypt.hash(employee.password, salt);
+                        employee.password = pass;
+
                     }
-                    employee.password = pass;
                     if(!employee.addresses){
                         employee.addresses = currentEmployee.addresses;
                     }
