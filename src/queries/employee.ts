@@ -12,7 +12,6 @@ const selectEmployeeQuery = `
         u.last_name,
         u.birth_date,
         u.email,
-        u.password,
         u.phone_number,
         u.national_registry_number,
         u.active,
@@ -46,7 +45,7 @@ const modifyEmployee = `
     UPDATE ${TABLES.EMPLOYEES} SET salary = $2 WHERE user_id = $1;
 `
 const modifyUser = `
-    UPDATE ${TABLES.USERS} SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7, password = $8, active = $9 WHERE id = $1;
+    UPDATE ${TABLES.USERS} SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7, password = COALESCE($8,password) , active = $9 WHERE id = $1;
    
 `
 const modifyUserRoles = `

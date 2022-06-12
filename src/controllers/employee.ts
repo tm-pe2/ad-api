@@ -42,19 +42,19 @@ export class EmployeeController {
                     if (!currentEmployee) {
                         throw new Error("Employee not found");
                     }
-                    if (!employee.active) {
+                    if(!employee.active){
                         employee.active = currentEmployee.active;
                     }
-
+                    
                     if (!employee.password) {
-                        employee.password = currentEmployee.password
+                        res.sendStatus(400);
+                        return;
                     }
-                    else {
-                        const salt = await bcrypt.genSalt(10);
-                        const pass = await bcrypt.hash(employee.password, salt);
-                        employee.password = pass;
-                    }
-                    if (!employee.addresses) {
+ 
+                    const salt = await bcrypt.genSalt(10);
+                    const pass = await bcrypt.hash(employee.password, salt);
+                    employee.password = pass;
+                    if(!employee.addresses){
                         employee.addresses = currentEmployee.addresses;
                     }
                     for (let i = 0; i < employee.addresses!.length; i++) {
@@ -62,7 +62,7 @@ export class EmployeeController {
                     }
                     const employeeEdited = await EmployeeService.modifyEmployee(client, employee);
 
-                    if (!employeeEdited) {
+                    if(!employeeEdited){
                         throw new Error("Employee not edited");
                     }
 
@@ -80,7 +80,7 @@ export class EmployeeController {
                 try {
                     const employee: Employee = req.body;
                     employee.active = true;
-
+                    
                     //hash password
                     if (!employee.password) {
                         res.sendStatus(400);
