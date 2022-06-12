@@ -12,15 +12,6 @@ export interface Contract {
     status: number,
 }
 
-// export interface ContractPost {
-//     user_id: number,
-//     start_date: Date,
-//     end_date: Date,
-//     tariff_id: number,
-//     estimation_id: number,
-//     address_id: number,
-// }
-
 export interface Tariff {
     customer_type: number,
     service_type: ServiceType,
