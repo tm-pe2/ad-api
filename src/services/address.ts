@@ -20,3 +20,9 @@ export const getCityIDByPostalCode = async (client: PoolClient, postalCode: stri
     const cityID = await execute(client,addressQueries.getCityIDByPostalCode, [postalCode]);
     return cityID.rows[0].id;
 }
+
+export async function getUserIdFromAddressId(client: PoolClient, addressId: number): Promise<number | null> {
+    const userId = await execute(client,addressQueries.getUserIdFromAddress, [addressId]);
+    if (userId.rowCount === 0) return null;
+    return userId.rows[0].user_id;
+}

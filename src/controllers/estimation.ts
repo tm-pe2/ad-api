@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authSelf } from "../middleware/auth";
 import { EstimationRegistration } from "../models/estimation"
+import { getUserIdFromAddressId } from "../services/address";
 import { calculateEstimation, getAllEstimations, insertEstimation } from "../services/estimation";
 import { begin, commit, connectClient, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
@@ -26,6 +27,18 @@ export class EstimationController {
                 console.log(input);
                 // TODO validate
     
+                // Check address
+                const userFromAddress = await getUserIdFromAddressId(client, input.address_id);
+                if (userFromAddress === null) {
+                    res.status(400).send("Address not found");
+                    return;
+                }
+                if (userFromAddress !== req.body.tokenData.id) {
+                    res.status(403).send("Address not owned by user");
+                    return;
+                }
+
+                // Insert estimation
                 const calc_estimation = calculateEstimation(input);
 
                 const estimationId = insertEstimation(client, input, calc_estimation);
@@ -33,6 +46,7 @@ export class EstimationController {
                     throw new Error("Could not insert estimation");
                 }
 
+                
                 commit(client);
             }
             catch (err) {

@@ -16,8 +16,7 @@ export async function insertEstimation(client: PoolClient, estimation: Estimatio
         estimation.building_type,
         estimation.address_id,
         estimation.family_size,
-        //estimation.equipment,
-        "TODO",
+        estimation.equipment,
         estimation.past_consumption,
         estimated_consumption,
     ]);
