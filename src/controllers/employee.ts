@@ -38,6 +38,9 @@ export class EmployeeController {
                 try {
                     const employee: Employee = req.body;
                     const currentEmployee = await EmployeeService.getEmployeeById(client, employee.id);
+                    if(!employee.active){
+                        employee.active = currentEmployee.active;
+                    }
                     if (!currentEmployee) {
                         throw new Error("Employee not found");
                     }
