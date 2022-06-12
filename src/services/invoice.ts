@@ -1,26 +1,23 @@
-import { execute } from "../utils/database-connector";
-import { Invoice, InvoiceStatus } from "../classes/invoice";
-import { invoiceQueries } from "../queries/invoice-queries";
-import { setInterval } from "timers";
-import { MailService } from "./mail";
-import { Contract } from "../classes/contracts";
-import { InvoicePdf } from "../classes/invoice-pdf";
+import { Invoice } from "../models/invoice";
+import { invoiceQueries } from "../queries/invoice";
+import { begin, execute } from "../utils/database-connector";
 
-export const getAllInvoices = async () => {
-    return await execute<Invoice[]>(invoiceQueries.getAllInvoices, [], "rows");
+
+export async function getAllInvoices(): Promise<Invoice[]> {
+    const client = await begin();
+    const invoices = await execute(client, invoiceQueries.getAllInvoices)
+    if(invoices.rowCount === 0) 
+        return []
+    return invoices.rows  
+}
+export async function getInvoiceByUserId (id: number) {
+    if(id == NaN) {
+        
+    }
+    const client = await begin();
+    const invoices = await execute(client, invoiceQueries.getInvoicesByUserId, [id]);
 };
-
-export const getInvoiceById = async (id: Invoice['invoice_id']) => {
-    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceById, [id], "rows");
-    return invoices[0];
-};
-
-export const getInvoiceByPeriod = async (id: Invoice['contract_id'], periodStart: Invoice['period_start'], periodEnd: Invoice['period_end']) => {
-    const invoices = await execute<Invoice[]>(invoiceQueries.getInvoiceByPeriod, [periodStart, periodEnd], "rows");
-    return invoices[0];
-};
-
-export const insertInvoice = async (invoice: Invoice) => {
+/*export const insertInvoice = async (invoice: Invoice) => {
     const rowCount = await execute<number>(invoiceQueries.addInvoice, [
         invoice.contract_id,
         invoice.supplier_id,
@@ -36,52 +33,11 @@ export const insertInvoice = async (invoice: Invoice) => {
 
     return rowCount > 0;
 };
+*/
+/*
 
-export const updateInvoice = async (invoice: Invoice) => {
-    const rowCount = await execute<number>(invoiceQueries.updateInvoice, [
-        invoice.contract_id,
-        invoice.supplier_id,
-        invoice.creation_date,
-        invoice.due_date,
-        invoice.status_id,
-        invoice.price,
-        invoice.tax,
-        invoice.period_start,
-        invoice.period_end,
-        invoice.tariff_rate,
 
-        invoice.invoice_id
-    ], "rowCount");
-
-    return rowCount > 0;
-};
-
-export const deleteInvoiceById = async (id: Invoice['invoice_id']) => {
-    const rowCount = await execute<number>(invoiceQueries.deleteInvoiceById, [id], "rowCount");
-
-    return rowCount > 0;
-};
-
-export const getInvoiceByIdAndContractPeriod = async (contract: Contract) => {
-    const rowCount = await execute<number>(invoiceQueries.getInvoiceByIdAndContractPeriod, [
-        contract.contract_id,
-        contract.start_date,
-        contract.end_date,
-    ], "rowCount");
-
-    return rowCount > 0;
-};
-
-export const getInvoicePdfData = async (id: Invoice['invoice_id']) => {
-    const result = await execute<InvoicePdf[]>(invoiceQueries.getInvoicePdfData, [id], "rows");
-
-    return result[0];
-}
-
-export const getInvoiceByUserId = async (id: Invoice['invoice_id']) => {
-    return await execute<Invoice[]>(invoiceQueries.getInvoiceByUserId, [id], "rows");
-};
-
+/*
 //this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue
 export const getOverdueInvoices = async () => {
     const query = `SELECT * FROM invoices WHERE "status_id" =  $1;`;
@@ -97,7 +53,8 @@ export const getOverdueInvoices = async () => {
     })
     return invoicesSql.rows;
 };
-
+*/
+/*
 //TODO use scheduler (invoice branch)
 export async function setOverdue() {
     const querySelect = `select * from "invoices" WHERE "status_id" = $1 AND "due_date" <= $2`;
@@ -113,3 +70,4 @@ export async function setOverdue() {
 export async function startIntervalsOverdue() {
     setInterval(setOverdue, 10000);
 }
+*/
