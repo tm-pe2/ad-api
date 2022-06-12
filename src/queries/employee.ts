@@ -12,6 +12,7 @@ const selectEmployeeQuery = `
         u.last_name,
         u.birth_date,
         u.email,
+        u.password,
         u.phone_number,
         u.national_registry_number,
         u.active,
