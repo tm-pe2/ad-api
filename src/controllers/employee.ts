@@ -42,7 +42,7 @@ export class EmployeeController {
                     if (!currentEmployee) {
                         throw new Error("Employee not found");
                     }
-                    if(!employee.active){
+                    if(employee.active == null){
                         employee.active = currentEmployee.active;
                     }
                     
@@ -64,10 +64,18 @@ export class EmployeeController {
                     commit(client);
                     res.status(200).send("Employee edited");
                 }
-                catch (err) {
-                    Logger.error(err);
+                catch (error) {
                     await rollback(client);
-                    res.sendStatus(500);
+                    if(error instanceof Error){
+                        res.status(500).json({
+                            message: error.message
+                        });
+                    }
+                    else{
+                        res.status(500).json({
+                            message: "Unknown error"
+                        });
+                    }
                 }
             })
             .post('/', async (req, res, next) => {
