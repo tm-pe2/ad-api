@@ -5,7 +5,7 @@ import { Address } from "../models/address";
 
 
 
-export const insertAddress = async (client:PoolClient, address: Address) => {
+export async function insertAddress(client:PoolClient, address: Address) : Promise<number>{
     const newAddress = await execute(client,addressQueries.addAddress, [
         address.street,
         address.house_number,
