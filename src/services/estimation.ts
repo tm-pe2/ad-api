@@ -10,22 +10,21 @@ export async function getAllEstimations(client: PoolClient): Promise<Estimation[
 }
 
 // TODO: change TODO to real values after database change
-export async function insertEstimation(client: PoolClient, estimation: EstimationRegistration, estimated_consumption: number): Promise<boolean> {
+export async function insertEstimation(client: PoolClient, estimation: EstimationRegistration, estimated_consumption: number): Promise<number | null> {
     const res = await execute(client, estimationQueries.insertEstimation, [
         estimation.service_type,
         estimation.building_type,
-        estimation.address_id,
         estimation.family_size,
         estimation.equipment,
         estimation.past_consumption,
         estimated_consumption,
     ]);
-    return res.rowCount > 0;
+    if (res.rowCount === 0) return null;
+    return res.rows[0].id;
 }
 
 // Logic copied from Klara from front-end
 // TODO: above 4 family members?
-// TODO: 4 building types, 3 in code?
 export function calculateEstimation(estimation: EstimationRegistration): number {
     let calc_estimation = 0;
 

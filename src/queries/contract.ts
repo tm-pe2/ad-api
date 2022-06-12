@@ -32,18 +32,32 @@ const selectContractQuery = `
     LEFT JOIN ${TABLES.TARIFFS} as t ON c.tariff_id = t.id
 `
 
-const insertContractQuery = `
-    INSERT INTO ${TABLES.CONTRACTS} as c (
-        user_id,
-        start_date,
-        end_date,
+const insertNewContractQuery = `
+    INSERT INTO ${TABLES.CONTRACTS} (
+
         tariff_id,
+
         estimation_id,
         address_id,
-        status_id,
-    ) VALUES ($1, $2, $3, $4, $5, $6, ${CONTRACT_STATUS.NOT_VALIDATED})
+        status_id
+    )
+    VALUES ((
+            SELECT id
+            FROM ${TABLES.TARIFFS}
+            WHERE customer_type_id = (
+                SELECT type_id
+                FROM ${TABLES.CUSTOMERS}
+                WHERE user_id = $1
+                ORDER BY type_id
+                LIMIT 1
+            )
+            AND service_type = $2
+        ),
+    $3, $4, ${CONTRACT_STATUS.NOT_VALIDATED}
+    )
     RETURNING id
 `
+console.log(insertNewContractQuery)
 
 export const contractQueries = {
     getAllContracts: selectContractQuery,
@@ -53,5 +67,5 @@ export const contractQueries = {
     getContractByUserId: selectContractQuery + `
         WHERE users.id = $1
     `,
-    insertContract: insertContractQuery,
+    insertNewContract: insertNewContractQuery,
 }

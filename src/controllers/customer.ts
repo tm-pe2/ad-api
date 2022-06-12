@@ -91,7 +91,7 @@ export class CustomerController {
                     if (!customerInserted) {
                         throw new Error("Customer not inserted");
                     }
-                    
+
                     const userRoleInserted = await UserService.insertUserRole(client,customer.id, UserRole.CUSTOMER);
                     if(!userRoleInserted){
                         throw new Error("User-Role not inserted");

@@ -2,7 +2,9 @@ import { Router } from "express";
 import { authSelf } from "../middleware/auth";
 import { EstimationRegistration } from "../models/estimation"
 import { getUserIdFromAddressId } from "../services/address";
+import { addNewContract } from "../services/contract";
 import { calculateEstimation, getAllEstimations, insertEstimation } from "../services/estimation";
+import { addNewMeter } from "../services/meter";
 import { begin, commit, connectClient, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
 
@@ -37,16 +39,33 @@ export class EstimationController {
                     res.status(403).send("Address not owned by user");
                     return;
                 }
-
+                console.log(1)
                 // Insert estimation
                 const calc_estimation = calculateEstimation(input);
 
-                const estimationId = insertEstimation(client, input, calc_estimation);
-                if (!estimationId) {
+                const estimationId = await insertEstimation(client, input, calc_estimation);
+                if (estimationId === null) {
                     throw new Error("Could not insert estimation");
                 }
 
-                
+                console.log(2)
+                // Add new contract
+                const contractId = await addNewContract(client,
+                    req.body.tokenData.id, input.service_type, estimationId, input.address_id);
+
+                if (contractId === null) {
+                    throw new Error("Could not add contract");
+                }
+
+                console.log(3) 
+                // Add meters
+                for (const meter of input.meters) {
+                    const meterId = await addNewMeter(client, contractId, meter.meter_type);
+                    if (meterId === null) {
+                        throw new Error("Could not add meter");
+                    }
+                }
+
                 commit(client);
             }
             catch (err) {

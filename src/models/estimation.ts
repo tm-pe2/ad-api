@@ -22,8 +22,13 @@ export interface EstimationRegistration {
 interface Meter {
     id?: number,
     physical_id?: number,
-    meter_type: string, // TODO: Specify type
+    meter_type: MeterType, // TODO: Specify type
     value: number,
+}
+
+export enum MeterType {
+    MANUAL = "Manual",
+    SMART = "Smart",
 }
 
 export enum BuildingType {
@@ -34,8 +39,8 @@ export enum BuildingType {
 }
 
 export enum ServiceType {
-    ELECTRICITY = "Electricity",
-    GAS = "Gas",
+    ELECTRICITY = 1,
+    GAS = 2,
 }
 
 export enum EquipmentType {

@@ -24,7 +24,6 @@ const insertEstimation = `
     INSERT INTO ${TABLES.ESTIMATIONS} (
         service_type,
         building_type,
-        address_id,
         family_size,
         equipments,
         past_consumption,
