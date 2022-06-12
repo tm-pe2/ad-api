@@ -4,18 +4,25 @@ import { begin, execute } from "../utils/database-connector";
 
 
 export async function getAllInvoices(): Promise<Invoice[]> {
+    console.log("beep");
+    
     const client = await begin();
     const invoices = await execute(client, invoiceQueries.getAllInvoices)
     if(invoices.rowCount === 0) 
         return []
     return invoices.rows  
 }
-export async function getInvoiceByUserId (id: number) {
+export async function getInvoicesByUserId (id: number) {
+    console.log("invoices");
     if(id == NaN) {
-        
+      throw new Error("user id is not a number");
     }
     const client = await begin();
     const invoices = await execute(client, invoiceQueries.getInvoicesByUserId, [id]);
+    
+    if(invoices.rowCount === 0) return [];
+
+    return invoices.rows;
 };
 /*export const insertInvoice = async (invoice: Invoice) => {
     const rowCount = await execute<number>(invoiceQueries.addInvoice, [
