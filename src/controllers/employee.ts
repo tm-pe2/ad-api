@@ -54,7 +54,12 @@ export class EmployeeController {
                     const salt = await bcrypt.genSalt(10);
                     const pass = await bcrypt.hash(employee.password, salt);
                     employee.password = pass;
-
+                    if(!employee.addresses){
+                        employee.addresses = currentEmployee.addresses;
+                    }
+                    for (let i = 0; i < employee.addresses!.length; i++) {
+                        employee.addresses![i].country = "Belgium";
+                    }
                     const employeeEdited = await EmployeeService.modifyEmployee(client, employee);
 
                     if(!employeeEdited){
