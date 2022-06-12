@@ -1,13 +1,7 @@
 import { PoolClient } from "pg";
-import { BuildingType, EquipmentType, Estimation, EstimationRegistration } from "../models/estimation";
+import { BuildingType, EquipmentType, EstimationRegistration } from "../models/estimation";
 import { estimationQueries } from "../queries/estimation";
 import { execute } from "../utils/database-connector";
-
-export async function getAllEstimations(client: PoolClient): Promise<Estimation[]> {
-    const res = await execute(client, estimationQueries.getAllEstimations);
-    if (res.rowCount === 0) return [];
-    return res.rows as Estimation[];
-}
 
 // TODO: change TODO to real values after database change
 export async function insertEstimation(client: PoolClient, estimation: EstimationRegistration, estimated_consumption: number): Promise<number | null> {

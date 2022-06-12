@@ -57,7 +57,6 @@ const insertNewContractQuery = `
     )
     RETURNING id
 `
-console.log(insertNewContractQuery)
 
 export const contractQueries = {
     getAllContracts: selectContractQuery,

@@ -3,7 +3,7 @@ import { authSelf } from "../middleware/auth";
 import { EstimationRegistration } from "../models/estimation"
 import { getUserIdFromAddressId } from "../services/address";
 import { addNewContract } from "../services/contract";
-import { calculateEstimation, getAllEstimations, insertEstimation } from "../services/estimation";
+import { calculateEstimation, insertEstimation } from "../services/estimation";
 import { addNewMeter } from "../services/meter";
 import { begin, commit, connectClient, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
@@ -11,17 +11,6 @@ import { Logger } from "../utils/logger";
 export class EstimationController {
     static router(): Router {
         return Router({caseSensitive: false})
-        .get("/", async (req, res, next) => {
-            const client = await connectClient();
-            getAllEstimations(client)
-                .then((estimations) => {
-                    res.send(estimations);
-                })
-                .catch((err) => {
-                    Logger.error(err);
-                    res.sendStatus(500);
-                });
-        })
         .post("/", authSelf(), async (req, res, next) => {
             const client = await begin();
             try {
