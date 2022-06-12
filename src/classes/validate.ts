@@ -1,62 +1,60 @@
-import { Customer, Employee, User } from "../models/user";
+import { Customer, CustomerType, Employee, User } from "../models/user";
 
-export class Validate {
-    static isEmail(email: string): boolean {
+class Validate {
+    static checkEmail(email: string): void {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
+        if (!re.test(String(email).toLowerCase()))
+            throw new Error("Invalid email");
     }
 
-    static isPhone(phone: string): boolean {
+    static checkPhone(phone: string): void {
         const re = /^\+?[0-9]{10,12}$/;
-        return re.test(String(phone).toLowerCase());
+        if (!re.test(String(phone).toLowerCase()))
+            throw new Error("Invalid phone number");
     }
 
-    static isName(name: string): boolean {
+    static checkName(name: string): void {
         const re = /^[a-zA-Zа-яА-ЯёЁ]+$/;
-        return re.test(String(name).toLowerCase());
+        if (!re.test(String(name).toLowerCase()))
+            throw new Error("Invalid name");
     }
 
-    static isNameOrEmail(nameOrEmail: string): boolean {
-        const re = /^[a-zA-Zа-яА-ЯёЁ]+$/;
-        return re.test(String(nameOrEmail).toLowerCase());
-    }
-
-    static isOlder(date: Date, age: 16 | 18): boolean {
+    static checkOlder(date: Date, age: 16 | 18): void {
         const now = new Date();
         const ageDiff = now.getFullYear() - date.getFullYear();
-        return ageDiff >= age;
+        if (ageDiff < age)
+            throw new Error("User is too young, must be atleast " + age + " years old");
     }
 
-    static isNationalRegistryNumber(nationalRegistryNumber: string): boolean {
+    static checkNationalRegistryNumber(nationalRegistryNumber: string): void {
         const re = /^[0-9]{11}$/; // TODO: better regex
-        return re.test(nationalRegistryNumber);
+        if (!re.test(String(nationalRegistryNumber)))
+            throw new Error("Invalid national registry number. Only supply /^[0-9]{11}$/");
     }
 
-    // Validate interfaces
-
-    static isUser(user: User): boolean {
-        return (
-            this.isEmail(user.email) &&
-            this.isPhone(user.phone_number) &&
-            this.isName(user.first_name) &&
-            this.isName(user.last_name) &&
-            this.isNationalRegistryNumber(user.national_registry_number)
-        );
+    // Check custom types
+    // TODO: Check if this is the best way to do this
+    static checkCustomerType(customerType: CustomerType): void {
+        if (customerType !== CustomerType.PRIVATE && customerType !== CustomerType.COMPANY)
+            throw new Error("Invalid customer type");
     }
+}
 
-    static isEmployee(employee: Employee): boolean {
-        return (
-            this.isUser(employee) &&
-            this.isOlder(employee.birth_date, 18)
-        );
+export class ValidateInterface {
+    static checkUser(user: User): void {
+        Validate.checkEmail(user.email);
+        Validate.checkPhone(user.phone_number);
+        Validate.checkName(user.first_name);
+        Validate.checkName(user.last_name);
+        Validate.checkNationalRegistryNumber(user.national_registry_number);
     }
-
-    static isCustomer(customer: Customer): boolean {
-        return (
-            this.isUser(customer)
-        );
-    }
-
     
-
+    static checkEmployee(employee: Employee): void {
+        ValidateInterface.checkUser(employee);
+        Validate.checkOlder(employee.birth_date, 16);
+    }
+    
+    static checkCustomer(customer: Customer): void {
+        ValidateInterface.checkUser(customer);
+    }
 }
