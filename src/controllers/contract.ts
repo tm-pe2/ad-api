@@ -57,26 +57,5 @@ export class ContractController {
                     res.sendStatus(500);
                 });
         })
-        // .post('/', async (req, res, next) => {
-        //     const client = await begin();
-        //     try {
-        //         const contract: ContractPost = req.body;
-
-        //         // TODO: validate
-
-        //         const contractID = await ContractService.addContract(client, contract);
-        //         if (!contractID) {
-        //             throw new Error("Contract not inserted");
-        //         }
-
-        //         commit(client);
-        //     }
-        //     catch (err) {
-        //         Logger.error(err);
-        //         rollback(client);
-        //         res.sendStatus(500);
-        //     }
-        // })
-
     }
 }
