@@ -9,5 +9,11 @@ export const addressQueries = {
 
     getCityIDByPostalCode: `
         SELECT id FROM ${TABLES.CITIES} WHERE postal_code = $1
+    `,
+
+    getUserIdFromAddress: `
+        SELECT user_id
+        FROM ${TABLES.USERS_ADDRESSES}
+        WHERE address_id = $1
     `
 };

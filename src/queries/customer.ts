@@ -2,14 +2,15 @@ import { TABLES } from "./tables";
 
 const selectCustomerQuery = `
         SELECT 
-            users.id,
-            users.first_name,
-            users.last_name,
-            users.birth_date,
-            users.email,
-            users.phone_number,
-            users.national_registry_number,
-            c.type_id,
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.birth_date,
+            u.email,
+            u.phone_number,
+            u.national_registry_number,
+            c.type_id as customer_type,
+            u.active,
             json_agg(
                 json_build_object(
                     'id', a.id, 

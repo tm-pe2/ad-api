@@ -35,7 +35,8 @@ export async function modifyEmployee(client: PoolClient, employee: Employee): Pr
             employee.email,
             employee.phone_number,
             employee.national_registry_number,
-            employee.password
+            employee.password,
+            employee.active,
         ]);
 
         await execute(client, employeeQueries.modifyUserRoles, [

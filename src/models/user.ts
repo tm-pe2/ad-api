@@ -30,6 +30,7 @@ export interface User {
     roles?: UserRole[],
     addresses?: Address[],
     password?: string,
+    active?: boolean,
 }
 
 export interface Employee extends User {
@@ -38,7 +39,7 @@ export interface Employee extends User {
 }
 
 export interface Customer extends User {
-    type_id: CustomerType
+    customer_type: CustomerType
 }
 
 export enum CustomerType {

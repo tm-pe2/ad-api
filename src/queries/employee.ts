@@ -14,6 +14,7 @@ const selectEmployeeQuery = `
         u.email,
         u.phone_number,
         u.national_registry_number,
+        u.active,
         json_agg(
             json_build_object(
                 'id', a.id,
@@ -44,7 +45,7 @@ const modifyEmployee = `
     UPDATE ${TABLES.EMPLOYEES} SET salary = $2 WHERE user_id = $1;
 `
 const modifyUser = `
-    UPDATE ${TABLES.USERS} SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7, password = $8 WHERE id = $1;
+    UPDATE ${TABLES.USERS} SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7, password = $8, active = $9 WHERE id = $1;
    
 `
 const modifyUserRoles = `
@@ -62,7 +63,7 @@ export const employeeQueries = {
 
     getEmployeeById: selectEmployeeQuery + `
         WHERE e.user_id = $1
-        GROUP BY u.id, u.first_name, u.last_name, u.birth_date, u.email, u.phone_number, u.national_registry_number, e.hire_date, e.salary;
+        GROUP BY u.id, e.hire_date, e.salary
     `,
 
     modifyEmployee: modifyEmployee,
