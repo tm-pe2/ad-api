@@ -52,9 +52,6 @@ export class EmployeeController {
                         employee.password = pass;
 
                     }
-                    if(!employee.addresses){
-                        employee.addresses = currentEmployee.addresses;
-                    }
                     for (let i = 0; i < employee.addresses!.length; i++) {
                         employee.addresses![i].country = "Belgium";
                     }
