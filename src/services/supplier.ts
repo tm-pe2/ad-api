@@ -30,7 +30,7 @@ export async function modifySupplier(client: PoolClient, supplier: Supplier): Pr
             supplier.address.id]);
 
         await execute(client, supplierQueries.modifyAddress, [
-            supplier.id,
+            supplier.address.id,
             supplier.address.street,
             supplier.address.house_number,
             supplier.address.city_id,

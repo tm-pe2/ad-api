@@ -93,7 +93,7 @@ export class SupplierController {
                     throw new Error("Supplier not found")
                 }
                 
-
+                supplier.address.id = currentSupplier.address.id
                 const supplierEdited = await modifySupplier(client, supplier);
                 if(!supplierEdited){
                     throw new Error("Supplier not edited")
