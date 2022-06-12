@@ -19,3 +19,26 @@ export async function insertSupplier(client: PoolClient, supplier: Supplier): Pr
     let res = await execute(client, supplierQueries.insertSupplier, [supplier.id, supplier.company_name,supplier.service_type,supplier.vat_number, supplier.address.id]);
     return res.rowCount > 0;
 }
+
+export async function modifySupplier(client: PoolClient, supplier: Supplier): Promise<boolean> {
+    try {
+        await execute(client, supplierQueries.modifySupplier, [
+            supplier.id, 
+            supplier.company_name,
+            supplier.service_type,
+            supplier.vat_number,
+            supplier.address.id]);
+
+        await execute(client, supplierQueries.modifyAddress, [
+            supplier.id,
+            supplier.address.street,
+            supplier.address.house_number,
+            supplier.address.city_id,
+            supplier.address.country
+            ]);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Supplier } from "../models/supplier";
 import { insertAddress } from "../services/address";
-import { getAllSuppliers, getSupplierById, insertSupplier } from "../services/supplier";
+import { getAllSuppliers, getSupplierById, insertSupplier, modifySupplier } from "../services/supplier";
 import { begin, commit, connectClient, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
 
@@ -61,6 +61,45 @@ export class SupplierController {
                 res.status(200).json({
                     message: "Supplier inserted succesfully"
                 })
+            }
+            catch (error){
+                rollback(client);
+                if(error instanceof Error){
+                    res.status(500).json({
+                        message: error.message
+                    });
+                }
+                else{
+                    res.status(500).json({
+                        message: "Unknown error"
+                    });
+                }
+            }
+        })
+        .put('/', async (req,res,next) => {
+            const client = await begin();
+            // similar to the employee controller put method
+            try{
+                const supplier: Supplier = req.body
+
+                if(!supplier.address){
+                    res.sendStatus(400)
+                    return;
+                }
+                supplier.address.country = "Belgium"
+                const currentSupplier = await getSupplierById(client, supplier.id!);
+
+                if(!currentSupplier){
+                    throw new Error("Supplier not found")
+                }
+                
+
+                const supplierEdited = await modifySupplier(client, supplier);
+                if(!supplierEdited){
+                    throw new Error("Supplier not edited")
+                }
+                commit(client)
+                res.status(200).send("Supplier edited")
             }
             catch (error){
                 rollback(client);
