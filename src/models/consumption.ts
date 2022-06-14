@@ -31,6 +31,12 @@ export interface Consumption{
 
 export interface ConsumptionPost {
     read_date: Date,
+    meters: Meter[],
+}
+
+export interface Meter{
+    id: number,
+    meter_type: string,
+    physical_id: number,
     index_value: number,
-    meter_id: number,
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Consumption, ConsumptionPost } from "../models/consumption";
-import { createConsumption, getConsumptionById } from "../services/consumption";
+import {  addIndexedValue, getConsumptionById } from "../services/consumption";
 import { begin, commit, connectClient, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
 
@@ -49,10 +49,11 @@ export class ConsumptionController {
                 try {
                     const consumption: ConsumptionPost = req.body;
                     consumption.read_date = new Date();
-
-                    const consumptionInserted = await createConsumption(client, consumption);
-                    if (!consumptionInserted) {
-                        throw new Error("Consumption not inserted");
+                    for(const meter of consumption.meters) {
+                        const consumptionInserted = await addIndexedValue(client, meter, consumption.read_date);
+                        if (!consumptionInserted) {
+                            throw new Error("Consumption not inserted");
+                        }
                     }
                     await commit(client);
                     res.send(200);

@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { Consumption, ConsumptionPost } from "../models/consumption";
+import { Consumption, ConsumptionPost, Meter } from "../models/consumption";
 import { consumptionQueries } from "../queries/consumption";
 import { execute } from "../utils/database-connector";
 
@@ -9,11 +9,11 @@ export async function getConsumptionById(client: PoolClient, id: number): Promis
     return consumption.rows[0];
 }
 
-export async function createConsumption(client: PoolClient, consumption: ConsumptionPost): Promise<Boolean> {
+export async function addIndexedValue(client: PoolClient, meter: Meter, readDate: Date): Promise<Boolean> {
     const res = await execute(client, consumptionQueries.insertConsumption, [
-        consumption.meter_id,
-        consumption.index_value,
-        consumption.read_date
+        meter.id,
+        meter.index_value,
+        readDate
     ]);
 
     return res.rowCount > 0;
