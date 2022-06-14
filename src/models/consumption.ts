@@ -30,7 +30,7 @@ export interface Consumption{
 }
 
 export interface ConsumptionPost {
-    consumed_value: number,
-    calculated_date: Date,
+    read_date: Date,
+    index_value: number,
     meter_id: number,
 }
