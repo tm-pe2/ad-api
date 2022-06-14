@@ -57,8 +57,10 @@ export async function generateSmartMeter(occupants: number, day_consumption: num
 
     return new Promise<number>((resolve, reject) => {
         fetch("http://10.97.0.100:3000/meter", meter_data)
+        .then((raw: any) => raw.json())
         .then((response: any) => {
             generated_meterid = response.id;
+            console.log(response);
             console.log("smart meter generated: ", generated_meterid);
             fetch("http://10.97.0.100:3000/meter/" + generated_meterid + "/device", device_data)
             .then(() => {
@@ -87,10 +89,11 @@ export async function getSmartMeterValue(physical_id: number) : Promise<number> 
 
     return new Promise<number>(async (resolve, reject) => {
         fetch("http://10.97.0.100:3000/meter/" + physical_id + "/update", request)
+        .then((raw: any) => raw.json())
         .then((response: any) => {
             index_value = response['last_data_point']['day_consumption'];
             resolve(index_value);
         })
         .catch((error: any) => reject(error))
     })
-}   
+}
