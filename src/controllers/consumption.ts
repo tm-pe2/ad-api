@@ -44,7 +44,7 @@ export class ConsumptionController {
                 client.release();
 
             })
-            .post('/:id', async (req, res, next) => {
+            .post('/', async (req, res, next) => {
                 const client = await begin();
                 try {
                     const consumption: ConsumptionPost = req.body;
