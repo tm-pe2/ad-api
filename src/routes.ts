@@ -12,6 +12,7 @@ import { RolesController } from './controllers/roles';
 import { EmployeeController } from './controllers/employee';
 import { EstimationController } from './controllers/estimation';
 import { ConsumptionController } from './controllers/consumption';
+import { PlanningController } from './controllers/planning';
 
 export function setRoutes(router: Express): Express {
     router.use(cors()); // enable CORS
@@ -41,6 +42,7 @@ export function setRoutes(router: Express): Express {
     router.use('/employees', EmployeeController.router());
     router.use('/estimations', EstimationController.router());
     router.use('/consumptions', ConsumptionController.router())
+    router.use('/plannings', PlanningController.router());
 
     // Handle 404
     router.use((req: Request, res: Response, next: NextFunction) => {
