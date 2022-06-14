@@ -58,6 +58,14 @@ const insertNewContractQuery = `
     RETURNING id
 `
 
+const insertCustomersUsersQuery = `
+    INSERT INTO ${TABLES.CUSTOMERS_CONTRACTS} (
+        user_id,
+        contract_id
+    )
+    VALUES ($1, $2)
+`
+
 export const contractQueries = {
     getAllContracts: selectContractQuery,
     getContractById: selectContractQuery + `
@@ -67,4 +75,5 @@ export const contractQueries = {
         WHERE users.id = $1
     `,
     insertNewContract: insertNewContractQuery,
+    insertCustomersUsers: insertCustomersUsersQuery,
 }

@@ -4,9 +4,11 @@ import { EstimationRegistration } from "../models/estimation"
 import { getUserIdFromAddressId } from "../services/address";
 import { addNewContract } from "../services/contract";
 import { calculateEstimation, insertEstimation } from "../services/estimation";
+import { createPlanning } from "../services/planning";
 import { addNewMeter } from "../services/meter";
-import { begin, commit, connectClient, rollback } from "../utils/database-connector";
+import { begin, commit, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
+import { PlanningStatus } from "../models/planning";
 
 export class EstimationController {
     static router(): Router {
@@ -50,6 +52,15 @@ export class EstimationController {
                     if (meterId === null) {
                         throw new Error("Could not add meter");
                     }
+                }
+
+                // Create planning for day after the contract gets made
+                const date = new Date();
+                date.setDate(date.getDate() + 1);
+
+                const planningId = await createPlanning(client, contractId, date, PlanningStatus.SCHEDULED);
+                if (planningId === null) {
+                    throw new Error("Could not create planning");
                 }
 
                 commit(client);
