@@ -60,6 +60,7 @@ export class EstimationController {
                 rollback(client);
                 res.sendStatus(500);
             }
+            client.release();
         })
     }
 }
