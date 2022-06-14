@@ -75,5 +75,5 @@ export function calculateEstimation(estimation: EstimationRegistration): number 
         if (estimation.equipment[i] == EquipmentType.HAIR_DRYER) { calc_estimation += 1.07 }
     }
 
-    return calc_estimation;
+    return calc_estimation*30;
 }
