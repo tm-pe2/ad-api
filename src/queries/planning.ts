@@ -10,15 +10,16 @@ const getAllPlannings = `
             'id', a.id, 
             'street', a.street,
             'house_number', a.house_number, 
-            'city_name', c.city_name, 
-            'postal_code', c.postal_code, 
-            'country', a.country)
-        ) as address,
+            'city_name', ct.city_name, 
+            'postal_code', ct.postal_code, 
+            'country', a.country
+        ) as address
     FROM ${TABLES.PLANNINGS} as p
-    LEFT JOIN ${TABLES.USERS} as u ON p.user_id = u.id
     LEFT JOIN ${TABLES.CONTRACTS} as c ON p.contract_id = c.id
-    LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON u.id = ua.user_id
-    LEFT JOIN ${TABLES.ADDRESSES} as a ON ua.address_id = a.id
+    LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
+    LEFT JOIN ${TABLES.CITIES} as ct ON a.city_id = ct.id
+    LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON a.id = ua.address_id
+    LEFT JOIN ${TABLES.USERS} as u ON ua.user_id = u.id
 `;
 
 const changePlanningStatus = `
