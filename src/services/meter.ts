@@ -5,7 +5,6 @@ import { contractQueries } from "../queries/contract";
 import { Contract } from "../models/contract";
 import { MeterType, ServiceType } from "../models/estimation";
 import { meterQueries } from "../queries/meters";
-import { instance } from "gaxios";
 
 export async function addNewMeter(client:PoolClient,
     contractId: number, meterType: MeterType): Promise<number | null> {
@@ -67,13 +66,11 @@ export async function generateSmartMeter(occupants: number, day_consumption: num
                 resolve(generated_meterid);
             })
             .catch((error: any) => {
-                console.log(error);
-                reject();
+                reject(error);
             })
         })
         .catch((error: any) => {
-            console.log(error);
-            reject();
+            reject(error);
         })
     })
 }
@@ -87,7 +84,6 @@ export async function getSmartMeterValue(physical_id: number) : Promise<number> 
     }
 
     let index_value: number = 0;
-    
 
     return new Promise<number>(async (resolve, reject) => {
         fetch("http://10.97.0.100:3000/meter/" + physical_id + "/update", request)
@@ -95,5 +91,6 @@ export async function getSmartMeterValue(physical_id: number) : Promise<number> 
             index_value = response['last_data_point']['day_consumption'];
             resolve(index_value);
         })
+        .catch((error: any) => reject(error))
     })
-}
+}   
