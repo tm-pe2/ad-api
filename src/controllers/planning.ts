@@ -21,9 +21,16 @@ export class PlanningController {
             try {
                 // TODO validate
                 const id = parseInt(req.params.id);
+                if (isNaN(id)) {
+                    res.sendStatus(400);
+                    return;
+                }
                 const status = parseInt(req.body.status);
                 const planning = await PlanningService.changePlanningStatus(client, id, status);
-                res.send(planning);
+                if (!planning) {
+                    throw new Error("Could not change planning status");
+                }
+                res.sendStatus(200);
             }
             catch(err) {
                 Logger.error(err);
