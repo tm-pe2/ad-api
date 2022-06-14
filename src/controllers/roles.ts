@@ -8,7 +8,7 @@ export class RolesController{
         return Router({caseSensitive: false})
         .get('/', async (req, res, next) => {
             const client = await connectClient();
-           getAllRoles(client)
+            getAllRoles(client)
                 .then((roles) => {
                     res.send(roles)
                 })
@@ -16,6 +16,7 @@ export class RolesController{
                     Logger.error(err);
                     res.sendStatus(500);
                 });
+            client.release();
         })
     }
 }

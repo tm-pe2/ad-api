@@ -22,6 +22,7 @@ export class CustomerController {
                         Logger.error(err);
                         res.sendStatus(500);
                     });
+                client.release();
             })
             .get('/:id', async (req, res, next) => {
                 const id = parseInt(req.params.id);
@@ -42,6 +43,7 @@ export class CustomerController {
                         Logger.error(err);
                         res.sendStatus(500);
                     });
+                client.release();
             })
             .post('/', async (req, res, next) => {
                 const client = await begin()
@@ -115,7 +117,7 @@ export class CustomerController {
                         });
                     }
                 }
-
+                client.release();
             })
     }
 }
