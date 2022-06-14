@@ -5,7 +5,7 @@ import { Address } from "../models/address";
 
 
 
-export const insertAddress = async (client:PoolClient, address: Address) => {
+export async function insertAddress(client:PoolClient, address: Address) : Promise<number>{
     const newAddress = await execute(client,addressQueries.addAddress, [
         address.street,
         address.house_number,
@@ -19,4 +19,10 @@ export const insertAddress = async (client:PoolClient, address: Address) => {
 export const getCityIDByPostalCode = async (client: PoolClient, postalCode: string) => {
     const cityID = await execute(client,addressQueries.getCityIDByPostalCode, [postalCode]);
     return cityID.rows[0].id;
+}
+
+export async function getUserIdFromAddressId(client: PoolClient, addressId: number): Promise<number | null> {
+    const userId = await execute(client,addressQueries.getUserIdFromAddress, [addressId]);
+    if (userId.rowCount === 0) return null;
+    return userId.rows[0].user_id;
 }

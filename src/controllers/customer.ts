@@ -22,6 +22,7 @@ export class CustomerController {
                         Logger.error(err);
                         res.sendStatus(500);
                     });
+                client.release();
             })
             .get('/:id', async (req, res, next) => {
                 const id = parseInt(req.params.id);
@@ -42,6 +43,7 @@ export class CustomerController {
                         Logger.error(err);
                         res.sendStatus(500);
                     });
+                client.release();
             })
             .post('/', async (req, res, next) => {
                 const client = await begin()
@@ -87,11 +89,11 @@ export class CustomerController {
                     }
 
                     //insert customer
-                    const customerInserted = await CustomerService.insertCustomer(client,customer.id, customer.type_id);
+                    const customerInserted = await CustomerService.insertCustomer(client,customer.id, customer.customer_type);
                     if (!customerInserted) {
                         throw new Error("Customer not inserted");
                     }
-                    
+
                     const userRoleInserted = await UserService.insertUserRole(client,customer.id, UserRole.CUSTOMER);
                     if(!userRoleInserted){
                         throw new Error("User-Role not inserted");
@@ -115,7 +117,7 @@ export class CustomerController {
                         });
                     }
                 }
-
+                client.release();
             })
     }
 }
