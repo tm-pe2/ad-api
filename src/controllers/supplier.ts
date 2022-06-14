@@ -17,6 +17,7 @@ export class SupplierController {
                 Logger.error(err);
                 res.send(500);
             })
+            client.release();
         })
         .get('/:id', async (req,res,next) => {
             const id = parseInt(req.params.id)

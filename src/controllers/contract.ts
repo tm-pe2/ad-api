@@ -19,6 +19,7 @@ export class ContractController {
                     Logger.error(err);
                     res.sendStatus(500);
                 });
+            client.release();
         })
         .get('/self', authSelf(), async (req, res, next) => {
             const client = await connectClient();
@@ -35,6 +36,7 @@ export class ContractController {
                     Logger.error(err);
                     res.sendStatus(500);
                 });
+            client.release();
         })
         .get('/:id', async (req, res, next) => {
             const id = parseInt(req.params.id);
@@ -56,6 +58,7 @@ export class ContractController {
                     Logger.error(err);
                     res.sendStatus(500);
                 });
+            client.release();
         })
     }
 }
