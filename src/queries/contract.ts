@@ -66,6 +66,17 @@ const insertCustomersUsersQuery = `
     VALUES ($1, $2)
 `
 
+const updateContractStatusByMetedIdQuery = `
+    UPDATE ${TABLES.CONTRACTS}
+    SET status_id = $2
+    WHERE id = (
+        SELECT contract_id
+        FROM ${TABLES.CONTRACTS_METERS}
+        WHERE meter_id = $1
+    )
+    RETURNING id
+`
+
 export const contractQueries = {
     getAllContracts: selectContractQuery,
     getContractById: selectContractQuery + `
@@ -76,4 +87,5 @@ export const contractQueries = {
     `,
     insertNewContract: insertNewContractQuery,
     insertCustomersUsers: insertCustomersUsersQuery,
+    updateContractStatus: updateContractStatusByMetedIdQuery
 }

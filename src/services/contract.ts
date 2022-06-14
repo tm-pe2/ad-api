@@ -2,7 +2,7 @@ import {execute} from "../utils/database-connector";
 import { Customer } from "../models/user";
 import { PoolClient } from "pg";
 import { contractQueries } from "../queries/contract";
-import { Contract } from "../models/contract";
+import { Contract, CONTRACT_STATUS } from "../models/contract";
 import { ServiceType } from "../models/estimation";
 
 
@@ -38,4 +38,11 @@ export async function addNewContract(client:PoolClient,
     if (intermediateRes.rowCount === 0) return null;
 
     return contract_id;
+}
+
+export async function updateContractStatusByMeterId(client:PoolClient, meterId: number, status: CONTRACT_STATUS): Promise<Boolean> {
+    const res = await execute(client,contractQueries.updateContractStatus, [
+        meterId, status
+    ]);
+    return res.rowCount > 0;
 }
