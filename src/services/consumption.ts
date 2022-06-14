@@ -18,7 +18,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
         readDate
     ]);
 
-    // Change the contract status to active if the consumption is inserted
+    // Start the contract (status active + start and end date)
     // This isn't the most efficient way since multiple queries are executed
     // eventhough they might be from the same contract
     // But it's the easiest/safest way to implement this

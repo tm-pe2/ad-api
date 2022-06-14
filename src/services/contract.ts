@@ -41,8 +41,11 @@ export async function addNewContract(client:PoolClient,
 }
 
 export async function updateContractStatusByMeterId(client:PoolClient, meterId: number, status: CONTRACT_STATUS): Promise<Boolean> {
-    const res = await execute(client,contractQueries.updateContractStatus, [
-        meterId, status
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setFullYear(endDate.getFullYear() + 1);
+    const res = await execute(client,contractQueries.updateContractbyMeterId, [
+        meterId, status, startDate, endDate
     ]);
     return res.rowCount > 0;
 }
