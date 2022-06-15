@@ -1,16 +1,22 @@
 import { Invoice } from "../models/invoice";
 import { invoiceQueries } from "../queries/invoice";
 import { begin, execute } from "../utils/database-connector";
+import { Logger } from "../utils/logger";
 
 
 export async function getAllInvoices(): Promise<Invoice[]> {
-    console.log("beep");
-    
     const client = await begin();
-    const invoices = await execute(client, invoiceQueries.getAllInvoices)
-    if(invoices.rowCount === 0) 
+    try {
+
+        const invoices = await execute(client, invoiceQueries.getAllInvoices)
+        if(invoices.rowCount === 0) 
+            return []
+        return invoices.rows  
+    }
+    catch (e) {
+        Logger.error(e);
         return []
-    return invoices.rows  
+    }
 }
 export async function getInvoicesByUserId (id: number) {
     console.log("invoices");
