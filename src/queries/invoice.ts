@@ -59,6 +59,18 @@ const getAllInvoices = `
     LEFT JOIN ${TABLES.INVOICES_STATUSES} as ins ON i.id = ins.invoice_id
     LEFT JOIN ${TABLES.TARIFFS} as t ON t.id = i.tariff_id
     `
+//TODO remove tariff_id from invoice table??
+const insertInvoice = `
+    INSERT INTO ${TABLES.INVOICES} (contract_id, supplier_id, type_id, creation_date, due_date, price, tax, period_start, period_end, tariff_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 1)
+        RETURNING id
+`;
+
+const insertInvoiceStatus = `
+    INSERT INTO ${TABLES.INVOICES_STATUSES} (invoice_id, status_id)
+        VALUES ($1, $2)
+        RETURNING invoice_id
+`;
 
 const groupBy = `
     GROUP BY i.id, i.contract_id, i.supplier_id, i.price, i.tax,
@@ -70,4 +82,12 @@ const groupBy = `
 export const invoiceQueries = {
     getAllInvoices: getAllInvoices + groupBy,
     getInvoicesByUserId: getAllInvoices + ` WHERE u.id = $1` + groupBy,
+    getInvoiceByContractIdAndPeriod: getAllInvoices + `
+        WHERE i.contract_id = $1
+        AND i.period_start = $2
+        AND i.period_end = $3
+    ` + groupBy,
+    insertInvoice: insertInvoice,
+    insertInvoiceStatus: insertInvoiceStatus
+
 }

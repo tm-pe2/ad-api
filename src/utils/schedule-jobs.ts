@@ -1,5 +1,6 @@
-import {generateAdvanceInvoices, generateAnnualInvoices} from "./generate-invoice-util";
+import {generateInvoices} from "./generate-invoice-util";
 import schedule from 'node-schedule'
+import {INVOICE_TYPE} from "../models/invoice";
 
 export const scheduleInvoiceJobs = () => {
     const dailyRule = new schedule.RecurrenceRule();
@@ -8,9 +9,7 @@ export const scheduleInvoiceJobs = () => {
     dailyRule.minute = 0;
 
     const advanceInvoiceJob = schedule.scheduleJob(dailyRule, async function(){
-        let success = await generateAdvanceInvoices(new Date());
-
-        console.log(success);
+        await generateInvoices(INVOICE_TYPE.ADVANCE);
         console.log("Next advance invoice run on:");
         console.log(advanceInvoiceJob.nextInvocation());
     });
@@ -21,9 +20,8 @@ export const scheduleInvoiceJobs = () => {
     weeklyRule.minute = 0;
 
     const annualInvoiceJob = schedule.scheduleJob(weeklyRule, async function(){
-        let success = await generateAnnualInvoices(new Date());
+        await generateInvoices(INVOICE_TYPE.DEBIT);
 
-        console.log(success);
         console.log("Next annual invoice job on:");
         console.log(annualInvoiceJob.nextInvocation());
     });
