@@ -66,4 +66,5 @@ export class ValidateInterface {
         if (customer.customer_type in CustomerType)
             throw new Error("Invalid customer type");
     }
+
 }

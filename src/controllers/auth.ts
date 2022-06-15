@@ -12,12 +12,12 @@ export class AuthController {
     static router(): Router {
         return Router({ caseSensitive: false })
         .post('/login',  async (req, res, next) => {
-            if (process.env.JWTSECRET == undefined) {
-                throw new Error('JWTSECRET undefined');
-            }
-        
             const email = req.body.email;
             const password = req.body.password;
+            if (email == undefined || password == undefined) {
+                res.status(400).send('No email or password');
+            }
+
             const client = await connectClient();
             console.log("start");
             const user = await userService.getUserAuthInfoByEmail(client,email);
@@ -68,10 +68,6 @@ export class AuthController {
                 })
         })
         .post('/token', async (req, res, next) => {
-            if (process.env.JWTSECRET == undefined) {
-                throw new Error('JWTSECRET undefined');
-            }
-            
             const token = req.body.refreshToken;
         
             if (!token)
