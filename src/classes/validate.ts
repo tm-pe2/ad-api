@@ -48,7 +48,7 @@ class Validate {
     }
 
     static checkVatNumber(vatNumber: string): void {
-        const re = /^[0-9]{10}$/;
+        const re = /^BE[0-9]{10}$/;
         if (!re.test(String(vatNumber)))
             throw new Error("Invalid vat number");
     }
@@ -92,7 +92,8 @@ export class ValidateInterface {
     }
 
     static checkSupplierRegistration(supplier: Supplier): void {
-        Validate.checkName(supplier.company_name);
+        if (!supplier.company_name)
+            throw new Error("No company name provided");
         Validate.checkVatNumber(supplier.vat_number);
         Validate.checkAddresses([supplier.address]);
         if (!(supplier.service_type in ServiceType))
