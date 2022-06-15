@@ -8,6 +8,7 @@ import * as AddressService from "../services/address";
 import { Address } from "../models/address";
 import * as UserService from "../services/user";
 import {begin,commit,connectClient,rollback} from "../utils/database-connector";
+import { ValidateInterface } from "../classes/validate";
 
 export class CustomerController {
     static router(): Router {
@@ -49,8 +50,8 @@ export class CustomerController {
                 const client = await begin()
                 try {
                     const customer: Customer = req.body
-                    // TODO: Create function that takes Customer and validates it
-
+                    ValidateInterface.checkCustomerRegistration(customer);
+                    
                     //hash password
                     if (!customer.password) {
                         res.sendStatus(400);

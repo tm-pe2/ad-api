@@ -1,4 +1,5 @@
-import { Customer, CustomerType, Employee, User } from "../models/user";
+import { Address } from "../models/address";
+import { Customer, CustomerType, Employee, User, UserRole } from "../models/user";
 
 class Validate {
     static checkEmail(email: string): void {
@@ -20,8 +21,9 @@ class Validate {
     }
 
     static checkOlder(date: Date, age: 16 | 18): void {
+        const newDate = new Date(date);
         const now = new Date();
-        const ageDiff = now.getFullYear() - date.getFullYear();
+        const ageDiff = now.getFullYear() - newDate.getFullYear();
         if (ageDiff < age)
             throw new Error("User is too young, must be atleast " + age + " years old");
     }
@@ -33,13 +35,21 @@ class Validate {
     }
     
     static checkDate(date: Date): void {
-        if (date.getFullYear() < 1900)
+        const newDate = new Date(date);
+        if (newDate.getFullYear() < 1900)
             throw new Error("Invalid date");
     }
 
     static checkSalary(salary: number): void {
         if (salary < 500 && salary > 10000)
             throw new Error("Invalid salary");
+    }
+
+    static checkAddresses(addresses: Address[]): void {
+        for (const address of addresses) {
+            if (address.street == null || address.city_id == null || address.house_number == null)
+                throw new Error("Invalid address supplied");
+        }
     }
 }
 
@@ -51,20 +61,22 @@ export class ValidateInterface {
         Validate.checkName(user.last_name);
         Validate.checkDate(user.birth_date);
         Validate.checkNationalRegistryNumber(user.national_registry_number);
+        Validate.checkAddresses(user.addresses);
     }
     
-    static checkEmployee(employee: Employee): void {
+    static checkEmployeeRegistration(employee: Employee): void {
         ValidateInterface.checkUser(employee);
         Validate.checkOlder(employee.birth_date, 16);
         Validate.checkSalary(employee.salary);
         Validate.checkDate(employee.hire_date);
+        if (!(employee.roles != null  && employee.roles.some(role => role in UserRole)))
+            throw new Error("Invalid role(s)");
     }
     
-    static checkCustomer(customer: Customer): void {
+    static checkCustomerRegistration(customer: Customer): void {
         ValidateInterface.checkUser(customer);
         Validate.checkOlder(customer.birth_date, 18);
-        if (customer.customer_type in CustomerType)
+        if (!(customer.customer_type in CustomerType))
             throw new Error("Invalid customer type");
     }
-
 }
