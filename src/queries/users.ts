@@ -74,7 +74,7 @@ const InsertUserRole = `
     `
 
 const changeStatus = `UPDATE ${TABLES.USERS}
-SET status_id = $2
+SET active = $2
 WHERE id = $1
 RETURNING id`
 
