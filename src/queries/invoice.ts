@@ -20,6 +20,7 @@ const getAllInvoices = `
         i.period_start,
         i.period_end,
         i.type_id as type,
+        ins.status_id as status,
         json_build_object(
             'id', a.id,
             'street', a.street,
@@ -32,9 +33,20 @@ const getAllInvoices = `
             'id', u.id,
             'first_name', u.first_name,
             'last_name', u.last_name,
+            'birth_date', u.birth_date,
+            'email', u.email,
+            'phone_number', u.phone_number,
+            'national_registry_number', u.national_registry_number,
+            'customer_type', cu.type_id,
+            'active', u.active,
             'roles', array_agg(r.id)
-        ) as user
-
+        ) as customer,
+        json_build_object(
+            'id', t.id,
+            'customer_type', t.customer_type_id,
+            'service_type', t.service_type,
+            'value', t.value
+        ) as tariff
     FROM ${TABLES.INVOICES} as i
     LEFT JOIN ${TABLES.CONTRACTS} as c ON i.contract_id = c.id
     LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON c.address_id = ua.address_id
@@ -44,7 +56,12 @@ const getAllInvoices = `
     LEFT JOIN ${TABLES.CUSTOMERS} as cu ON u.id = cu.user_id
     LEFT JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
     LEFT JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
-    GROUP BY i.id, i.contract_id, i.supplier_id, i.price, i.tax, i.creation_date, i.due_date, i.period_start, i.period_end, i.type_id, a.id, u.id, r.id, ci.city_name, ci.postal_code, a.country
+    LEFT JOIN ${TABLES.INVOICES_STATUSES} as ins ON i.id = ins.invoice_id
+    LEFT JOIN ${TABLES.TARIFFS} as t ON t.id = i.tariff_id
+    GROUP BY i.id, i.contract_id, i.supplier_id, i.price, i.tax,
+    i.creation_date, i.due_date, i.period_start, i.period_end, i.type_id,
+    a.id, u.id, r.id, ci.city_name, ci.postal_code, a.country, ins.status_id,
+    cu.type_id, t.id
 `
 const getInvoicesByUserId = getAllInvoices + ` WHERE u.id = $1 AND u.active = True`
 
