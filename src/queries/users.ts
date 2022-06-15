@@ -70,8 +70,13 @@ const AddUser = `
     `
 
 const InsertUserRole = `
-    INSERT INTO users_roles (user_id, role_id) VALUES ($1, $2)
+    INSERT INTO ${TABLES.USERS_ROLES} (user_id, role_id) VALUES ($1, $2)
     `
+
+const changeStatus = `UPDATE ${TABLES.USERS}
+SET status_id = $2
+WHERE id = $1
+RETURNING id`
 
 export const userQueries = {
     getUserById: getUserById,
@@ -79,5 +84,6 @@ export const userQueries = {
     getUserAuthInfoByEmail: getUserAuthInfoByEmail,
     AddUserAddress: addUserAddress,
     AddUser: AddUser,
-    InsertUserRole: InsertUserRole
+    InsertUserRole: InsertUserRole,
+    changeStatus: changeStatus
 };
