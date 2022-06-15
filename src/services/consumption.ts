@@ -26,9 +26,8 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
     
     if (res.rowCount > 0) {
         
-        if (await activivateContractByMeterId(client, meter.id)) 
+        if (await activivateContractByMeterId(client, meter.id, readDate)) 
         {
-            
             // Contract has been activated
             const contractId = await getContractIdByMeterId(client, meter.id);
             if (contractId == null) {
@@ -36,9 +35,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             }
             
             // Read date + 11 months
-            console.log("Read date: " + readDate);
-            const endContractPlanning = new Date(readDate.getTime());
-            console.log("Planning date: " + endContractPlanning);
+            const endContractPlanning = new Date(readDate);
             endContractPlanning.setMonth(endContractPlanning.getMonth() + 11);
             const planning = createPlanning(client, contractId, readDate, PLANNING_STATUS.SCHEDULED);
             if (planning == null) {
