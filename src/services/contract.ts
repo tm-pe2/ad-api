@@ -40,12 +40,18 @@ export async function addNewContract(client:PoolClient,
     return contract_id;
 }
 
-export async function updateContractStatusByMeterId(client:PoolClient, meterId: number, status: CONTRACT_STATUS): Promise<Boolean> {
+export async function activivateContractByMeterId(client:PoolClient, meterId: number): Promise<Boolean> {
     const startDate = new Date();
     const endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 1);
-    const res = await execute(client,contractQueries.updateContractbyMeterId, [
+    const res = await execute(client,contractQueries.activateContractbyMeterId, [
         meterId, status, startDate, endDate
     ]);
     return res.rowCount > 0;
+}
+
+export async function getContractIdByMeterId(client:PoolClient, meterId: number): Promise<number | null> {
+    const res = await execute(client,contractQueries.getContractIdByMeterId, [meterId]);
+    if (res.rowCount === 0) return null;
+    return res.rows[0].id;
 }

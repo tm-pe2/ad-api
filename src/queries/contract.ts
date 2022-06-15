@@ -66,7 +66,7 @@ const insertCustomersUsersQuery = `
     VALUES ($1, $2)
 `
 
-const updateContractByMeterIdQuery = `
+const activateContractbyMeterIdQuery = `
     UPDATE ${TABLES.CONTRACTS}
     SET status_id = $2
     SET start_date = $3
@@ -75,8 +75,16 @@ const updateContractByMeterIdQuery = `
         SELECT contract_id
         FROM ${TABLES.CONTRACTS_METERS}
         WHERE meter_id = $1
-    )
+    ) AND status_id = ${CONTRACT_STATUS.NOT_VALIDATED}
     RETURNING id
+`
+
+const getContractIdByMeterIdQuery = `
+    SELECT
+        c.id
+    FROM ${TABLES.CONTRACTS} as c
+    LEFT JOIN ${TABLES.CONTRACTS_METERS} as cm ON c.id = cm.contract_id
+    WHERE cm.meter_id = $1
 `
 
 export const contractQueries = {
@@ -89,5 +97,6 @@ export const contractQueries = {
     `,
     insertNewContract: insertNewContractQuery,
     insertCustomersUsers: insertCustomersUsersQuery,
-    updateContractbyMeterId: updateContractByMeterIdQuery
+    activateContractbyMeterId: activateContractbyMeterIdQuery,
+    getContractIdByMeterId: getContractIdByMeterIdQuery,
 }
