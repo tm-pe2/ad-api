@@ -6,9 +6,19 @@ import { meterQueries } from "../queries/meters";
 import fetch from "node-fetch";
 
 export async function addNewMeter(client:PoolClient,
-    contractId: number, meterType: MeterType): Promise<number | null> {
+    contractId: number, meterType: MeterType, familySize: number, meterValue: number): Promise<number | null> {
+    
+    let ph_id;
+    if (meterType == MeterType.SMART) {
+        ph_id = await generateSmartMeter(familySize, meterValue);
+    } else {
+        ph_id = 0;
+    }
+    
+    let ph_id_str = ph_id.toString().padStart(3, '0');
+    
     const meterRes = await execute(client, meterQueries.insertMeter, [
-        meterType
+        meterType, ph_id_str
     ]);
     if (meterRes.rowCount === 0) return null;
 
