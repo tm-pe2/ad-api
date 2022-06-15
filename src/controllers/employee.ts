@@ -11,8 +11,8 @@ export class EmployeeController {
     static router(): Router {
         return Router({ caseSensitive: false })
             .get('/', async (req, res, next) => {
+                const client = await connectClient();
                 try {
-                    const client = await connectClient();
                     const employees = await EmployeeService.getAllEmployees(client);
                     res.send(employees);
                 }
@@ -20,10 +20,11 @@ export class EmployeeController {
                     Logger.error(err);
                     res.sendStatus(500);
                 }
+                client.release();
             })
             .get('/:id', async (req, res, next) => {
+                const client = await connectClient();
                 try {
-                    const client = await connectClient();
                     let id = parseInt(req.params.id);
                     const employee = await EmployeeService.getEmployeeById(client, id);
                     res.send(employee);
@@ -32,6 +33,7 @@ export class EmployeeController {
                     Logger.error(err);
                     res.sendStatus(500);
                 }
+                client.release();
             })
             .put('/', async (req, res, next) => {
                 const client = await begin();
@@ -77,6 +79,7 @@ export class EmployeeController {
                         });
                     }
                 }
+                client.release();
             })
             .post('/', async (req, res, next) => {
                 const client = await begin();
@@ -137,6 +140,7 @@ export class EmployeeController {
                     await rollback(client);
                     res.sendStatus(500);
                 }
+                client.release();
             })
     }
 }

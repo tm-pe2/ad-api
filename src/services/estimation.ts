@@ -44,6 +44,12 @@ export function calculateEstimation(estimation: EstimationRegistration): number 
                 calc_estimation += 60;
                 break;
             }
+        default:
+            {
+                // Quick fix
+                calc_estimation += 20 * estimation.family_size;
+                break;
+            }
     }
 
     //electricity consumption is adjusted depending on building type. e.g: closed house can get warmer easier than an open building, etc:
@@ -75,5 +81,5 @@ export function calculateEstimation(estimation: EstimationRegistration): number 
         if (estimation.equipment[i] == EquipmentType.HAIR_DRYER) { calc_estimation += 1.07 }
     }
 
-    return calc_estimation;
+    return calc_estimation*30;
 }

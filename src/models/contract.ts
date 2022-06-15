@@ -9,7 +9,7 @@ export interface Contract {
     estimation_id: number,
     address: Address,
     tariff: Tariff,
-    status: number,
+    status: CONTRACT_STATUS,
 }
 
 export interface Tariff {
