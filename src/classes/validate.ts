@@ -96,7 +96,7 @@ export class ValidateInterface {
             throw new Error("No company name provided");
         Validate.checkVatNumber(supplier.vat_number);
         Validate.checkAddresses([supplier.address]);
-        if (!(supplier.service_type in ['gas', 'electricity']))
+        if (!(['gas', 'electricity'].includes(supplier.service_type)))
             throw new Error("Invalid service type");
     }
         
