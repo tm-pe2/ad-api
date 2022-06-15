@@ -32,8 +32,8 @@ const getAllInvoices = `
             'id', u.id,
             'first_name', u.first_name,
             'last_name', u.last_name,
-            array_agg(r.id) as roles
-        ) as user,
+            'roles', array_agg(r.id)
+        ) as user
 
     FROM ${TABLES.INVOICES} as i
     LEFT JOIN ${TABLES.CONTRACTS} as c ON i.contract_id = c.id
@@ -44,6 +44,7 @@ const getAllInvoices = `
     LEFT JOIN ${TABLES.CUSTOMERS} as cu ON u.id = cu.user_id
     LEFT JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
     LEFT JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
+    GROUP BY i.id, i.contract_id, i.supplier_id, i.price, i.tax, i.creation_date, i.due_date, i.period_start, i.period_end, i.type_id, a.id, u.id, r.id, ci.city_name, ci.postal_code, a.country
 `
 const getInvoicesByUserId = getAllInvoices + ` WHERE u.id = $1 AND u.active = True`
 
