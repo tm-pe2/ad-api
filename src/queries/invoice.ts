@@ -58,14 +58,16 @@ const getAllInvoices = `
     LEFT JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
     LEFT JOIN ${TABLES.INVOICES_STATUSES} as ins ON i.id = ins.invoice_id
     LEFT JOIN ${TABLES.TARIFFS} as t ON t.id = i.tariff_id
+    `
+
+const groupBy = `
     GROUP BY i.id, i.contract_id, i.supplier_id, i.price, i.tax,
     i.creation_date, i.due_date, i.period_start, i.period_end, i.type_id,
     a.id, u.id, r.id, ci.city_name, ci.postal_code, a.country, ins.status_id,
     cu.type_id, t.id
 `
-const getInvoicesByUserId = getAllInvoices + ` WHERE u.id = $1`
 
 export const invoiceQueries = {
-    getAllInvoices: getAllInvoices,
-    getInvoicesByUserId: getInvoicesByUserId
+    getAllInvoices: getAllInvoices + groupBy,
+    getInvoicesByUserId: getAllInvoices + ` WHERE u.id = $1` + groupBy,
 }

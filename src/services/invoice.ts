@@ -1,35 +1,21 @@
+import { PoolClient } from "pg";
 import { Invoice } from "../models/invoice";
 import { invoiceQueries } from "../queries/invoice";
 import { begin, execute } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
 
 
-export async function getAllInvoices(): Promise<Invoice[]> {
-    const client = await begin();
-    try {
-
+export async function getAllInvoices(client: PoolClient): Promise<Invoice[]> {
         const invoices = await execute(client, invoiceQueries.getAllInvoices)
-        if(invoices.rowCount === 0) 
-            return []
-        return invoices.rows  
-    }
-    catch (e) {
-        Logger.error(e);
-        return []
-    }
+        if(invoices.rowCount === 0) return [];
+        return invoices.rows
 }
-export async function getInvoicesByUserId (id: number) {
-    console.log("invoices");
-    if(id == NaN) {
-      throw new Error("user id is not a number");
-    }
-    const client = await begin();
+export async function getInvoicesByUserId(client: PoolClient, id: number) {
     const invoices = await execute(client, invoiceQueries.getInvoicesByUserId, [id]);
-    
     if(invoices.rowCount === 0) return [];
-
     return invoices.rows;
 };
+
 /*export const insertInvoice = async (invoice: Invoice) => {
     const rowCount = await execute<number>(invoiceQueries.addInvoice, [
         invoice.contract_id,
