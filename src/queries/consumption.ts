@@ -28,14 +28,12 @@ const selectConsumptionQuery = `
             'country', a.country
     )as address,
 
-    json_agg(
-        json_build_object(
+    json_build_object(
             'id', m.id,
             'meter_type', m.meter_type,
             'physical_id', m.physical_id,
             'index_value', iv.index_value,
             'read_date', iv.read_date
-        )
     ) as meter
     FROM ${TABLES.CONSUMPTIONS} as cons
     LEFT JOIN ${TABLES.METERS} as m ON cons.meter_id = m.id
