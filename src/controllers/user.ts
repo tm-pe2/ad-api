@@ -45,7 +45,8 @@ export class UserController {
                       res.status(406).json({message: "status is not a boolean"})
                   }
                 } catch (error) {
-                  res.status(500).json({message: "something went wrong updating the user"})
+                  res.status(500).json({message: "something went wrong updating the user",
+                error: error})
                 }
                   
               })
