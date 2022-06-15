@@ -13,7 +13,7 @@ import { PlanningStatus } from "../models/planning";
 export class EstimationController {
     static router(): Router {
         return Router({caseSensitive: false})
-        .post("/", authSelf(), async (req, res, next) => {
+        .post("/", async (req, res, next) => {
             const client = await begin();
             try {
                 const input: EstimationRegistration = req.body;
@@ -26,10 +26,6 @@ export class EstimationController {
                     res.status(400).send("Address not found");
                     return;
                 }
-                if (userFromAddress !== req.body.tokenData.id) {
-                    res.status(403).send("Address not owned by user");
-                    return;
-                }
                 // Insert estimation
                 const calc_estimation = calculateEstimation(input);
 
@@ -40,7 +36,7 @@ export class EstimationController {
 
                 // Add new contract
                 const contractId = await addNewContract(client,
-                    req.body.tokenData.id, input.service_type, estimationId, input.address_id);
+                    userFromAddress, input.service_type, estimationId, input.address_id);
 
                 if (contractId === null) {
                     throw new Error("Could not add contract");

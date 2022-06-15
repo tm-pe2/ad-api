@@ -19,21 +19,26 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
         meter.index_value,
         readDate
     ]);
-
     // Start the contract (status active + start and end date)
     // This isn't the most efficient way since multiple queries are executed
     // eventhough they might be from the same contract
     // But it's the easiest/safest way to implement this
+    
     if (res.rowCount > 0) {
+        
         if (await activivateContractByMeterId(client, meter.id)) 
         {
+            
             // Contract has been activated
             const contractId = await getContractIdByMeterId(client, meter.id);
             if (contractId == null) {
                 throw new Error("Contract not found to activate");
             }
+            
             // Read date + 11 months
+            console.log("Read date: " + readDate);
             const endContractPlanning = new Date(readDate.getTime());
+            console.log("Planning date: " + endContractPlanning);
             endContractPlanning.setMonth(endContractPlanning.getMonth() + 11);
             const planning = createPlanning(client, contractId, readDate, PLANNING_STATUS.SCHEDULED);
             if (planning == null) {
