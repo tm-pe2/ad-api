@@ -63,7 +63,7 @@ const getAllInvoices = `
     a.id, u.id, r.id, ci.city_name, ci.postal_code, a.country, ins.status_id,
     cu.type_id, t.id
 `
-const getInvoicesByUserId = getAllInvoices + ` WHERE u.id = $1 AND u.active = True`
+const getInvoicesByUserId = getAllInvoices + ` WHERE u.id = $1`
 
 export const invoiceQueries = {
     getAllInvoices: getAllInvoices,

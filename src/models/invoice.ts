@@ -14,7 +14,7 @@ export interface Invoice {
     status: INVOICE_STATUS,
     type: INVOICE_TYPE,
     address: Address,
-    user: Customer,
+    customer: Customer,
 }
 
 export enum INVOICE_TYPE {
