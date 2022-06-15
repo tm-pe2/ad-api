@@ -1,4 +1,6 @@
 import { Address } from "../models/address";
+import { ServiceType } from "../models/estimation";
+import { Supplier } from "../models/supplier";
 import { Customer, CustomerType, Employee, User, UserRole } from "../models/user";
 
 class Validate {
@@ -45,7 +47,16 @@ class Validate {
             throw new Error("Invalid salary");
     }
 
+    static checkVatNumber(vatNumber: string): void {
+        const re = /^[0-9]{10}$/;
+        if (!re.test(String(vatNumber)))
+            throw new Error("Invalid vat number");
+    }
+
     static checkAddresses(addresses: Address[]): void {
+        if (!addresses || addresses.length === 0)
+            throw new Error("No address(es) provided");
+    
         for (const address of addresses) {
             if (address.street == null || address.city_id == null || address.house_number == null)
                 throw new Error("Invalid address supplied");
@@ -79,4 +90,13 @@ export class ValidateInterface {
         if (!(customer.customer_type in CustomerType))
             throw new Error("Invalid customer type");
     }
+
+    static checkSupplierRegistration(supplier: Supplier): void {
+        Validate.checkName(supplier.company_name);
+        Validate.checkVatNumber(supplier.vat_number);
+        Validate.checkAddresses([supplier.address]);
+        if (!(supplier.service_type in ServiceType))
+            throw new Error("Invalid service type");
+    }
+        
 }

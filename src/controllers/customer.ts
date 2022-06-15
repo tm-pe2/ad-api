@@ -50,7 +50,22 @@ export class CustomerController {
                 const client = await begin()
                 try {
                     const customer: Customer = req.body
-                    ValidateInterface.checkCustomerRegistration(customer);
+                    
+                    try {
+                        ValidateInterface.checkCustomerRegistration(customer);
+                    }
+                    catch (err) {
+                        if(err instanceof Error){
+                            res.status(400).json({
+                                message: err.message
+                            });
+                        }
+                        else{
+                            Logger.warn(err);
+                            res.sendStatus(400);
+                        }
+                        return;
+                    }
                     
                     //hash password
                     if (!customer.password) {
