@@ -1,5 +1,5 @@
 import { Address } from "../models/address";
-import { ServiceType } from "../models/estimation";
+import { BuildingType as BUILDING_TYPE, EquipmentType as EQUIPMENT_TYPE, EstimationRegistration, MeterType as METER_TYPE, ServiceType as SERVICE_TYPE } from "../models/estimation";
 import { Supplier } from "../models/supplier";
 import { Customer, CustomerType, Employee, User, UserRole } from "../models/user";
 
@@ -62,6 +62,8 @@ class Validate {
                 throw new Error("Invalid address supplied");
         }
     }
+
+
 }
 
 export class ValidateInterface {
@@ -99,5 +101,31 @@ export class ValidateInterface {
         if (!(['gas', 'electricity'].includes(supplier.service_type)))
             throw new Error("Invalid service type");
     }
-        
+    
+    static checkEstimationRegistration(estimation: EstimationRegistration): void {
+        if (estimation.past_consumption <= 0)
+            throw new Error("Invalid past consumption");
+        if (estimation.address_id == null)
+            throw new Error("No address provided");
+        if (estimation.family_size <= 0)
+            throw new Error("Invalid family size");
+        if (!(estimation.service_type in SERVICE_TYPE))
+            throw new Error("Invalid service type");
+        if (!(estimation.building_type in BUILDING_TYPE))
+            throw new Error("Invalid building type");
+        if (!estimation.meters)
+            throw new Error("No meters provided");
+        for (const meter of estimation.meters) {
+            console.log(meter);
+            if (!(meter.meter_type == METER_TYPE.MANUAL ||
+                meter.meter_type == METER_TYPE.SMART))
+                throw new Error("Invalid meter type");
+        }
+        if (!estimation.equipment)
+            throw new Error("No equipment provided");
+        for (const equipment of estimation.equipment) {
+            if (!(equipment in EQUIPMENT_TYPE))
+                throw new Error("Invalid equipment type");
+        }
+    }
 }
