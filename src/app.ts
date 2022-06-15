@@ -10,6 +10,7 @@ import { setRoutes } from './routes';
 import { createServer, Server } from 'http';
 import settings from './configs/settings.json';
 import { scheduleInvoiceJobs } from './utils/schedule-jobs';
+import { calcConstumtionMeter } from './calculateConstumptions/calculateConsumptions';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -31,9 +32,11 @@ try {
     });
     
     DBConnector.init();
-
+    
     process.on('SIGINT', () => {onClose(server)});
     process.on('SIGTERM', () => {onClose(server)});
+    
+    calcConstumtionMeter();
       
     // scheduleInvoiceJobs();
 })();

@@ -1,8 +1,12 @@
-function calcConstumtionMeter(): number{
+import { getConsumptionById } from "../services/consumption";
+import { getIndexValueById } from "../services/index-value";
+import { connectClient } from "../utils/database-connector";
+
+export function calcConstumtionMeter(): number{
+
     const limit = 10000000;
 
     var values = getValues();
-    console.log(values);
 
     var prevValue = 9999999;
     var currentValue = 1;
@@ -14,7 +18,6 @@ function calcConstumtionMeter(): number{
         actualConstumption = currentValue + beforeTurnOver;
 
 
-        console.log(actualConstumption);
         return actualConstumption;
     }
     
@@ -26,10 +29,16 @@ function calcConstumtionMeter(): number{
 
 }
 
-function getValues(){
+async function getValues(){
+    var  id = 1;
+    console.log("hier");
+    const client = await connectClient();
+    getIndexValueById(client, id).then((res) => 
+    {
+        return res;
+    });
 
 }
 
     
-calcConstumtionMeter();
 
