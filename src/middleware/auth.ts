@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
-import { UserRole } from '../models/userrole';
+import { AccessTokenData } from '../classes/accesstokens';
+import { UserRole } from '../models/user';
 
 function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextFunction) => Promise<void> {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -18,8 +19,8 @@ function authorize(roles: UserRole[]): (req: Request, res: Response, next: NextF
                         return res.status(401).send('Unauthorized.')
                     }
 
-                    if (decoded.role_id != undefined && decoded.id != undefined
-                        && roles.includes(decoded.role_id)) {
+                    if (decoded.id != undefined
+                        && roles.some((role) => { decoded.roles.includes(role) })) { // TODO: test
                         next();
                     }
                     else {
@@ -46,5 +47,36 @@ export function getToken(req: Request): Promise<string> {
     });
     return promise;
 }
+export function authSelf(): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+    return async (req: Request, res: Response, next: NextFunction) => {   
+        getToken(req)
+            .then((token) => {
+                jwt.verify(token, process.env.JWTSECRET!, (err: any, decoded: any) => { //change any?
+                    if (err) {
+                        if (err instanceof TokenExpiredError) {
+                            return res.status(401).send('Unauthorized: Access token expired.')
+                        }
+                        return res.status(401).send('Unauthorized.')
+                    }
+
+                    if (decoded.id != undefined
+                        && decoded.roles.length != 0) { // TODO: test
+                            req.body.tokenData = {
+                                id: decoded.id,
+                                roles: decoded.roles
+                            } as AccessTokenData
+                        next();
+                    }
+                    else {
+                        return res.status(401).send('Unauthorized.')
+                    }
+                })
+            })
+            .catch((err) => {
+                return res.status(401).send(err); // unauthorized
+            })
+    }
+}
+
 
 export {authorize as authenticate, getToken as getAccessToken}

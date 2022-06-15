@@ -1,26 +1,47 @@
 import dotenv from 'dotenv';
-import { date } from 'joi';
-import { Invoice } from './classes/invoice';
-import { httpServer } from './server'
-import { MailService } from './services/mail-service'
+import express, {Express} from 'express';
+import * as DBConnector from './utils/database-connector';
 import { Env } from './utils/env';
 import { Logger } from './utils/logger';
+import { setRoutes } from './routes';
+import { createServer, Server } from 'http';
+import settings from './configs/settings.json';
+import { invoiceQueries } from './queries/invoice';
 
-if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'develepmont') {
-  dotenv.config();
+if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
+    dotenv.config();
 }
 
 try {
+    console.log(invoiceQueries.getAllInvoices);
+    
     Env.validateMandatoryKeys();
 } catch (err) {
-    console.error('.env not properly configured: ', err);
+    Logger.error('.env not properly configured: ', err);
     process.exit(-1);
 }
 
 (async () => {
-    console.log("run");
+    const app = setRoutes(express())
+    const server = createServer(app);
 
-    const PORT: any = process.env.PORT || 6060;
-    httpServer.listen(PORT, () => Logger.info(`The server is running on port ${PORT}`));
+    server.listen(process.env.PORT || settings.port, () => {
+        Logger.info(`The server is running on port ${process.env.PORT || settings.port}`);
+    });
     
+    DBConnector.init();
+
+    process.on('SIGINT', () => {onClose(server)});
+    process.on('SIGTERM', () => {onClose(server)});
+      
+    // scheduleInvoiceJobs();
 })();
+
+function onClose(http: Server) {
+    Logger.warn('Closing http server and database connection...');
+    DBConnector.end();
+    http.close((err) => {
+        Logger.info('HTTP server closed.');
+        process.exit(err ? 1 : 0);
+    });
+}

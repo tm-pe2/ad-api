@@ -1,15 +1,27 @@
-import { execute } from "../utils/mysql.connector";
-import { refreshtokenQueries } from "../queries/refreshtoken-queries";
+import { commit, execute, rollback } from "../utils/database-connector";
+import { v4 as uuid } from 'uuid';
 import Joi from "joi";
+import { DatabaseError, PoolClient } from "pg";
+import { refreshtokenQueries } from "../queries/refreshtoken";
+
+export interface RefreshTokenData {
+    refreshToken: string,
+    userId: number
+    expires: Date
+}
+
+const refreshExpireTime = 604800; // 7 days
 
 export class RefreshToken {
+    static add(client:PoolClient, userId: number, refreshToken: string): Promise<void> {
+        let expirationDate = new Date();
+        expirationDate.setSeconds(expirationDate.getSeconds() + refreshExpireTime);
 
-    static addRefreshToken(userId: number, refreshToken: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            execute<{ rowCount: number }>(refreshtokenQueries.addToken, [
+            execute(client,refreshtokenQueries.addToken, [
                 refreshToken,
                 userId,
-                new Date(),
+                expirationDate,
             ])
                 .then(() => {
                     resolve();
@@ -21,14 +33,17 @@ export class RefreshToken {
         });
     }
 
-    static getRefreshToken(token: string): Promise<RefreshTokenData> {
+    static get(client:PoolClient,token: string): Promise<RefreshTokenData> {
         return new Promise<RefreshTokenData>((resolve, reject) => {
-            execute<{ rows: RefreshTokenData[] }>(refreshtokenQueries.getTokenByToken, [token])
+            execute(client,refreshtokenQueries.getTokenByToken, [token])
                 .then((result) => {
+
                     if (result.rows.length > 0) {
+                        commit(client);
                         resolve(result.rows[0]);
                     }
                     else {
+                        rollback(client)
                         reject("No refresh token found");
                     }
                 })
@@ -38,9 +53,9 @@ export class RefreshToken {
         });
     };
 
-    static deleteRefreshToken(token: string): Promise<void> {
+    static delete(client:PoolClient,token: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            execute<{ rowCount: number }>(refreshtokenQueries.deleteToken, [token])
+            execute(client,refreshtokenQueries.deleteToken, [token])
                 .then(() => {
                     resolve();
                 })
@@ -49,17 +64,19 @@ export class RefreshToken {
                 });
         });
     }
-}
 
-export interface RefreshTokenData {
-    refreshToken: string,
-    userId: number
-    expires: Date
+    static create(client:PoolClient,userId: number): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            const token = uuid();
+            RefreshToken.add(client,userId, token)
+                .then(() => {
+                    commit(client);
+                    resolve(token);
+                })
+                .catch((err) => {
+                    rollback(client);
+                    reject(err);
+                });
+        });
+    }
 }
-
-// export const addressSchema = Joi.object({
-//     id: Joi.number().integer().min(0).required(),
-//     token: Joi.string().required(),
-//     user_id: Joi.number().integer().min(0).required(),
-//     expiry_date: Joi.date()
-// });

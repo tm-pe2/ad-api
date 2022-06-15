@@ -1,10 +1,10 @@
-import * as contractService from '../services/contract-service';
-import * as invoiceService from '../services/invoice-service';
-import * as meterService from '../services/meter-service';
-import * as consumptionService from '../services/consumption-service';
-import * as tariffService from '../services/tariff-service';
-import * as estimationService from '../services/estimation-service';
-import * as planningService from '../services/planning-service';
+import * as contractService from '../services/contract';
+import * as invoiceService from '../services/invoice';
+import * as meterService from '../services/meter';
+import * as consumptionService from '../services/consumption';
+import * as tariffService from '../services/tariff';
+import * as estimationService from '../services/estimation';
+import * as planningService from '../services/planning';
 
 import {Contract} from "../classes/contracts";
 import {Invoice} from "../classes/invoice";
