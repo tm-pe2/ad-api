@@ -88,8 +88,8 @@ Or just delete and new post?
 ## Invoices
 
 Should be easy
-- [ ] GET `/invoices`
-- [ ] GET `/invoices/self`
+- [X] GET `/invoices`
+- [X] GET `/invoices/self`
 
 - ~~`invoices/:invoice_id`~~
   - **Unnecessary GET** -> already inside /invoices

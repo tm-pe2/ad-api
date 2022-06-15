@@ -1,21 +1,20 @@
 import dotenv from 'dotenv';
 import express, {Express} from 'express';
 import * as DBConnector from './utils/database-connector';
-import { date } from 'joi';
-import { MailService } from './services/mail'
 import { Env } from './utils/env';
-import { startIntervalsOverdue } from './services/invoice';
 import { Logger } from './utils/logger';
 import { setRoutes } from './routes';
 import { createServer, Server } from 'http';
 import settings from './configs/settings.json';
-import { scheduleInvoiceJobs } from './utils/schedule-jobs';
+import { invoiceQueries } from './queries/invoice';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
 }
 
 try {
+    console.log(invoiceQueries.getAllInvoices);
+    
     Env.validateMandatoryKeys();
 } catch (err) {
     Logger.error('.env not properly configured: ', err);
