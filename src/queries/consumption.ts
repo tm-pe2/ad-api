@@ -5,8 +5,8 @@ const selectConsumptionQuery = `
     cons.id,
     cons.consumed_value,
     cons.calculated_date,
-    json_agg(
-        json_build_object(
+
+    json_build_object(
             'id', u.id,
             'first_name', u.first_name,
             'last_name', u.last_name,
@@ -14,32 +14,31 @@ const selectConsumptionQuery = `
             'email', u.email,
             'phone_number', u.phone_number,
             'national_registry_number', u.national_registry_number,
-            'customer_type', c.type_id,
+            'customer_type', cus.type_id,
             'active', u.active,
             'roles', array_agg(r.id)
-        )
-    ) as customer,
-    json_agg(
-        json_build_object(
+    )as customer,
+
+    json_build_object(
             'id', a.id,
             'street', a.street,
             'house_number', a.house_number,
             'city_name', ci.city_name,
             'postal_code', ci.postal_code,
             'country', a.country
-        )
-    ) as address
+    )as address,
+
     json_agg(
         json_build_object(
-            'id': m.id,
-            'meter_type': m.meter_type,
-            'physical_id': m.physical_id,
-            'index_value': iv.index_value,
-            'read_date': iv.read_date
+            'id', m.id,
+            'meter_type', m.meter_type,
+            'physical_id', m.physical_id,
+            'index_value', iv.index_value,
+            'read_date', iv.read_date
         )
     ) as meter
-
-    LEFT JOIN ${TABLES.METERS} as m ON u.meter_id = m.id
+    FROM ${TABLES.CONSUMPTIONS} as cons
+    LEFT JOIN ${TABLES.METERS} as m ON cons.meter_id = m.id
     LEFT JOIN ${TABLES.CONTRACTS_METERS} as cm ON m.id = cm.meter_id
     LEFT JOIN ${TABLES.CONTRACTS} as c ON cm.contract_id = c.id
     LEFT JOIN ${TABLES.CONTRACT_STATUSES} as cs ON c.status_id = cs.id
@@ -50,8 +49,9 @@ const selectConsumptionQuery = `
     LEFT JOIN ${TABLES.CUSTOMERS} as cus ON u.id = cus.user_id
     LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
     LEFT JOIN ${TABLES.CITIES} as ci ON a.city_id = ci.id
-    LEFT JOIN ${TABLES.INDEXED_VALUES} as iv ON cons.indexed_value_id = iv.id
-    FROM ${TABLES.CONSUMPTIONS} as cons
+    LEFT JOIN ${TABLES.INDEXED_VALUES} as iv ON iv.meter_id = m.id
+
+
 `
 const insertConsumption = `
     INSERT INTO ${TABLES.INDEXED_VALUES} as iv (meter_id, index_value, read_date) VALUES ($1, $2, $3)
@@ -60,7 +60,7 @@ const insertConsumption = `
 export const consumptionQueries = {
     getConsumptionById: selectConsumptionQuery + `
         WHERE u.id = $1
-        GROUP BY cons.id
+        GROUP BY cons.id , u.id, cus.type_id, a.id, m.id, iv.index_value, iv.read_date , cs.id, c.id, cus.user_id, a.street, a.house_number, ci.city_name, ci.postal_code, a.country, m.meter_type, m.physical_id
     `,
     insertConsumption: insertConsumption
 }
