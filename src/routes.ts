@@ -13,6 +13,7 @@ import { EmployeeController } from './controllers/employee';
 import { EstimationController } from './controllers/estimation';
 import { ConsumptionController } from './controllers/consumption';
 import { PlanningController } from './controllers/planning';
+import { SupplierController } from './controllers/supplier';
 
 export function setRoutes(router: Express): Express {
     router.use(cors()); // enable CORS

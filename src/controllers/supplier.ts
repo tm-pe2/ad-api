@@ -115,7 +115,7 @@ export class SupplierController {
                     return;
                 }
                 
-                if(!supplier.address){
+                if(!supplier.address.id){
                     res.sendStatus(400)
                     return;
                 }
@@ -125,7 +125,7 @@ export class SupplierController {
                 if(!currentSupplier){
                     throw new Error("Supplier not found")
                 }
-                
+                console.log(currentSupplier.address.id)
                 supplier.address.id = currentSupplier.address.id
                 const supplierEdited = await modifySupplier(client, supplier);
                 if(!supplierEdited){
