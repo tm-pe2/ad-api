@@ -1,10 +1,9 @@
 import {execute} from "../utils/database-connector";
-import { Customer } from "../models/user";
 import { PoolClient } from "pg";
-import { contractQueries } from "../queries/contract";
-import { Contract } from "../models/contract";
-import { MeterType, ServiceType } from "../models/estimation";
+
+import { MeterType } from "../models/estimation";
 import { meterQueries } from "../queries/meters";
+import fetch from "node-fetch";
 
 export async function addNewMeter(client:PoolClient,
     contractId: number, meterType: MeterType): Promise<number | null> {
