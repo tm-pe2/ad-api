@@ -11,8 +11,8 @@ export class EmployeeController {
     static router(): Router {
         return Router({ caseSensitive: false })
             .get('/', async (req, res, next) => {
+                const client = await connectClient();
                 try {
-                    const client = await connectClient();
                     const employees = await EmployeeService.getAllEmployees(client);
                     res.send(employees);
                 }
@@ -20,10 +20,11 @@ export class EmployeeController {
                     Logger.error(err);
                     res.sendStatus(500);
                 }
+                client.release();
             })
             .get('/:id', async (req, res, next) => {
+                const client = await connectClient();
                 try {
-                    const client = await connectClient();
                     let id = parseInt(req.params.id);
                     const employee = await EmployeeService.getEmployeeById(client, id);
                     res.send(employee);
@@ -32,24 +33,30 @@ export class EmployeeController {
                     Logger.error(err);
                     res.sendStatus(500);
                 }
+                client.release();
             })
             .put('/', async (req, res, next) => {
                 const client = await begin();
                 try {
                     const employee: Employee = req.body;
                     const currentEmployee = await EmployeeService.getEmployeeById(client, employee.id);
+
                     if (!currentEmployee) {
                         throw new Error("Employee not found");
                     }
-                    if (!employee.password) {
-                        res.sendStatus(400);
-                        return;
+                    if(employee.active == null){
+                        employee.active = currentEmployee.active;
                     }
- 
-                    const salt = await bcrypt.genSalt(10);
-                    const pass = await bcrypt.hash(employee.password, salt);
-                    employee.password = pass;
+                    
+                    if (employee.password) {
+                        const salt = await bcrypt.genSalt(10);
+                        const pass = await bcrypt.hash(employee.password, salt);
+                        employee.password = pass;
 
+                    }
+                    for (let i = 0; i < employee.addresses!.length; i++) {
+                        employee.addresses![i].country = "Belgium";
+                    }
                     const employeeEdited = await EmployeeService.modifyEmployee(client, employee);
 
                     if(!employeeEdited){
@@ -59,11 +66,20 @@ export class EmployeeController {
                     commit(client);
                     res.status(200).send("Employee edited");
                 }
-                catch (err) {
-                    Logger.error(err);
+                catch (error) {
                     await rollback(client);
-                    res.sendStatus(500);
+                    if(error instanceof Error){
+                        res.status(500).json({
+                            message: error.message
+                        });
+                    }
+                    else{
+                        res.status(500).json({
+                            message: "Unknown error"
+                        });
+                    }
                 }
+                client.release();
             })
             .post('/', async (req, res, next) => {
                 const client = await begin();
@@ -124,6 +140,7 @@ export class EmployeeController {
                     await rollback(client);
                     res.sendStatus(500);
                 }
+                client.release();
             })
     }
 }

@@ -31,12 +31,8 @@ export class UserController {
                             message: 'There was an error when fetching user'
                         });
                     });
-
+                client.release();
             })
-
-
-
-
     }
 }
 

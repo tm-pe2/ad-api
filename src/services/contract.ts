@@ -30,5 +30,12 @@ export async function addNewContract(client:PoolClient,
         userId, serviceType, estimationId, addressId
     ]);
     if (res.rowCount === 0) return null;
-    return res.rows[0].id;
+    const contract_id = res.rows[0].id;
+
+    const intermediateRes = await execute(client,contractQueries.insertCustomersUsers, [
+        userId, contract_id
+    ]);
+    if (intermediateRes.rowCount === 0) return null;
+
+    return contract_id;
 }

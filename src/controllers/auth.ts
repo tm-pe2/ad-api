@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { AccessToken, AccessTokenData } from "../classes/accesstokens";
 import { RefreshToken } from "../classes/refreshtokens";
 import { Logger } from "../utils/logger";
-import {commit, rollback, begin, connectClient} from "../utils/database-connector";
+import {commit, rollback, begin, connectClient, end} from "../utils/database-connector";
 
 // TODO: Testing!
 
@@ -51,6 +51,8 @@ export class AuthController {
                     res.status(401).send('Invalid credentials');
                 }
             });
+
+            client.release();
         })
         .post('/logout', async (req, res, next) => {
             const token = req.body.refreshToken;
@@ -65,7 +67,9 @@ export class AuthController {
                 .catch((err) => {
                     rollback(client);
                     res.sendStatus(400);
-                })
+                });
+
+            client.release();
         })
         .post('/token', async (req, res, next) => {
             const token = req.body.refreshToken;
@@ -103,6 +107,7 @@ export class AuthController {
                     return res.status(403).send('Refresh token invalid'); 
                 });
 
+            client.release();
         })
     }
 }
