@@ -63,6 +63,8 @@ export class SupplierController {
                     return;
                 }
 
+                supplier.address.country = "Belgium";
+
                 const addressId = await insertAddress(client, supplier.address)
                 if(!addressId){
                     throw new Error("Address not inserted")

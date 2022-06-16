@@ -19,7 +19,7 @@ const selectSupplierQuery = `
     LEFT JOIN ${TABLES.CITIES} as ci ON a.city_id = ci.id
     `
 const insertSupplier = `
-    INSERT INTO ${TABLES.SUPPLIERS} as c (id, company_name, service_type, vat_number, address_id) VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO ${TABLES.SUPPLIERS} as c (company_name, service_type, vat_number, address_id) VALUES ($1, $2, $3, $4, $5)
 `
 // modify supplier
 const modifySupplier = `
