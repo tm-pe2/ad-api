@@ -1,9 +1,12 @@
-import {execute} from "../utils/database-connector";
+import {connectClient, execute} from "../utils/database-connector";
 import { PoolClient } from "pg";
 
 import { MeterType } from "../models/estimation";
 import { meterQueries } from "../queries/meters";
 import fetch from "node-fetch";
+import { consumptionQueries } from "../queries/consumption";
+import { addIndexedValue } from "./consumption";
+import { Meter } from "../models/consumption";
 
 export async function addNewMeter(client:PoolClient,
     contractId: number, meterType: MeterType, familySize: number): Promise<number | null> {
@@ -105,4 +108,18 @@ export async function getSmartMeterValue(physical_id: number) : Promise<number> 
         })
         .catch((error: any) => reject(error))
     })
+}
+
+export async function smartMeterValueToDB(meter_id: number, meter_value: number) {
+    const client = await connectClient();
+    const read_date = new Date();
+
+    const meter: Meter = {
+        id: meter_id,
+        meter_type: MeterType.SMART,
+        value: meter_value
+    }
+
+    const rows = await execute(client, consumptionQueries.insertConsumption, [meter_id, value, read_date])
+    const consumptionInserted = await addIndexedValue(client, meter, read_date);
 }
