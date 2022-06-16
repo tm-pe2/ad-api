@@ -58,9 +58,12 @@ class Validate {
             throw new Error("No address(es) provided");
     
         for (const address of addresses) {
+            this.checkAddress(address);
+        }
+    }
+    static checkAddress(address: Address): void {
             if (address.street == null || address.city_id == null || address.house_number == null)
                 throw new Error("Invalid address supplied");
-        }
     }
 }
 
@@ -96,6 +99,14 @@ export class ValidateInterface {
             throw new Error("No company name provided");
         Validate.checkVatNumber(supplier.vat_number);
         Validate.checkAddresses([supplier.address]);
+        if (!(['gas', 'electricity'].includes(supplier.service_type)))
+            throw new Error("Invalid service type");
+    }
+    static checkSupplierEdit(supplier: Supplier): void {
+        if (!supplier.company_name)
+            throw new Error("No company name provided");
+        Validate.checkVatNumber(supplier.vat_number);
+        Validate.checkAddress(supplier.address);
         if (!(['gas', 'electricity'].includes(supplier.service_type)))
             throw new Error("Invalid service type");
     }
