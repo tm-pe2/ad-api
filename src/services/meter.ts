@@ -6,11 +6,11 @@ import { meterQueries } from "../queries/meters";
 import fetch from "node-fetch";
 
 export async function addNewMeter(client:PoolClient,
-    contractId: number, meterType: MeterType, familySize: number, meterValue: number): Promise<number | null> {
+    contractId: number, meterType: MeterType, familySize: number): Promise<number | null> {
     
     let ph_id;
     if (meterType == MeterType.SMART) {
-        ph_id = await generateSmartMeter(familySize, meterValue);
+        ph_id = await generateSmartMeter(familySize);
     } else {
         ph_id = 0;
     }
@@ -30,12 +30,12 @@ export async function addNewMeter(client:PoolClient,
     return meterRes.rows[0].id;
 }
 
-export async function generateSmartMeter(occupants: number, day_consumption: number) : Promise<number> {
+export async function generateSmartMeter(occupants: number) : Promise<number> {
     // function to generate smart meter in the API from the AI team to simulate an actual smart meter
     // returns the physical id for the smart meter = the id the meter has in the smartmeter API
     let meter = {
           occupants : occupants,
-          day_consumption : day_consumption,
+          day_consumption : 0,
           night_consumption : 0,
           latitude: 50.5039,
           longitude: 4.4699
