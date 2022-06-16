@@ -26,15 +26,13 @@ const selectConsumptionQuery = `
             'postal_code', ci.postal_code,
             'country', a.country
         ) as address,
-    json_agg(
-        json_build_object(
+    json_build_object(
             'id', m.id,
             'meter_type', m.meter_type,
             'physical_id', m.physical_id,
             'index_value', iv.index_value,
             'read_date', iv.read_date
-        )
-    ) as meters
+    ) as meter
     FROM ${TABLES.USERS} as u
     LEFT JOIN ${TABLES.CUSTOMERS} as cus ON u.id = cus.user_id
     LEFT JOIN ${TABLES.CUSTOMERS_CONTRACTS} as cc ON cus.user_id = cc.user_id
