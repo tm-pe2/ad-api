@@ -31,7 +31,13 @@ const selectCustomerQuery = `
 `;
 const AddCustomer = `
     INSERT INTO ${TABLES.CUSTOMERS} as c (user_id, type_id) VALUES ($1, $2)
-    `
+`;
+const modifyCustomer = `
+    UPDATE ${TABLES.CUSTOMERS}
+    SET type_id = $2
+    WHERE user_id = $1
+`;
+
 export const customerQueries = {
     getAllCustomers: selectCustomerQuery + `
         GROUP BY u.id, c.type_id
@@ -42,4 +48,5 @@ export const customerQueries = {
         GROUP BY u.id, c.type_id
     `,
     addCustomer: AddCustomer,
+    modifyCustomer: modifyCustomer,
 };
