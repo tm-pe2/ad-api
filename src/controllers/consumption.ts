@@ -57,7 +57,7 @@ export class ConsumptionController {
                         }
                     }
                     await commit(client);
-                    res.sendStatus(200).send("Consumption inserted");
+                    res.status(200).send("Consumption inserted");
                 }
                 catch (error) {
                     rollback(client)
