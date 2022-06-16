@@ -37,8 +37,8 @@ try {
     process.on('SIGTERM', () => {onClose(server)});
       
     // scheduleInvoiceJobs();
-    //await generateInvoices(INVOICE_TYPE.DEBIT);
-    //await generateInvoices(INVOICE_TYPE.ADVANCE);
+    // await generateInvoices(INVOICE_TYPE.DEBIT);
+    // await generateInvoices(INVOICE_TYPE.ADVANCE);
 })();
 
 function onClose(http: Server) {

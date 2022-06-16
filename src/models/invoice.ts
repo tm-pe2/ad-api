@@ -1,5 +1,5 @@
-import { Address } from "cluster";
 import { Customer } from "./user";
+import {Address} from "./address";
 
 export interface Invoice {
     id: number,
@@ -13,8 +13,8 @@ export interface Invoice {
     period_end: Date,
     status: INVOICE_STATUS,
     type: INVOICE_TYPE,
-    address: Address | null,
-    customer: Customer | null,
+    address?: Address,
+    customer?: Customer,
 }
 
 export enum INVOICE_TYPE {
@@ -27,4 +27,9 @@ export enum INVOICE_STATUS {
     DUE = 1,
     LATE,
     PAID,
+}
+
+export interface InvoicesStatuses {
+    invoice_id: number,
+    status_id: INVOICE_STATUS
 }

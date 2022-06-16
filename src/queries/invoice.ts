@@ -72,6 +72,13 @@ const insertInvoiceStatus = `
         RETURNING invoice_id
 `;
 
+const updateInvoiceStatus = `
+    UPDATE ${TABLES.INVOICES_STATUSES} 
+    SET status_id = $2
+    WHERE invoice_id = $1
+    RETURNING invoice_id
+`;
+
 const groupBy = `
     GROUP BY i.id, i.contract_id, i.supplier_id, i.price, i.tax,
     i.creation_date, i.due_date, i.period_start, i.period_end, i.type_id,
@@ -87,7 +94,15 @@ export const invoiceQueries = {
         AND i.period_start = $2
         AND i.period_end = $3
     ` + groupBy,
+    getInvoicesByContractIdAndBetweenPeriod: getAllInvoices + `
+        WHERE i.contract_id = $1
+        AND i.period_start >= $2
+        AND i.period_end <= $3
+    ` + groupBy,
     insertInvoice: insertInvoice,
-    insertInvoiceStatus: insertInvoiceStatus
-
+    insertInvoiceStatus: insertInvoiceStatus,
+    updateInvoiceStatus: updateInvoiceStatus,
+    getInvoiceById: getAllInvoices + `
+        WHERE i.id = $1
+    ` + groupBy
 }

@@ -1,5 +1,5 @@
 import {PoolClient} from "pg";
-import {Invoice, INVOICE_STATUS} from "../models/invoice";
+import {Invoice, INVOICE_STATUS, InvoicesStatuses} from "../models/invoice";
 import {invoiceQueries} from "../queries/invoice";
 import {execute} from "../utils/database-connector";
 import {Contract} from "../models/contract";
@@ -45,6 +45,27 @@ export async function getInvoiceByContractIdAndPeriod(client: PoolClient, contra
     const invoices = await execute(client, invoiceQueries.getInvoiceByContractIdAndPeriod, [contract.id, contract.start_date, contract.end_date]);
     if(invoices.rowCount === 0) return null;
     return invoices.rows[0] as Invoice;
+}
+// might or might not need this for something
+export async function getInvoicesByContractIdAndPeriod(client: PoolClient, contract: Contract): Promise<Invoice[] | null> {
+    const invoices = await execute(client, invoiceQueries.getInvoicesByContractIdAndBetweenPeriod, [contract.id, contract.start_date, contract.end_date]);
+    if (invoices.rowCount === 0) return null;
+    return invoices.rows as Invoice[];
+}
+
+export async function updateInvoiceStatus(client:PoolClient, invoicesStatuses: InvoicesStatuses): Promise<number | null>{
+    const res = await execute(client, invoiceQueries.updateInvoiceStatus, [
+        invoicesStatuses.invoice_id,
+        invoicesStatuses.status_id
+    ]);
+    if (res.rowCount === 0) return null;
+    return res.rows[0].invoice_id;
+}
+
+export async function getInvoiceById(client: PoolClient, invoiceId: number) {
+    const res = await execute(client, invoiceQueries.getInvoiceById, [invoiceId]);
+    if (res.rowCount === 0) return null;
+    return res.rows[0] as Invoice;
 }
 
 /*

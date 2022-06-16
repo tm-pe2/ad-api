@@ -89,8 +89,8 @@ const generateAdvanceInvoice = async (contract: Contract) => {
         period_end: addMonths(creationDate, 1),
         status: INVOICE_STATUS.DUE,
         type: INVOICE_TYPE.ADVANCE,
-        address: null,
-        customer: null
+        address: undefined,
+        customer: undefined
     };
 
     const invoiceId = await insertInvoice(client, invoice);
@@ -130,8 +130,8 @@ const generateAnnualInvoice = async (contract: Contract, totalConsumption: numbe
         period_end: contract.end_date,
         status: INVOICE_STATUS.DUE,
         type: endTotal > 0 ? INVOICE_TYPE.DEBIT : INVOICE_TYPE.CREDIT,
-        address: null,
-        customer: null
+        address: undefined,
+        customer: undefined
     };
 
     const invoiceId = await insertInvoice(client, invoice);

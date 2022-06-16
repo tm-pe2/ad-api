@@ -51,3 +51,10 @@ export async function getLastConsumptionByMeterId(client: PoolClient, id: number
     if (consumption.rowCount === 0) return null;
     return consumption.rows[0] as Consumption;
 }
+
+export async function getConsumptionsByContractId(client: PoolClient, id: number): Promise<Consumption[] | null> {
+    const consumptions = await execute(client, consumptionQueries.getConsumptionsByContractId, [id]);
+    if (consumptions.rowCount === 0) return null;
+    return consumptions.rows as Consumption[];
+}
+
