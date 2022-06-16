@@ -48,7 +48,8 @@ export async function modifyCustomer(client:PoolClient, customer: Customer): Pro
             const addressId = await insertAddress(client, customer.addresses[i]);
             if (customer.id == null)
                 throw new Error("Customer id is not provided");
-            insertUserAddress(client, customer.id, addressId);
+            if (!(await insertUserAddress(client, customer.id, addressId)))
+                throw new Error("Failed to link address to user");
         }
 
         // role is not modified
