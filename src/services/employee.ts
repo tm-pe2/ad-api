@@ -1,6 +1,7 @@
 import { PoolClient } from "pg";
 import { Employee } from "../models/user";
 import { employeeQueries } from "../queries/employee";
+import { userQueries } from "../queries/users";
 import { execute } from "../utils/database-connector";
 
 
@@ -27,7 +28,7 @@ export async function modifyEmployee(client: PoolClient, employee: Employee): Pr
                 employee.id,
                 employee.salary
             ]);
-        await execute(client, employeeQueries.modifyUser, [
+        await execute(client, userQueries.modifyUser, [
             employee.id,
             employee.first_name,
             employee.last_name,
@@ -39,7 +40,7 @@ export async function modifyEmployee(client: PoolClient, employee: Employee): Pr
             employee.active,
         ]);
 
-        await execute(client, employeeQueries.modifyUserRoles, [
+        await execute(client, userQueries.modifyUserRoles, [
             employee.id,
             employee.roles![0]
         ]);
