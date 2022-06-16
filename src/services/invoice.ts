@@ -1,8 +1,8 @@
-import { PoolClient } from "pg";
-import { Invoice } from "../models/invoice";
-import { invoiceQueries } from "../queries/invoice";
-import { begin, execute } from "../utils/database-connector";
-import { Logger } from "../utils/logger";
+import {PoolClient} from "pg";
+import {Invoice, INVOICE_STATUS} from "../models/invoice";
+import {invoiceQueries} from "../queries/invoice";
+import {execute} from "../utils/database-connector";
+import {Contract} from "../models/contract";
 
 
 export async function getAllInvoices(client: PoolClient): Promise<Invoice[]> {
@@ -14,27 +14,38 @@ export async function getInvoicesByUserId(client: PoolClient, id: number) {
     const invoices = await execute(client, invoiceQueries.getInvoicesByUserId, [id]);
     if(invoices.rowCount === 0) return [];
     return invoices.rows;
-};
+}
 
-/*export const insertInvoice = async (invoice: Invoice) => {
-    const rowCount = await execute<number>(invoiceQueries.addInvoice, [
+export async function insertInvoice(client:PoolClient, invoice: Invoice): Promise<number | null>{
+    const res = await execute(client, invoiceQueries.insertInvoice, [
         invoice.contract_id,
         invoice.supplier_id,
+        invoice.type.valueOf(),
         invoice.creation_date,
         invoice.due_date,
-        invoice.status_id,
         invoice.price,
         invoice.tax,
         invoice.period_start,
-        invoice.period_end,
-        invoice.tariff_rate
-    ], "rowCount");
+        invoice.period_end
+    ]);
 
-    return rowCount > 0;
-};
-*/
-/*
+    if (res.rowCount === 0) return null;
+    const invoiceId = res.rows[0].id;
 
+    const intermediateRes = await execute(client, invoiceQueries.insertInvoiceStatus, [
+        invoiceId, INVOICE_STATUS.DUE
+    ]);
+    if (intermediateRes.rowCount === 0) return null;
+
+    return intermediateRes.rows[0].invoice_id;
+}
+
+
+export async function getInvoiceByContractIdAndPeriod(client: PoolClient, contract: Contract): Promise<Invoice | null> {
+    const invoices = await execute(client, invoiceQueries.getInvoiceByContractIdAndPeriod, [contract.id, contract.start_date, contract.end_date]);
+    if(invoices.rowCount === 0) return null;
+    return invoices.rows[0] as Invoice;
+}
 
 /*
 //this gives all the overdue invoices even if status id isn't InvoiceStatus.overdue

@@ -47,3 +47,9 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
 
     return res.rowCount > 0;
 }
+
+export async function getLastConsumptionByMeterId(client: PoolClient, id: number): Promise<Consumption | null> {
+    const consumption = await execute(client, consumptionQueries.getLastConsumptionByMeterId, [id]);
+    if (consumption.rowCount === 0) return null;
+    return consumption.rows[0] as Consumption;
+}

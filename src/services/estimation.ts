@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { BuildingType, EquipmentType, EstimationRegistration } from "../models/estimation";
+import {BuildingType, EquipmentType, Estimation, EstimationRegistration} from "../models/estimation";
 import { estimationQueries } from "../queries/estimation";
 import { execute } from "../utils/database-connector";
 
@@ -82,4 +82,10 @@ export function calculateEstimation(estimation: EstimationRegistration): number 
     }
 
     return calc_estimation*30;
+}
+
+export async function getEstimationById(client: PoolClient, id: number): Promise<Estimation | null> {
+    const res = await execute(client, estimationQueries.getEstimationById, [id]);
+    if (res.rowCount === 0) return null;
+    return res.rows[0] as Estimation;
 }

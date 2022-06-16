@@ -54,3 +54,9 @@ export async function getContractIdByMeterId(client:PoolClient, meterId: number)
     if (res.rowCount === 0) return null;
     return res.rows[0].id;
 }
+
+export async function getAllActiveContracts(client: PoolClient): Promise<Contract[] | null> {
+    const res = await execute(client, contractQueries.getAllActiveContracts, [new Date()]);
+    if (res.rowCount === 0) return [];
+    return res.rows as Contract[];
+}

@@ -4,7 +4,7 @@ import { CustomerType, UserRole } from "./user";
 export interface Consumption{
     id: number,
     consumed_value: number,
-    calculate_date: Date,
+    calculated_date: Date,
     customer: {
         id: number,
         first_name: string,

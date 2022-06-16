@@ -60,5 +60,11 @@ export const consumptionQueries = {
         WHERE u.id = $1
         GROUP BY cons.id , u.id, cus.type_id, a.id, m.id, iv.index_value, iv.read_date , cs.id, c.id, cus.user_id, a.street, a.house_number, ci.city_name, ci.postal_code, a.country, m.meter_type, m.physical_id
     `,
-    insertConsumption: insertConsumption
+    insertConsumption: insertConsumption,
+    getLastConsumptionByMeterId: selectConsumptionQuery + `
+         WHERE cm.meter_id = $1
+         GROUP BY cons.id , u.id, cus.type_id, a.id, m.id, iv.index_value, iv.read_date , cs.id, c.id, cus.user_id, a.street, a.house_number, ci.city_name, ci.postal_code, a.country, m.meter_type, m.physical_id
+         ORDER BY cons.calculated_date DESC
+         LIMIT 1;
+    `,
 }

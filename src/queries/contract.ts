@@ -97,4 +97,7 @@ export const contractQueries = {
     insertCustomersUsers: insertCustomersUsersQuery,
     activateContractbyMeterId: activateContractbyMeterIdQuery,
     getContractIdByMeterId: getContractIdByMeterIdQuery,
+    getAllActiveContracts: selectContractQuery + `
+        WHERE c.start_date <= $1 AND c.end_date >= $1
+    `
 }

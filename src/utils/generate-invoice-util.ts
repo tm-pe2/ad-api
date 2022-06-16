@@ -1,168 +1,191 @@
-import * as contractService from '../services/contract';
-import * as invoiceService from '../services/invoice';
-import * as meterService from '../services/meter';
-import * as consumptionService from '../services/consumption';
-import * as tariffService from '../services/tariff';
-import * as estimationService from '../services/estimation';
-import * as planningService from '../services/planning';
+import {Contract} from "../models/contract";
+import {getAllActiveContracts} from "../services/contract";
+import {connectClient} from "./database-connector";
+import {Invoice, INVOICE_STATUS, INVOICE_TYPE} from "../models/invoice";
+import {Estimation} from "../models/estimation";
+import {getEstimationById} from "../services/estimation";
+import {Consumption, Meter} from "../models/consumption";
+import {getInvoiceByContractIdAndPeriod, insertInvoice} from "../services/invoice";
+import {getMetersByContractId} from "../services/meter";
+import {getLastConsumptionByMeterId} from "../services/consumption";
 
-import {Contract} from "../classes/contracts";
-import {Invoice} from "../classes/invoice";
-import {Meter} from "../classes/meters";
-import {Tariff} from "../classes/tariff";
-import {Estimation} from "../classes/estimation";
-import {Consumption} from "../classes/consumption";
-import {Planning} from "../classes/planning";
+export const generateInvoices = async (invoiceType: INVOICE_TYPE) => {
+    const client = await connectClient();
+    const activeContracts: Contract[] | null = await getAllActiveContracts(client);
+    if (activeContracts) {
+        handleActiveContracts(activeContracts, invoiceType);
+    }
+    return true;
+}
 
-export const generateAdvanceInvoices = async (currentDate: Date) => {
-    currentDate.setHours(0, 0, 0, 0);
-
-    try {
-        const activeContracts: Contract[] = await contractService.getAllActiveContracts();
-
-        for (const contract of activeContracts) {
-            const amountOfPastInvoices = monthDiff(contract.start_date, currentDate);
-            const nextInvoiceDate: Date = addMonths(contract.start_date, amountOfPastInvoices);
-            nextInvoiceDate.setHours(0,0,0,0);
-
-            const timeForAdvanceInvoice = nextInvoiceDate.valueOf() === currentDate.valueOf() && amountOfPastInvoices < 11
-            if (timeForAdvanceInvoice) {
-                const result = await generateAdvanceInvoice(contract);
-                result ? console.log("Generated invoice for contract with id: " + contract.contract_id): console.log("Failed to generate invoice for contract with id: " + contract.contract_id);
-            }
-        }
-
-        return true;
-    } catch (error) {
-        return false;
+const handleActiveContracts = (activeContracts: Contract[], invoiceType: INVOICE_TYPE) => {
+    if (invoiceType == INVOICE_TYPE.ADVANCE) {
+        handleAdvancePayments(activeContracts);
+    } else {
+        handleAnnualPayments(activeContracts);
     }
 }
 
-export const generateAnnualInvoices = async (currentDate: Date) => {
-    currentDate.setHours(0,0,0,0);
+const handleAdvancePayments = async (activeContracts: Contract[]) => {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0)
 
-    try {
-        const activeContracts: Contract[] = await contractService.getAllActiveContracts();
-        for (const contract of activeContracts) {
-            const nearAnnualInvoiceDate: Date = addMonths(contract.start_date, 11);
-            const timeForAnnualInvoice = currentDate >= nearAnnualInvoiceDate;
-
-            if (timeForAnnualInvoice)
-            {
-                if (!await invoiceAlreadyExists(contract))
-                {
-                    await handleAnnualInvoice(contract);
-                }
+    for (const contract of activeContracts) {
+        const amountOfPastInvoices = monthDiff(contract.start_date, currentDate);
+        const nextInvoiceDate: Date = addMonths(contract.start_date, amountOfPastInvoices);
+        const timeForAdvanceInvoice = nextInvoiceDate.valueOf() === currentDate.valueOf() && amountOfPastInvoices < 11;
+        if (timeForAdvanceInvoice) {
+            try {
+                await generateAdvanceInvoice(contract);
+            } catch (e) {
+                console.log('Error when generating advance invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
         }
-
-        return true;
     }
-    catch (error) {
-        return false;
+}
+
+const handleAnnualPayments = async (activeContracts: Contract[]) => {
+    const currentDate = new Date();
+    for (const contract of activeContracts) {
+        const nearAnnualInvoiceDate: Date = addMonths(contract.start_date, 11);
+        const timeForAnnualInvoice = currentDate >= nearAnnualInvoiceDate;
+        if (timeForAnnualInvoice) {
+            try {
+                const invoiceExists = await annualInvoiceAlreadyExists(contract)
+                if (invoiceExists) {
+                    return;
+                }
+                const totalConsumption = await getTotalConsumption(contract);
+                await generateAnnualInvoice(contract, totalConsumption);
+            } catch (e) {
+                console.log('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
+            }
+        }
     }
 }
 
 const generateAdvanceInvoice = async (contract: Contract) => {
-    const tariff: Tariff = await tariffService.getTariffById(contract.tariff_id);
-    const estimation: Estimation = await estimationService.getEstimationById(contract.estimation_id);
+    const client = await connectClient();
+    const estimation: Estimation | null = await getEstimationById(client, contract.estimation_id);
+
+    if (!estimation) {
+        throw new Error('Could not find estimation.');
+    }
+
+    const creationDate = new Date();
+    const serviceType = contract.tariff.service_type.valueOf();
+
+    const price = contract.tariff.value * estimation.estimated_consumption;
 
     let invoice: Invoice = {
-        invoice_id: -1,
-        contract_id: contract.contract_id,
-        supplier_id: 0, // TODO?
-        creation_date: new Date(),
-        due_date: addMonths(new Date(), 1),
-        status_id: 0,
-        price: tariff.value * estimation.estimated_consumption,
-        tax: tariff.value * estimation.estimated_consumption * 0.21,
-        period_start: new Date(),
-        period_end: addMonths(new Date(), 1),
-        tariff_rate: tariff.value
+        id: -1,
+        contract_id: contract.id,
+        supplier_id: serviceType === 1 ? 1 : 2,
+        price: price,
+        tax: price * 0.21,
+        creation_date: creationDate,
+        due_date: addMonths(creationDate, 1),
+        period_start: creationDate,
+        period_end: addMonths(creationDate, 1),
+        status: INVOICE_STATUS.DUE,
+        type: INVOICE_TYPE.ADVANCE,
+        address: null,
+        customer: null
     };
 
-    return await invoiceService.insertInvoice(invoice);
-}
+    const invoiceId = await insertInvoice(client, invoice);
+    client.release();
 
-const invoiceAlreadyExists = async (contract: Contract) => {
-    return await invoiceService.getInvoiceByIdAndContractPeriod(contract);
-}
-
-const handleAnnualInvoice = async (contract: Contract) => {
-    const meters: Meter[] = await meterService.getMetersByContractId(contract.contract_id);
-    let totalConsumption = 0;
-
-    let metersWithMissingReading: Meter[] = [];
-
-    for (const meter of meters) {
-        const consumption: Consumption = await consumptionService.getConsumptionByMeterIdAndPeriod(meter.meter_id, contract.start_date, contract.end_date);
-
-        if (consumption != undefined) {
-            totalConsumption += consumption.consumption;
-        }
-        else {
-            metersWithMissingReading.push(meter);
-        }
-    }
-
-    if (metersWithMissingReading.length > 0)
-    {
-        const readingPlanned = await planningService.getPlanningByContractIdAndPeriod(contract);
-
-        if (!readingPlanned) {
-            const planningEntry: Planning = {
-                planning_id: -1,
-                employee_id: -1,
-                contract_id: contract.contract_id,
-                date: contract.end_date,
-                status: 0
-            }
-
-            await planningService.insertPlanning(planningEntry);
-        }
-    }
-    else {
-        await generateAnnualInvoice(contract, totalConsumption);
+    if (!invoiceId) {
+        throw new Error('Could not insert invoice/invoice_status.');
     }
 }
 
 const generateAnnualInvoice = async (contract: Contract, totalConsumption: number) => {
-    const tariff: Tariff = await tariffService.getTariffById(contract.tariff_id);
-    const price = totalConsumption * tariff.value;
+    const currentDate = new Date();
+
+    const client = await connectClient();
+    const estimation: Estimation | null = await getEstimationById(client, contract.estimation_id);
+    if (!estimation) {
+        throw new Error('Could not find estimation while generating annual invoice for contract: ' + contract.id);
+    }
+
+    const price = totalConsumption * contract.tariff.value;
+    const tax = price * 0.21
+    const totalEstimations = estimation.estimated_consumption * 11
+    const estimationTax = totalEstimations * 0.21;
+    const endTotal = (price + tax) - (totalEstimations + estimationTax);
+
+    const serviceType = contract.tariff.service_type.valueOf();
 
     const invoice: Invoice = {
-        invoice_id: -1,
-        contract_id: contract.contract_id,
-        supplier_id: 0, //TODO?
-        creation_date: new Date(),
-        due_date: addMonths(new Date(), 1),
-        status_id: 0,
+        id: -1,
+        contract_id: contract.id,
+        supplier_id: serviceType === 1 ? 1 : 2,
         price: price,
-        tax: price * 0.21,
-        tariff_rate: tariff.value,
+        tax: tax,
+        creation_date: currentDate,
+        due_date: addMonths(currentDate, 1),
         period_start: contract.start_date,
-        period_end: contract.end_date
+        period_end: contract.end_date,
+        status: INVOICE_STATUS.DUE,
+        type: endTotal > 0 ? INVOICE_TYPE.DEBIT : INVOICE_TYPE.CREDIT,
+        address: null,
+        customer: null
     };
 
-    return await invoiceService.insertInvoice(invoice);
+    const invoiceId = await insertInvoice(client, invoice);
+    client.release();
+
+    if (!invoiceId) {
+        throw new Error('Could not insert invoice/invoice_status.');
+    }
+}
+
+const getTotalConsumption = async (contract: Contract) => {
+    const client = await connectClient();
+
+    const meters: Meter[] | null = await getMetersByContractId(client, contract.id);
+    if (!meters) {
+        throw new Error('Could not find any meters linked to this contract');
+    }
+    let totalConsumption = 0;
+    for (const meter of meters) {
+        const consumption: Consumption | null = await getLastConsumptionByMeterId(client, meter.id);
+
+        if (!consumption) {
+            throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
+        }
+
+        const consumptionIsValid = consumption.consumed_value > 0
+            && consumption.calculated_date > contract.start_date
+            && consumption.calculated_date <= contract.end_date;
+        if (!consumptionIsValid) {
+            throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
+        }
+        totalConsumption += consumption.consumed_value;
+    }
+    return totalConsumption;
+}
+
+const annualInvoiceAlreadyExists = async (contract: Contract) => {
+    const client = await connectClient();
+    const invoice: Invoice | null = await getInvoiceByContractIdAndPeriod(client, contract);
+    client.release();
+    return invoice != null;
 }
 
 const addMonths = (date: Date, amount: number) => {
     const endDate = new Date(date.getTime());
-    const originalTimeZoneOffset = endDate.getTimezoneOffset();
-
     endDate.setMonth(endDate.getMonth() + amount);
-
     while (monthDiff(date, endDate) > amount) {
         endDate.setDate(endDate.getDate() - 1);
     }
-
     return new Date(endDate);
 }
 
 export const monthDiff = (from: Date, to: Date) => {
     const years = to.getFullYear() - from.getFullYear();
     const months = to.getMonth() - from.getMonth();
-
     return 12 * years + months;
 }
