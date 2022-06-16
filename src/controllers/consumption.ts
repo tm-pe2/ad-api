@@ -51,6 +51,7 @@ export class ConsumptionController {
                     consumption.read_date = new Date();
                     for(const meter of consumption.meters) {
                         const consumptionInserted = await addIndexedValue(client, meter, consumption.read_date);
+  
                         if (!consumptionInserted) {
                             throw new Error("Consumption not inserted");
                         }

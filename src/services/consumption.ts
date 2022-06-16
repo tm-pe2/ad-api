@@ -29,8 +29,10 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
     if (res.rowCount > 0) {
         if (await activivateContractByMeterId(client, meter.id)) 
         {
+            console.log("here")
             // Contract has been activated
             const contractId = await getContractIdByMeterId(client, meter.id);
+            console.log("no here")
             if (contractId == null) {
                 throw new Error("Contract not found to activate");
             }
@@ -38,6 +40,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             const endContractPlanning = new Date(readDate.getTime());
             endContractPlanning.setMonth(endContractPlanning.getMonth() + 11);
             const planning = createPlanning(client, contractId, readDate, PLANNING_STATUS.SCHEDULED);
+            console.log("no no")
             if (planning == null) {
                 throw new Error("Planning not created");
             }
