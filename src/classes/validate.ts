@@ -1,5 +1,6 @@
 import { Address } from "../models/address";
 import { BuildingType as BUILDING_TYPE, EquipmentType as EQUIPMENT_TYPE, EstimationRegistration, MeterType as METER_TYPE, ServiceType as SERVICE_TYPE } from "../models/estimation";
+import { PlanningStatus } from "../models/planning";
 import { Supplier } from "../models/supplier";
 import { Customer, CustomerType, Employee, User, UserRole } from "../models/user";
 
@@ -127,5 +128,9 @@ export class ValidateInterface {
             if (!(equipment in EQUIPMENT_TYPE))
                 throw new Error("Invalid equipment type");
         }
+    }
+
+    static checkPlanning(planning: PlanningStatus){
+        
     }
 }
