@@ -6,7 +6,7 @@ export enum TABLES {
     CITIES = 'cities',
     ADDRESSES = 'addresses',
     USERS_ADDRESSES = 'users_addresses',
-    CUSTOMER_TYPES = 'customers_types',
+    CUSTOMER_TYPES = 'customer_types',
     CUSTOMERS = 'customers',
     EMPLOYEES = 'employees',
     SUPPLIERS = 'suppliers',

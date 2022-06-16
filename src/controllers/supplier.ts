@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { ValidateInterface } from "../classes/validate";
 import { Supplier } from "../models/supplier";
 import { insertAddress } from "../services/address";
 import { getAllSuppliers, getSupplierById, insertSupplier, modifySupplier } from "../services/supplier";
@@ -45,10 +46,25 @@ export class SupplierController {
             const client = await begin();
             try{
                 const supplier: Supplier = req.body
-                if(!supplier.address){
-                    res.sendStatus(400)
+
+                try {
+                    ValidateInterface.checkSupplierRegistration(supplier);
+                }
+                catch (err) {
+                    if(err instanceof Error){
+                        res.status(400).json({
+                            message: err.message
+                        });
+                    }
+                    else{
+                        Logger.warn(err);
+                        res.sendStatus(400);
+                    }
                     return;
                 }
+
+                supplier.address.country = "Belgium";
+
                 const addressId = await insertAddress(client, supplier.address)
                 if(!addressId){
                     throw new Error("Address not inserted")
@@ -85,17 +101,31 @@ export class SupplierController {
             try{
                 const supplier: Supplier = req.body
 
-                if(!supplier.address){
-                    res.sendStatus(400)
+                try {
+                    ValidateInterface.checkSupplierEdit(supplier);
+                }
+                catch (err) {
+                    if(err instanceof Error){
+                        console.log("here")
+                        res.status(400).json({
+                            message: err.message
+                        });
+                    }
+                    else{
+                        Logger.warn(err);
+                        console.log("here")
+                        res.sendStatus(400);
+                    }
                     return;
                 }
+                
                 supplier.address.country = "Belgium"
                 const currentSupplier = await getSupplierById(client, supplier.id!);
 
                 if(!currentSupplier){
                     throw new Error("Supplier not found")
                 }
-                
+                console.log(currentSupplier.address.id)
                 supplier.address.id = currentSupplier.address.id
                 const supplierEdited = await modifySupplier(client, supplier);
                 if(!supplierEdited){

@@ -5,4 +5,3 @@ export interface Address{
     house_number: string,
     country?: string, // Only belgium
 }
-

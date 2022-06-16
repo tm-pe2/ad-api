@@ -5,7 +5,7 @@ const insertMeter = `
         meter_type,
         physical_id
     )
-    VALUES ($1, null)
+    VALUES ($1, $2)
     RETURNING id
 `;
 

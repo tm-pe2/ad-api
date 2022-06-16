@@ -1,11 +1,23 @@
+import { Address } from "cluster";
+
 export interface Planning {
     id: number,
-    user_id: number, // can be removed from table. We can query it from contracts.
+    user: {
+        id: number,
+        first_name: string,
+        last_name: string,
+        email: string,
+        phone: string,
+        birth_date: Date,
+        national_registry_number: string,
+        address: Address,
+    },
     contract_id: number,
     date: Date,
     status: PlanningStatus,
 }
 
 export enum PlanningStatus {
-    // shrug
+    SCHEDULED = 1,
+    DONE = 2,
 }

@@ -7,6 +7,7 @@ import * as EmployeeService from "../services/employee";
 import { Logger } from "../utils/logger";
 import { Employee, User, UserRole } from "../models/user";
 import { customerQueries } from "../queries/customer";
+import { ValidateInterface } from "../classes/validate";
 export class EmployeeController {
     static router(): Router {
         return Router({ caseSensitive: false })
@@ -39,6 +40,23 @@ export class EmployeeController {
                 const client = await begin();
                 try {
                     const employee: Employee = req.body;
+
+                    try {
+                        ValidateInterface.checkEmployeeRegistration(employee);
+                    }
+                    catch (err) {
+                        if(err instanceof Error){
+                            res.status(400).json({
+                                message: err.message
+                            });
+                        }
+                        else{
+                            Logger.warn(err);
+                            res.sendStatus(400);
+                        }
+                        return;
+                    }
+
                     const currentEmployee = await EmployeeService.getEmployeeById(client, employee.id);
 
                     if (!currentEmployee) {
@@ -85,6 +103,23 @@ export class EmployeeController {
                 const client = await begin();
                 try {
                     const employee: Employee = req.body;
+
+                    try {
+                        ValidateInterface.checkEmployeeRegistration(employee);
+                    }
+                    catch (err) {
+                        if(err instanceof Error){
+                            res.status(400).json({
+                                message: err.message
+                            });
+                        }
+                        else{
+                            Logger.warn(err);
+                            res.sendStatus(400);
+                        }
+                        return;
+                    }
+
                     employee.active = true;
                     
                     //hash password

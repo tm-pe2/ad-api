@@ -28,7 +28,7 @@ export interface User {
     phone_number: string,
     national_registry_number: string,
     roles?: UserRole[],
-    addresses?: Address[],
+    addresses: Address[],
     password?: string,
     active?: boolean,
 }
