@@ -102,7 +102,7 @@ export class SupplierController {
                 const supplier: Supplier = req.body
 
                 try {
-                    ValidateInterface.checkSupplierRegistration(supplier);
+                    ValidateInterface.checkSupplierEdit(supplier);
                 }
                 catch (err) {
                     if(err instanceof Error){
