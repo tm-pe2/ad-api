@@ -1,5 +1,6 @@
 import { PoolClient } from "pg";
 import { Employee } from "../models/user";
+import { addressQueries } from "../queries/address";
 import { employeeQueries } from "../queries/employee";
 import { execute } from "../utils/database-connector";
 
@@ -43,8 +44,7 @@ export async function modifyEmployee(client: PoolClient, employee: Employee): Pr
             employee.id,
             employee.roles![0]
         ]);
-        await execute(client, employeeQueries.modifyAddress, [
-            employee.id,
+        await execute(client, addressQueries.addAddress, [
             employee.addresses![0].street,
             employee.addresses![0].house_number,
             employee.addresses![0].city_id,
