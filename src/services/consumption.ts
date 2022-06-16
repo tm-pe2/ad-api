@@ -9,7 +9,9 @@ import { createPlanning } from "./planning";
 
 export async function getConsumptionById(client: PoolClient, id: number): Promise<Consumption[] | null> {
     const consumption = await execute(client, consumptionQueries.getConsumptionById, [id]);
+    console.log(consumption.rows)
     if (consumption.rowCount === 0) return null;
+
     return consumption.rows;
 }
 

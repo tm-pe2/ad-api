@@ -15,8 +15,6 @@ if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
 }
 
 try {
-    console.log(invoiceQueries.getAllInvoices);
-    
     Env.validateMandatoryKeys();
 } catch (err) {
     Logger.error('.env not properly configured: ', err);
