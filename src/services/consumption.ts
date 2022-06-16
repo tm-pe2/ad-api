@@ -19,13 +19,13 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
         meter.index_value,
         readDate
     ]);
+
     // Start the contract (status active + start and end date)
     // This isn't the most efficient way since multiple queries are executed
     // eventhough they might be from the same contract
     // But it's the easiest/safest way to implement this
     
     if (res.rowCount > 0) {
-        
         if (await activivateContractByMeterId(client, meter.id, readDate)) 
         {
             // Contract has been activated

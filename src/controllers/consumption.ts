@@ -57,17 +57,17 @@ export class ConsumptionController {
                         }
                     }
                     await commit(client);
-                    res.send(200);
+                    res.sendStatus(200);
                 }
                 catch (error) {
                     rollback(client)
                     if (error instanceof Error) {
-                        res.status(500).json({
+                        res.sendStatus(500).json({
                             message: error.message
                         });
                     }
                     else {
-                        res.status(500).json({
+                        res.sendStatus(500).json({
                             message: "Unknown error"
                         });
                     }
