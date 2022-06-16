@@ -51,9 +51,6 @@ const modifyUser = `
 const modifyUserRoles = `
     UPDATE ${TABLES.USERS_ROLES} SET role_id = $2 WHERE user_id = $1;
 `
-const modifyAddress = `
-    UPDATE ${TABLES.ADDRESSES} SET street = $2, house_number = $3, city_id = COALESCE($4, city_id), country = $5 WHERE id = (SELECT address_id FROM ${TABLES.USERS_ADDRESSES} WHERE user_id = $1);
-`
 export const employeeQueries = {
     insertEmployee: insertEmployee,
     
@@ -69,5 +66,4 @@ export const employeeQueries = {
     modifyEmployee: modifyEmployee,
     modifyUser: modifyUser,
     modifyUserRoles: modifyUserRoles,
-    modifyAddress: modifyAddress
 }
