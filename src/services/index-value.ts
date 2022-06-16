@@ -10,3 +10,13 @@ export async function getIndexValueById(client : PoolClient,id:number): Promise<
     }
     return index_values.rows;
 }
+
+
+export async function addConsumption(client: PoolClient, consumption : Array<number | Date>): Promise<Boolean> {
+    const res = await execute(client, indexValueQueries.instertConsumptionValue, [
+        consumption[0],
+        consumption[1],
+        consumption[2],
+    ]);
+    return res.rowCount > 0;
+}

@@ -36,7 +36,7 @@ try {
     process.on('SIGINT', () => {onClose(server)});
     process.on('SIGTERM', () => {onClose(server)});
     
-    calcConstumtionMeter(5);
+    calcConstumtionMeter(1);
       
     // scheduleInvoiceJobs();
 })();
