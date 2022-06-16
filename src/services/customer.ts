@@ -5,6 +5,7 @@ import { PoolClient } from "pg";
 import { userQueries } from "../queries/users";
 import { insertAddress } from "./address";
 import { Logger } from "../utils/logger";
+import { insertUserAddress } from "./user";
 
 
 export async function getAllCustomers(client: PoolClient): Promise<Customer[] | null> {
@@ -44,7 +45,10 @@ export async function modifyCustomer(client:PoolClient, customer: Customer): Pro
         ]);
 
         for (let i = 0; i < customer.addresses.length; i++) {
-            insertAddress(client, customer.addresses[i]);
+            const addressId = await insertAddress(client, customer.addresses[i]);
+            if (customer.id == null)
+                throw new Error("Customer id is not provided");
+            insertUserAddress(client, customer.id, addressId);
         }
 
         // role is not modified
