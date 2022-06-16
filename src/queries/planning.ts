@@ -1,3 +1,4 @@
+import { MeterType } from "../models/estimation";
 import { TABLES } from "./tables";
 
 const getAllPlannings = `
@@ -25,10 +26,13 @@ const getAllPlannings = `
         ) as user
     FROM ${TABLES.PLANNINGS} as p
     LEFT JOIN ${TABLES.CONTRACTS} as c ON p.contract_id = c.id
+    LEFT JOIN ${TABLES.CONTRACTS_METERS} as cm ON c.id = cm.contract_id
+    LEFT JOIN ${TABLES.METERS} as m ON cm.meter_id = m.id
     LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
     LEFT JOIN ${TABLES.CITIES} as ct ON a.city_id = ct.id
     LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON a.id = ua.address_id
     LEFT JOIN ${TABLES.USERS} as u ON ua.user_id = u.id
+    WHERE m.meter_type = '${MeterType.MANUAL}'
 `;
 
 const changePlanningStatus = `
