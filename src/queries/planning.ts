@@ -7,13 +7,22 @@ const getAllPlannings = `
         p.date,
         p.status_id as status,
         json_build_object(
+            'id', u.id,
+            'first_name', u.first_name,
+            'last_name', u.last_name,
+            'birth_date', u.birth_date,
+            'email', u.email,
+            'phone_number', u.phone_number,
+            'national_registry_number', u.national_registry_number,
+            'address',json_build_object(
             'id', a.id, 
             'street', a.street,
             'house_number', a.house_number, 
             'city_name', ct.city_name, 
             'postal_code', ct.postal_code, 
             'country', a.country
-        ) as address
+        )
+        ) as user
     FROM ${TABLES.PLANNINGS} as p
     LEFT JOIN ${TABLES.CONTRACTS} as c ON p.contract_id = c.id
     LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
