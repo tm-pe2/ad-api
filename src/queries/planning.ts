@@ -32,7 +32,6 @@ const getAllPlannings = `
     LEFT JOIN ${TABLES.CITIES} as ct ON a.city_id = ct.id
     LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON a.id = ua.address_id
     LEFT JOIN ${TABLES.USERS} as u ON ua.user_id = u.id
-    WHERE m.meter_type = '${MeterType.MANUAL}'
 `;
 
 const changePlanningStatus = `
