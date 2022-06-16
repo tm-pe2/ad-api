@@ -135,5 +135,69 @@ export class CustomerController {
                 }
                 client.release();
             })
+            .put('/', async (req, res, next) => {
+                const client = await begin();
+                try {
+                    const customer: Customer = req.body;
+
+                    try {
+                        ValidateInterface.checkCustomerRegistration(customer);
+                    }
+                    catch (err) {
+                        if(err instanceof Error){
+                            res.status(400).json({
+                                message: err.message
+                            });
+                        }
+                        else {
+                            Logger.warn(err);
+                            res.sendStatus(400);
+                        }
+                        return;
+                    }
+
+                    if (!customer.id) {
+                        res.status(400).send("Customer id is required");
+                        return;
+                    }
+
+                    const currentCustomer = await CustomerService.getCustomerById(client, customer.id);
+                    if (!currentCustomer) {
+                        throw new Error("Customer not found");
+                    }
+                    if (customer.active == null) {
+                        customer.active = currentCustomer.active;
+                    }
+                    if (customer.password != null) {
+                        const salt = await bcrypt.genSalt(10);
+                        const pass = await bcrypt.hash(customer.password, salt);
+                        customer.password = pass;
+                    }
+                    for (let i = 0; i < customer.addresses!.length; i++) {
+                        customer.addresses![i].country = "Belgium";
+                    }
+                    const customerUpdated = await CustomerService.modifyCustomer(client, customer);
+                    if (!customerUpdated) {
+                        throw new Error("Customer not updated");
+                    }
+
+                    commit(client);
+                    res.status(200).send("Customer updated succesfully");
+                }
+                catch (err) {
+                    await rollback(client);
+                    if(err instanceof Error){
+                        res.status(500).json({
+                            message: err.message
+                        });
+                    }
+                    else {
+                        res.status(500).json({
+                            message: "Unknown error"
+                        });
+                    } 
+
+                }
+            })
     }
 }
