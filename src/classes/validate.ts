@@ -51,6 +51,7 @@ class Validate {
         const re = /^BE[0-9]{10}$/;
         if (!re.test(String(vatNumber)))
             throw new Error("Invalid vat number");
+        console.log("vat number")
     }
 
     static checkAddresses(addresses: Address[]): void {
@@ -64,6 +65,7 @@ class Validate {
     static checkAddress(address: Address): void {
             if (address.street == null || address.city_id == null || address.house_number == null)
                 throw new Error("Invalid address supplied");
+            console.log("address")
     }
 }
 
@@ -105,6 +107,7 @@ export class ValidateInterface {
     static checkSupplierEdit(supplier: Supplier): void {
         if (!supplier.company_name)
             throw new Error("No company name provided");
+        console.log("company name")
         Validate.checkVatNumber(supplier.vat_number);
         Validate.checkAddress(supplier.address);
         if (!(['gas', 'electricity'].includes(supplier.service_type)))

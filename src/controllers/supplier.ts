@@ -106,21 +106,19 @@ export class SupplierController {
                 }
                 catch (err) {
                     if(err instanceof Error){
+                        console.log("here")
                         res.status(400).json({
                             message: err.message
                         });
                     }
                     else{
                         Logger.warn(err);
+                        console.log("here")
                         res.sendStatus(400);
                     }
                     return;
                 }
                 
-                if(!supplier.address.id){
-                    res.sendStatus(400)
-                    return;
-                }
                 supplier.address.country = "Belgium"
                 const currentSupplier = await getSupplierById(client, supplier.id!);
 
