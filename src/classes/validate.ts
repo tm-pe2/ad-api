@@ -1,4 +1,5 @@
 import { Address } from "../models/address";
+import { Consumption, ConsumptionPost } from "../models/consumption";
 import { BuildingType as BUILDING_TYPE, EquipmentType as EQUIPMENT_TYPE, EstimationRegistration, MeterType as METER_TYPE, ServiceType as SERVICE_TYPE } from "../models/estimation";
 import { PlanningStatus } from "../models/planning";
 import { Supplier } from "../models/supplier";
@@ -62,6 +63,17 @@ class Validate {
             if (address.street == null || address.city_id == null || address.house_number == null)
                 throw new Error("Invalid address supplied");
         }
+    }
+
+    static checkMeters(meters: ConsumptionPost["meters"]): void {
+        if (!meters || meters.length === 0)
+            throw new Error("No meter(s) provided");
+            
+        for (const meter of meters) {
+            if (meter.meter_type == null || meter.physical_id == null || meter.index_value == null)
+                throw new Error("Invalid meter supplied");
+        }
+
     }
 
 
@@ -130,7 +142,13 @@ export class ValidateInterface {
         }
     }
 
-    static checkPlanning(planning: PlanningStatus){
-        
+    static checkPlanning(planning: PlanningStatus): void{
+        if(!(planning in PlanningStatus))
+            throw new Error("Invalid planning status");
+    }
+    static checkConsumption(consumption: ConsumptionPost){
+        Validate.checkDate(consumption.read_date);
+        Validate.checkMeters(consumption.meters);
     }
 }
+
