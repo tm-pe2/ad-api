@@ -1,56 +1,44 @@
 import { PoolClient } from "pg";
 import {addConsumption, getContractIdByMeterId, getIndexValueById} from "./index-value";
 import { connectClient } from "../utils/database-connector";
-import {generateAnnualInvoice} from "../utils/generate-invoice-util";
-import {INVOICE_TYPE} from "../models/invoice";
-import { getContractById, getContractByUserId } from "./contract";
-import { Contract } from "../models/contract";
+import { Logger } from "../utils/logger";
 
-export async function calcConstumptionMeter(id : number){
-    
+export async function calcConsumptionsMeter(id: number) {
     const limit = 10000000;
-    var actualConstumption = 0;
-    
-   const client = await connectClient();
+    let actualConsumption = 0;
+    const client = await connectClient();
 
-   try{
-    var values = await getIndexValueById(client,id);
+    try {
+        let values = await getIndexValueById(client, id);
 
-    if(values && values.length>1){
+        if (values && values.length > 1) {
 
-            var prevValue = values[0].index_value;
-            var currentValue = values[1].index_value; 
-            var meter_id = values[0].meter_id;
-            
-            var exportData: Array<number | Date> = [];
+            let prevValue = values[0].index_value;
+            let currentValue = values[1].index_value;
+            let meter_id = values[0].meter_id;
+
+            let exportData: Array<number | Date> = [];
             exportData[0] = meter_id;
             exportData[2] = new Date();
 
-            if(currentValue < prevValue){
-                var beforeTurnOver = limit - prevValue; 
-                actualConstumption = currentValue + beforeTurnOver;
-                
-                exportData[1] = actualConstumption;
-                
+            if (currentValue < prevValue) {
+                let beforeTurnOver = limit - prevValue;
+                actualConsumption = currentValue + beforeTurnOver;
+                exportData[1] = actualConsumption;
             }
-            else{
-                actualConstumption = currentValue - prevValue; 
-                exportData[1] = actualConstumption;
-            
+            else {
+                actualConsumption = currentValue - prevValue;
+                exportData[1] = actualConsumption;
             }
 
-           const output = await addConsumption(client,exportData);
-           
-           if(!output){
-               throw new Error("Could't add the consumption");                
-           }
-           const contractId = await getContractIdByMeterId(client, meter_id);
+            exportData[1] = Math.round(exportData[1]);
 
-           if(contractId){
+            const output = await addConsumption(client, exportData);
 
-               const contract = await getContractById(client, contractId);
-           
-            if(contract){generateAnnualInvoice(contract);}
+
+            if (!output) {
+                throw new Error("Couldn't add the consumption");
+            }
         }
         else{
             throw new Error("couldn't get contract id");
@@ -63,8 +51,10 @@ export async function calcConstumptionMeter(id : number){
     }
         
     }
-    catch(error){
-        console.log(error);        
+    catch (error) {
+        // Bad error handling Xander...
+        Logger.error(error);
     }
 
+    client.release();
 }
