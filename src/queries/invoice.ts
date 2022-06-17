@@ -30,7 +30,7 @@ const getAllInvoices = `
             'country', a.country
         ) as address,
         json_build_object(
-            'user_id', u.id,
+            'id', u.id,
             'first_name', u.first_name,
             'last_name', u.last_name,
             'birth_date', u.birth_date,
