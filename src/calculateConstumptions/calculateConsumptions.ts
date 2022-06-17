@@ -1,8 +1,10 @@
 import { PoolClient } from "pg";
 import { addConsumption, getIndexValueById } from "../services/index-value";
 import { connectClient } from "../utils/database-connector";
+import {generateAnnualInvoice} from "../utils/generate-invoice-util";
+import {INVOICE_TYPE} from "../models/invoice";
 
-export async function calcConsumptionsMeter(id : number){
+export async function calcConstumtionMeter(id : number){
     
     const limit = 10000000;
     var actualConstumption = 0;
@@ -11,6 +13,7 @@ export async function calcConsumptionsMeter(id : number){
 
    try{
     var values = await getIndexValueById(client,id);
+    console.log(values);
 
     if(values && values.length>1){
 
@@ -35,19 +38,28 @@ export async function calcConsumptionsMeter(id : number){
                 
             }
 
-            const output = await addConsumption(client,exportData);
+           // const output = await addConsumption(client,exportData);
+
+            //const contract = await 
+
+            var output = true;
             client.release();
+            
+            //await generateInvoices(INVOICE_TYPE.DEBIT);
+
+            //generateAnnualInvoice(contract);
            
             if(!output){
                 throw new Error("Could't add the consumption");                
             }
         }
+    else{
+        throw new Error("Could not load the index values");
+    }
+        
     }
     catch(error){
         console.log(error);        
     }
 
 }
-
-    
-
