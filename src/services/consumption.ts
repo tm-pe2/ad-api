@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { calcConsumptionsMeter } from "../calculateConstumptions/calculateConsumptions";
+import { calcConstumptionMeter } from "../calculateConstumptions/calculateConsumptions";
 import { Consumption, ConsumptionPost, Meter } from "../models/consumption";
 import { CONTRACT_STATUS } from "../models/contract";
 import { MeterType } from "../models/estimation";
@@ -51,7 +51,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             }
         }
         else{
-            calcConsumptionsMeter(meter.id);
+            calcConstumptionMeter(meter.id);
         }
     }
 

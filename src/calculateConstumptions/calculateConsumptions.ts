@@ -3,8 +3,10 @@ import { addConsumption, getIndexValueById } from "../services/index-value";
 import { connectClient } from "../utils/database-connector";
 import {generateAnnualInvoice} from "../utils/generate-invoice-util";
 import {INVOICE_TYPE} from "../models/invoice";
+import { getContractByUserId } from "../services/contract";
+import { Contract } from "../models/contract";
 
-export async function calcConstumtionMeter(id : number){
+export async function calcConstumptionMeter(id : number){
     
     const limit = 10000000;
     var actualConstumption = 0;
@@ -13,7 +15,6 @@ export async function calcConstumtionMeter(id : number){
 
    try{
     var values = await getIndexValueById(client,id);
-    console.log(values);
 
     if(values && values.length>1){
 
@@ -38,16 +39,16 @@ export async function calcConstumtionMeter(id : number){
                 
             }
 
-           // const output = await addConsumption(client,exportData);
+           const output = await addConsumption(client,exportData);
 
-            //const contract = await 
-
-            var output = true;
+            var contract = await getContractByUserId(client,values[0].user_id);
+    
             client.release();
             
-            //await generateInvoices(INVOICE_TYPE.DEBIT);
+            if(contract){
 
-            //generateAnnualInvoice(contract);
+            generateAnnualInvoice(contract[0]);
+            }
            
             if(!output){
                 throw new Error("Could't add the consumption");                
