@@ -6,10 +6,10 @@ import { INVOICE_TYPE } from "../models/invoice";
 import { getContractById, getContractByUserId } from "./contract";
 import { Contract } from "../models/contract";
 
-export async function calcConstumptionMeter(client: PoolClient, id: number) {
+export async function calcConsumptionMeter(client: PoolClient, id: number) {
 
     const limit = 10000000;
-    var actualConstumption = 0;
+    var actualConsumption = 0;
 
     var values = await getIndexValueById(client, id);
     //console.log("values",values);
@@ -27,14 +27,14 @@ export async function calcConstumptionMeter(client: PoolClient, id: number) {
 
         if (currentValue < prevValue) {
             var beforeTurnOver = limit - prevValue;
-            actualConstumption = currentValue + beforeTurnOver;
+            actualConsumption = currentValue + beforeTurnOver;
 
-            exportData[1] = actualConstumption;
+            exportData[1] = actualConsumption;
 
         }
         else {
-            actualConstumption = currentValue - prevValue;
-            exportData[1] = actualConstumption;
+            actualConsumption = currentValue - prevValue;
+            exportData[1] = actualConsumption;
 
         }
 
