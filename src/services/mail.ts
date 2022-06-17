@@ -12,13 +12,6 @@ export class MailService {
     private from: string;
 
     private endMail = `Best regards,\n${mailConfig.company}`;
-    //supposed to be gotten from the data base
-    /*private customer: Customer = {
-        id: 1,
-        firstName: "maci",
-        lastName: "rohan48",
-        email: "AD0830686@PE2022.com"
-    };*/
 
     constructor() {
         this.checkEnv()
@@ -26,11 +19,8 @@ export class MailService {
         this.from = `${mailConfig.company}: Info ${this.hostEmail}`;
         this.transport = this.createTrans();
         this.transport.on("error", (err) => Logger.error(err));
-        //console.log(this.transport);
         this.verify()
     };
-
-
 
     private checkEnv() {
         if (!process.env.MAILSERVER_P)
@@ -41,8 +31,6 @@ export class MailService {
     }
 
     private createTrans() {
-        //using https://ethereal.email includes authentication, testing
-        //mailserver doesn't have authentication (no TLS)
         return createTransport({
             from: this.from,
             host: mailConfig.host,
@@ -51,8 +39,6 @@ export class MailService {
                 user: this.hostEmail,
                 pass: process.env.MAILSERVER_P
             },
-            //logger: true,
-            //transactionLog: true,
             secure: false,
             requireTLS: false
         })
@@ -118,45 +104,6 @@ export class MailService {
         text += "<p>" + this.endMail.replace("\n", "<br>") + "</p>";
         return text;
     }
-
-
-    /*public sendWorkOrder(): SentMessageInfo{
-        const employee = this.customer;
-        //info from db
-        const title = `Dear ${employee.firstName} ${employee.lastName}`;
-        const body = [
-            "you have a new work order.",
-            "for more information go to <a href='https://templates.office.com/en-us/Invoices'>this link</a>"
-        ];
-        
-        return this.transport.sendMail({
-            from: this.from,
-            to: this.customer.email,
-            subject: `Work order`,
-            text: this.textFormat(title, body),
-            html: this.htmlFormat(title, body),
-        }).catch((e) => { Logger.error(e); });
-    }
-    
-    public sendAppointment(): SentMessageInfo{
-        const Customer = this.customer;
-        //info from db
-        const title = `Dear ${Customer.firstName} ${Customer.lastName}`;
-        const body = [
-            "there has been set an appointment",
-            `your appointment has been set on ${new Date().toDateString()}.`
-        ];
-        
-        return this.transport.sendMail({
-            from: this.from,
-            to: this.customer.email,
-            subject: `Work order`,
-            text: this.textFormat(title, body),
-            html: this.htmlFormat(title, body),
-        }).catch((e) => { Logger.error(e); });
-    }
-*/
-
 
 };
 
