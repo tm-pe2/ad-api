@@ -36,8 +36,8 @@ export class UserController {
                 client.release();
             })
             .patch('/:id', async (req, res, next) => {
+                const client = await connectClient();
                 try {
-                    const client = await connectClient();
                     const active = Boolean(req.body.active)
                     
                     const id = await execute(client, userQueries.changeStatus, [req.params.id, active])
@@ -48,7 +48,7 @@ export class UserController {
                         error: error
                     })
                 }
-
+                client.release();
             })
     }
 }
