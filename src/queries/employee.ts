@@ -25,14 +25,14 @@ const selectEmployeeQuery = `
                 'country', a.country
             )
         ) as addresses,
-        array_agg(r.id) as roles
+        array_agg(DISTINCT r.id) as roles
     FROM ${TABLES.EMPLOYEES} as e
-    JOIN ${TABLES.USERS} as u ON e.user_id = u.id
-    JOIN ${TABLES.USERS_ADDRESSES} as ua ON u.id = ua.user_id
-    JOIN ${TABLES.ADDRESSES} as a ON ua.address_id = a.id
-    JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
-    JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
-    JOIN ${TABLES.CITIES} as c ON a.city_id = c.id
+    LEFT JOIN ${TABLES.USERS} as u ON e.user_id = u.id
+    LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON u.id = ua.user_id
+    LEFT JOIN ${TABLES.ADDRESSES} as a ON ua.address_id = a.id
+    LEFT JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
+    LEFT JOIN ${TABLES.ROLES} as r ON ur.role_id = r.id
+    LEFT JOIN ${TABLES.CITIES} as c ON a.city_id = c.id
 `
 
 const insertEmployee = `
