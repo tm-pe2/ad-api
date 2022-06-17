@@ -16,7 +16,7 @@ export interface Invoice {
     type: INVOICE_TYPE,
     address?: Address,
     customer?: Customer,
-    tariff: Tariff,
+    tariff?: Tariff,
 }
 
 interface Tariff {
@@ -36,6 +36,7 @@ export enum INVOICE_STATUS {
     DUE = 1,
     LATE,
     PAID,
+    REMINDED
 }
 
 export interface InvoicesStatuses {
