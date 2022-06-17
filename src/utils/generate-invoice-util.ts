@@ -165,6 +165,8 @@ const getTotalConsumption = async (contract: Contract) => {
         }
         totalConsumption += consumption.consumed_value;
     }
+
+    client.release();
     return totalConsumption;
 }
 

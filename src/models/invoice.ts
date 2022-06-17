@@ -16,7 +16,7 @@ export interface Invoice {
     type: INVOICE_TYPE,
     address?: Address,
     customer?: Customer,
-    tariff: Tariff,
+    tariff?: Tariff,
 }
 
 interface Tariff {
