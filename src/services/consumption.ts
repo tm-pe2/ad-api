@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { calcConstumtionMeter } from "../calculateConstumptions/calculateConsumptions";
+import { calcConsumptionsMeter } from "../calculateConstumptions/calculateConsumptions";
 import { Consumption, ConsumptionPost, Meter } from "../models/consumption";
 import { CONTRACT_STATUS } from "../models/contract";
 import { MeterType } from "../models/estimation";

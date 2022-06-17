@@ -6,20 +6,11 @@ const selectIndexValueQuery = `
     iv.id,
     iv.meter_id,
     iv.index_value,
-    iv.read_date,
-    json_agg(
-        json_build_object(
-            'id',iv.id,
-            'meter_id',iv.meter_id,
-            'index_value', iv.index_value,
-            'read_date',iv.read_date
-        )
-    ) as indexValues
+    iv.read_date
 
     FROM ${TABLES.INDEXED_VALUES} as iv    
     
     WHERE iv.meter_id = $1
-    GROUP BY iv.id
     ORDER BY iv.read_date
 `
 
