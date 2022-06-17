@@ -72,6 +72,12 @@ const AddUser = `
 const InsertUserRole = `
     INSERT INTO ${TABLES.USERS_ROLES} (user_id, role_id) VALUES ($1, $2)
     `
+const modifyUser = `
+UPDATE ${TABLES.USERS} SET first_name = $2, last_name = $3, birth_date = $4, email = $5, phone_number = $6, national_registry_number = $7, password = COALESCE($8,password) , active = $9 WHERE id = $1;
+`
+const modifyUserRoles = `
+    UPDATE ${TABLES.USERS_ROLES} SET role_id = $2 WHERE user_id = $1;
+`
 
 const changeStatus = `UPDATE ${TABLES.USERS}
 SET active = $2
@@ -85,5 +91,7 @@ export const userQueries = {
     AddUserAddress: addUserAddress,
     AddUser: AddUser,
     InsertUserRole: InsertUserRole,
-    changeStatus: changeStatus
+    changeStatus: changeStatus,
+    modifyUser: modifyUser,
+    modifyUserRoles: modifyUserRoles
 };
