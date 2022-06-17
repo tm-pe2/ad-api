@@ -1,5 +1,6 @@
 import { Address } from "cluster";
-import { Customer } from "./user";
+import { ServiceType } from "./estimation";
+import { Customer, CustomerType } from "./user";
 
 export interface Invoice {
     id: number,
@@ -15,6 +16,14 @@ export interface Invoice {
     type: INVOICE_TYPE,
     address: Address,
     customer: Customer,
+    tariff: Tariff,
+}
+
+interface Tariff {
+    id: number,
+    customer_type: CustomerType,
+    service_type: ServiceType,
+    value: number,
 }
 
 export enum INVOICE_TYPE {

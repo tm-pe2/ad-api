@@ -1,5 +1,7 @@
 import { Address } from "../models/address";
-import { ServiceType } from "../models/estimation";
+import { ConsumptionPost } from "../models/consumption";
+import { BuildingType as BUILDING_TYPE, EquipmentType as EQUIPMENT_TYPE, EstimationRegistration, MeterType as METER_TYPE, ServiceType as SERVICE_TYPE } from "../models/estimation";
+import { PlanningStatus } from "../models/planning";
 import { Supplier } from "../models/supplier";
 import { Customer, CustomerType, Employee, User, UserRole } from "../models/user";
 
@@ -11,7 +13,7 @@ class Validate {
     }
 
     static checkPhone(phone: string): void {
-        const re = /^\+?[0-9]{10,12}$/;
+        const re = /^(((\+|00)32[ ]?(?:\(0\)[ ]?)?)|0){1}(4(60|[789]\d)\/?(\s?\d{2}\.?){2}(\s?\d{2})|(\d\/?\s?\d{3}|\d{2}\/?\s?\d{2})(\.?\s?\d{2}){2})$/;
         if (!re.test(String(phone).toLowerCase()))
             throw new Error("Invalid phone number");
     }
@@ -67,6 +69,19 @@ class Validate {
                 throw new Error("Invalid address supplied");
             console.log("address")
     }
+
+    static checkMeters(meters: ConsumptionPost["meters"]): void {
+        if (!meters || meters.length === 0)
+            throw new Error("No meter(s) provided");
+            
+        for (const meter of meters) {
+            if (meter.meter_type == null || meter.physical_id == null || meter.index_value == null)
+                throw new Error("Invalid meter supplied");
+        }
+
+    }
+
+
 }
 
 export class ValidateInterface {
@@ -104,6 +119,44 @@ export class ValidateInterface {
         if (!(['gas', 'electricity'].includes(supplier.service_type)))
             throw new Error("Invalid service type");
     }
+    
+    static checkEstimationRegistration(estimation: EstimationRegistration): void {
+        if (estimation.past_consumption <= 0)
+            throw new Error("Invalid past consumption");
+        if (estimation.address_id == null)
+            throw new Error("No address provided");
+        if (estimation.family_size <= 0)
+            throw new Error("Invalid family size");
+        if (!(estimation.service_type in SERVICE_TYPE))
+            throw new Error("Invalid service type");
+        if (!(estimation.building_type in BUILDING_TYPE))
+            throw new Error("Invalid building type");
+        if (!estimation.meters)
+            throw new Error("No meters provided");
+        for (const meter of estimation.meters) {
+            console.log(meter);
+            if (!(meter.meter_type == METER_TYPE.MANUAL ||
+                meter.meter_type == METER_TYPE.SMART))
+                throw new Error("Invalid meter type");
+        }
+        if (!estimation.equipment)
+            throw new Error("No equipment provided");
+        for (const equipment of estimation.equipment) {
+            if (!(equipment in EQUIPMENT_TYPE))
+                throw new Error("Invalid equipment type");
+        }
+    }
+
+    static checkPlanning(planning: PlanningStatus): void{
+        if(!(planning in PlanningStatus))
+            throw new Error("Invalid planning status");
+    }
+
+    static checkConsumption(consumption: ConsumptionPost){
+        Validate.checkDate(consumption.read_date);
+        Validate.checkMeters(consumption.meters);
+    }
+
     static checkSupplierEdit(supplier: Supplier): void {
         if (!supplier.company_name)
             throw new Error("No company name provided");
@@ -113,5 +166,4 @@ export class ValidateInterface {
         if (!(['gas', 'electricity'].includes(supplier.service_type)))
             throw new Error("Invalid service type");
     }
-        
 }
