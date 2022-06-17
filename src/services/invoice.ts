@@ -53,13 +53,12 @@ export async function getInvoicesByContractIdAndPeriod(client: PoolClient, contr
     return invoices.rows as Invoice[];
 }
 
-export async function updateInvoiceStatus(client:PoolClient, invoicesStatuses: InvoicesStatuses): Promise<number | null>{
+export async function updateInvoiceStatus(client:PoolClient, invoiceId: number, invoiceStatus: INVOICE_STATUS): Promise<boolean>{
     const res = await execute(client, invoiceQueries.updateInvoiceStatus, [
-        invoicesStatuses.invoice_id,
-        invoicesStatuses.status_id
+        invoiceId,
+        invoiceStatus
     ]);
-    if (res.rowCount === 0) return null;
-    return res.rows[0].invoice_id;
+    return res.rowCount !== 0;
 }
 
 export async function getInvoiceById(client: PoolClient, invoiceId: number) {

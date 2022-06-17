@@ -2,9 +2,10 @@ import {Router} from "express";
 import {authSelf} from "../middleware/auth";
 import {InvoicesStatuses} from "../models/invoice";
 import {getAllInvoices, getInvoicesByUserId, updateInvoiceStatus} from "../services/invoice";
-import {connectClient} from "../utils/database-connector";
+import {begin, commit, connectClient, rollback} from "../utils/database-connector";
 import {Logger} from "../utils/logger";
 import * as pdfUtil from "../utils/invoice-to-pdf-util";
+import { ValidateInterface } from "../classes/validate";
 
 export class InvoiceController {
     static router(): Router {
@@ -62,14 +63,24 @@ export class InvoiceController {
             }
             client.release();
         })
-
-        .post('/:id', async (req, res, next) => {
-            const client = await connectClient();
+        .patch('/:id', async (req, res, next) => {
+            const client = await begin();
             try {
-                const invoicesStatuses: InvoicesStatuses = req.body;
-                const invoiceId = await updateInvoiceStatus(client, invoicesStatuses);
-                res.send(invoiceId);
+                const invoiceId = Number(req.params.id);
+                if (isNaN(invoiceId)) {
+                    res.sendStatus(400);
+                    return;
+                }
+
+                const status = req.body.status;
+                // TODO validate
+                await updateInvoiceStatus(client, invoiceId, status);
+
+                commit(client);
+
+                res.send("Status updated successfully");
             } catch (e){
+                rollback(client);
                 Logger.error(e);
                 res.sendStatus(500);
             }
