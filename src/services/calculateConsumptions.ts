@@ -6,24 +6,24 @@ import { getContractById } from "./contract";
 export async function calcConsumptionMeter(client: PoolClient, id: number) {
 
     const limit = 10000000;
-    var actualConsumption = 0;
+    let actualConsumption = 0;
 
-    var values = await getIndexValueById(client, id);
+    let values = await getIndexValueById(client, id);
     //console.log("values",values);
 
     if (values && values.length > 1) {
 
-        var prevValue = values[0].index_value;
-        var currentValue = values[1].index_value;
-        var meter_id = values[0].meter_id;
+        let prevValue = values[0].index_value;
+        let currentValue = values[1].index_value;
+        let meter_id = values[0].meter_id;
         console.log(meter_id);
 
-        var exportData: Array<number | Date> = [];
+        let exportData: Array<number | Date> = [];
         exportData[0] = meter_id;
         exportData[2] = new Date();
 
         if (currentValue < prevValue) {
-            var beforeTurnOver = limit - prevValue;
+            let beforeTurnOver = limit - prevValue;
             actualConsumption = currentValue + beforeTurnOver;
 
             exportData[1] = actualConsumption;
