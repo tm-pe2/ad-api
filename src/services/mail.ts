@@ -85,17 +85,17 @@ export class MailService {
     async overdueInvoice(invoiceInfo: invoiceOverdue): Promise<SentMessageInfo> {
         const client = await begin();
         //info from db
-        const title = `Dear ${invoiceInfo} ${invoiceInfo}`;
+        const title = `Dear ${invoiceInfo.user.first_name} ${invoiceInfo.user.last_name}`;
         const body = [
-            `Your invoice ${invoiceInfo} is overdue`,
-            `Please pay the invoice at <a href="./invoice">this link</a>.`,
+            `Your invoice ${invoiceInfo.id} is overdue`,
+            `Please pay the invoice at <a href="${mailConfig.baseLink}/manageinvoices">this link</a>.`,
             `<br>`
         ];
 
         return this.transport.sendMail({
             from: this.from,
             to: invoiceInfo.user.email,
-            subject: `Work order`,
+            subject: `Overdue invoice`,
             text: this.textFormat(title, body),
             html: this.htmlFormat(title, body),
         }).catch((e) => { Logger.error(e); });

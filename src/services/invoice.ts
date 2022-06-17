@@ -1,24 +1,24 @@
-import {PoolClient} from "pg";
-import {Invoice, INVOICE_STATUS, InvoicesStatuses} from "../models/invoice";
-import {invoiceQueries} from "../queries/invoice";
-import {begin, execute} from "../utils/database-connector";
-import {Contract} from "../models/contract";
+import { PoolClient } from "pg";
+import { Invoice, INVOICE_STATUS, InvoicesStatuses } from "../models/invoice";
+import { invoiceQueries } from "../queries/invoice";
+import { begin, execute } from "../utils/database-connector";
+import { Contract } from "../models/contract";
 import { MailService } from "./mail";
 import { User } from "../models/user";
 
 
 export async function getAllInvoices(client: PoolClient): Promise<Invoice[]> {
-        const invoices = await execute(client, invoiceQueries.getAllInvoices)
-        if(invoices.rowCount === 0) return [];
-        return invoices.rows
+    const invoices = await execute(client, invoiceQueries.getAllInvoices)
+    if (invoices.rowCount === 0) return [];
+    return invoices.rows
 }
 export async function getInvoicesByUserId(client: PoolClient, id: number) {
     const invoices = await execute(client, invoiceQueries.getInvoicesByUserId, [id]);
-    if(invoices.rowCount === 0) return [];
+    if (invoices.rowCount === 0) return [];
     return invoices.rows;
 }
 
-export async function insertInvoice(client:PoolClient, invoice: Invoice): Promise<number | null>{
+export async function insertInvoice(client: PoolClient, invoice: Invoice): Promise<number | null> {
     const res = await execute(client, invoiceQueries.insertInvoice, [
         invoice.contract_id,
         invoice.supplier_id,
@@ -44,7 +44,7 @@ export async function insertInvoice(client:PoolClient, invoice: Invoice): Promis
 
 export async function getInvoiceByContractIdAndPeriod(client: PoolClient, contract: Contract): Promise<Invoice | null> {
     const invoices = await execute(client, invoiceQueries.getInvoiceByContractIdAndPeriod, [contract.id, contract.start_date, contract.end_date]);
-    if(invoices.rowCount === 0) return null;
+    if (invoices.rowCount === 0) return null;
     return invoices.rows[0] as Invoice;
 }
 // might or might not need this for something
@@ -54,7 +54,7 @@ export async function getInvoicesByContractIdAndPeriod(client: PoolClient, contr
     return invoices.rows as Invoice[];
 }
 
-export async function updateInvoiceStatus(client:PoolClient, invoiceId: number, invoiceStatus: INVOICE_STATUS): Promise<boolean>{
+export async function updateInvoiceStatus(client: PoolClient, invoiceId: number, invoiceStatus: INVOICE_STATUS): Promise<boolean> {
     const res = await execute(client, invoiceQueries.updateInvoiceStatus, [
         invoiceId,
         invoiceStatus
@@ -90,33 +90,36 @@ export const getOverdueInvoices = async () => {
 //TODO use scheduler (invoice branch)
 export async function setOverdue() {
     const client = await begin();
-    //TODO get user/invoice
-    const querySelect = `select * from invoices i WHERE "status_id" = $1 OR "status_id" = $2 AND "due_date" <= $3`;
-    const sql = await execute(client, querySelect, [
+
+    //console.log(invoiceQueries.getLateNotReminded);
+    const sql = await execute(client, invoiceQueries.getLateNotReminded, [
         INVOICE_STATUS.DUE,
         INVOICE_STATUS.LATE,
         new Date().toISOString()]);
     if (sql.rowCount === 0) return;
+
     const invoices = sql.rows as invoiceOverdue[];
-    const queryUpdate = `UPDATE invoices i SET "status_id" = $2 WHERE i.id = $1 `;
 
-   
+    //console.log(invoices);
+
     const ms = new MailService();
-
+    const date = new Date().toISOString();
     invoices.forEach(o => {
-        ms.overdueInvoice(o)
-         execute(client, queryUpdate, [
-        INVOICE_STATUS.LATE,
-        INVOICE_STATUS.DUE,
-        new Date().toISOString()])
+        ms.overdueInvoice(o).then(() => {
+            updateInvoiceStatus(client, o.id, INVOICE_STATUS.REMINDED);
+        }
+        ).catch(() => {
+            updateInvoiceStatus(client, o.id, INVOICE_STATUS.LATE);
+        })
+
         //ms.overdueInvoice(o)
     });
     //new 
 }
 
-export interface invoiceOverdue{
-    user: User,
-    id: number
+export interface invoiceOverdue extends Invoice {
+    user: User
+
 }
 /*export async function startIntervalsOverdue() {
     setInterval(setOverdue, 10000);
