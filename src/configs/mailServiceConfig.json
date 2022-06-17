@@ -3,5 +3,6 @@
     "domain": "PE2022.com",
     "host": "mailserver1.pe2022.com",
     "secure": false,
+    "baseLink": "localhost:4200",
     "company": "PE2022"
 }

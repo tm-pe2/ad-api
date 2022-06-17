@@ -1,6 +1,7 @@
 import {generateInvoices} from "./generate-invoice-util";
 import schedule from 'node-schedule'
 import {INVOICE_TYPE} from "../models/invoice";
+import { setOverdue } from "../services/invoice";
 
 export const scheduleInvoiceJobs = () => {
     const dailyRule = new schedule.RecurrenceRule();
@@ -25,4 +26,12 @@ export const scheduleInvoiceJobs = () => {
         console.log("Next annual invoice job on:");
         console.log(annualInvoiceJob.nextInvocation());
     });
+
+    const overdueInvoiceJob = schedule.scheduleJob(dailyRule, async function(){
+        await setOverdue();
+
+        console.log("Next annual invoice job on:");
+        console.log(overdueInvoiceJob.nextInvocation());
+    })
+    
 }
