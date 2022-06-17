@@ -22,7 +22,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
     if (meter.meter_type == MeterType.SMART) {
         meter.index_value = await getSmartMeterValue(meter.physical_id);
     }
-
+    
     const res = await execute(client, consumptionQueries.insertConsumption, [
         meter.id,
         meter.index_value,
