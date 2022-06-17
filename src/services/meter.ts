@@ -1,10 +1,10 @@
-import {PoolClient} from "pg";
 import {connectClient, execute} from "../utils/database-connector";
+import { PoolClient } from "pg";
 import {MeterType} from "../models/estimation";
 import {meterQueries} from "../queries/meters";
 import fetch from "node-fetch";
-import {Meter} from "../models/consumption";
 import { consumptionQueries } from "../queries/consumption";
+import { Meter } from "../models/consumption";
 
 export async function addNewMeter(client:PoolClient,
     contractId: number, meterType: MeterType, familySize: number): Promise<number | null> {

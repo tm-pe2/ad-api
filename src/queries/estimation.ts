@@ -27,7 +27,8 @@ const selectEstimation = `
             'country', a.country
         ) as address
     FROM ${TABLES.ESTIMATIONS} as est
-    LEFT JOIN ${TABLES.ADDRESSES} as a ON est.address_id = a.id
+    LEFT JOIN ${TABLES.CONTRACTS} as c ON c.id = est.id
+    LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
     LEFT JOIN ${TABLES.CITIES} as ci ON a.city_id = ci.id
 `;
 

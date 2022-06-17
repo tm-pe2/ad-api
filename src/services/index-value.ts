@@ -5,6 +5,7 @@ import { execute } from "../utils/database-connector";
 
 export async function getIndexValueById(client : PoolClient,id:number): Promise<index_value[] | null>{
     const index_values = await execute(client, indexValueQueries.selectIndexValueQuery,[id]);
+    console.log(index_values.rows);
     if(index_values.rowCount == 0){
         return null;
     }
@@ -19,4 +20,12 @@ export async function addConsumption(client: PoolClient, consumption : Array<num
         consumption[2],
     ]);
     return res.rowCount > 0;
+}
+
+export async function getContractIdByMeterId(client : PoolClient,id:number): Promise<number | null>{
+    const res = await execute(client, indexValueQueries.selectContractQuery,[id]);
+    if(res.rowCount == 0){
+        return null;
+    }
+    return res.rows[0].id;
 }

@@ -32,10 +32,9 @@ try {
     process.on('SIGINT', () => {onClose(server)});
     process.on('SIGTERM', () => {onClose(server)});
     
-      
-    // scheduleInvoiceJobs();
-    //await generateInvoices(INVOICE_TYPE.DEBIT);
-    //await generateInvoices(INVOICE_TYPE.ADVANCE);
+
+     scheduleInvoiceJobs();
+
 })();
 
 function onClose(http: Server) {

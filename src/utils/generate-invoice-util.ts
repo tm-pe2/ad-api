@@ -8,21 +8,23 @@ import {Consumption, Meter} from "../models/consumption";
 import {getInvoiceByContractIdAndPeriod, insertInvoice} from "../services/invoice";
 import {getMetersByContractId} from "../services/meter";
 import {getLastConsumptionByMeterId} from "../services/consumption";
+import { MailService } from "../services/mail";
+import { Logger } from "./logger";
 
 export const generateInvoices = async (invoiceType: INVOICE_TYPE) => {
     const client = await connectClient();
     const activeContracts: Contract[] | null = await getAllActiveContracts(client);
     if (activeContracts) {
-        handleActiveContracts(activeContracts, invoiceType);
+        await handleActiveContracts(activeContracts, invoiceType);
     }
     return true;
 }
 
-const handleActiveContracts = (activeContracts: Contract[], invoiceType: INVOICE_TYPE) => {
+const handleActiveContracts = async (activeContracts: Contract[], invoiceType: INVOICE_TYPE) => {
     if (invoiceType == INVOICE_TYPE.ADVANCE) {
-        handleAdvancePayments(activeContracts);
+        await handleAdvancePayments(activeContracts);
     } else {
-        handleAnnualPayments(activeContracts);
+        await handleAnnualPayments(activeContracts);
     }
 }
 
@@ -37,8 +39,9 @@ const handleAdvancePayments = async (activeContracts: Contract[]) => {
         if (timeForAdvanceInvoice) {
             try {
                 await generateAdvanceInvoice(contract);
+                new MailService().sendInvoice(contract.user_id)
             } catch (e) {
-                console.log('Error when generating advance invoice for contract with id: ' + contract.id + ' -> ' + e);
+                Logger.error('Error when generating advance invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
         }
     }
@@ -55,10 +58,10 @@ const handleAnnualPayments = async (activeContracts: Contract[]) => {
                 if (invoiceExists) {
                     return;
                 }
-                const totalConsumption = await getTotalConsumption(contract);
-                await generateAnnualInvoice(contract, totalConsumption);
+                await generateAnnualInvoice(contract);
+                new MailService().sendInvoice(contract.user_id)
             } catch (e) {
-                console.log('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
+                Logger.error('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
         }
     }
@@ -89,8 +92,9 @@ const generateAdvanceInvoice = async (contract: Contract) => {
         period_end: addMonths(creationDate, 1),
         status: INVOICE_STATUS.DUE,
         type: INVOICE_TYPE.ADVANCE,
-        address: null,
-        customer: null
+        address: undefined,
+        customer: undefined,
+        tariff: undefined
     };
 
     const invoiceId = await insertInvoice(client, invoice);
@@ -101,8 +105,10 @@ const generateAdvanceInvoice = async (contract: Contract) => {
     }
 }
 
-const generateAnnualInvoice = async (contract: Contract, totalConsumption: number) => {
+export const generateAnnualInvoice = async (contract: Contract) => {
     const currentDate = new Date();
+
+    const totalConsumption = await getTotalConsumption(contract);
 
     const client = await connectClient();
     const estimation: Estimation | null = await getEstimationById(client, contract.estimation_id);
@@ -130,8 +136,9 @@ const generateAnnualInvoice = async (contract: Contract, totalConsumption: numbe
         period_end: contract.end_date,
         status: INVOICE_STATUS.DUE,
         type: endTotal > 0 ? INVOICE_TYPE.DEBIT : INVOICE_TYPE.CREDIT,
-        address: null,
-        customer: null
+        address: undefined,
+        customer: undefined,
+        tariff: undefined
     };
 
     const invoiceId = await insertInvoice(client, invoice);
@@ -144,6 +151,8 @@ const generateAnnualInvoice = async (contract: Contract, totalConsumption: numbe
 
 const getTotalConsumption = async (contract: Contract) => {
     const client = await connectClient();
+    
+    console.log(contract);
 
     const meters: Meter[] | null = await getMetersByContractId(client, contract.id);
     if (!meters) {
@@ -151,20 +160,23 @@ const getTotalConsumption = async (contract: Contract) => {
     }
     let totalConsumption = 0;
     for (const meter of meters) {
+        console.log(meter.id);
         const consumption: Consumption | null = await getLastConsumptionByMeterId(client, meter.id);
+        console.log(consumption);
 
-        if (!consumption) {
-            throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
-        }
-
+        if (consumption) {
+            
         const consumptionIsValid = consumption.consumed_value > 0
-            && consumption.calculated_date > contract.start_date
+            && consumption.calculated_date >= contract.start_date
             && consumption.calculated_date <= contract.end_date;
         if (!consumptionIsValid) {
             throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
         }
         totalConsumption += consumption.consumed_value;
     }
+    }
+
+    client.release();
     return totalConsumption;
 }
 
