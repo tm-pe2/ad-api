@@ -35,7 +35,10 @@ export async function calcConsumptionsMeter(id : number){
                 
             }
 
+            exportData[1] = Math.round(exportData[1]);
+            
             const output = await addConsumption(client,exportData);
+
             client.release();
            
             if(!output){
