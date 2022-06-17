@@ -101,7 +101,7 @@ export async function getSmartMeterValue(physical_id: number) : Promise<number> 
         fetch("http://10.97.0.100:3000/meter/" + physical_id + "/update", request)
         .then((raw: any) => raw.json())
         .then((response: any) => {
-            index_value = response['last_data_point']['day_consumption'];
+            index_value = Math.floor(response['last_data_point']['day_consumption']);
             resolve(index_value);
         })
         .catch((error: any) => reject(error))

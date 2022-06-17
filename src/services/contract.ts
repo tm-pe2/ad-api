@@ -45,7 +45,7 @@ export async function activivateContractByMeterId(client:PoolClient, meterId: nu
     const endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 1);
     const res = await execute(client,contractQueries.activateContractbyMeterId, [
-        meterId, status, startDate, endDate
+        meterId, CONTRACT_STATUS.ACTIVE, startDate, endDate
     ]);
     return res.rowCount > 0;
 }

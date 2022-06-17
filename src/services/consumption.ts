@@ -1,10 +1,12 @@
 import { PoolClient } from "pg";
 import { Consumption, ConsumptionPost, Meter } from "../models/consumption";
 import { CONTRACT_STATUS } from "../models/contract";
+import { MeterType } from "../models/estimation";
 import { PlanningStatus as PLANNING_STATUS } from "../models/planning";
 import { consumptionQueries } from "../queries/consumption";
 import { execute } from "../utils/database-connector";
 import {activivateContractByMeterId, getContractIdByMeterId} from "./contract";
+import { getSmartMeterValue } from "./meter";
 import { createPlanning } from "./planning";
 
 export async function getConsumptionById(client: PoolClient, id: number): Promise<Consumption[] | null> {
@@ -16,6 +18,11 @@ export async function getConsumptionById(client: PoolClient, id: number): Promis
 }
 
 export async function addIndexedValue(client: PoolClient, meter: Meter, readDate: Date): Promise<Boolean> {
+
+    if (meter.meter_type == MeterType.SMART) {
+        meter.index_value = await getSmartMeterValue(meter.physical_id);
+    }
+
     const res = await execute(client, consumptionQueries.insertConsumption, [
         meter.id,
         meter.index_value,
@@ -37,7 +44,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             // Read date + 11 months
             const endContractPlanning = new Date(readDate.getTime());
             endContractPlanning.setMonth(endContractPlanning.getMonth() + 11);
-            const planning = createPlanning(client, contractId, readDate, PLANNING_STATUS.SCHEDULED);
+            const planning = createPlanning(client, contractId, endContractPlanning, PLANNING_STATUS.SCHEDULED);
             if (planning == null) {
                 throw new Error("Planning not created");
             }

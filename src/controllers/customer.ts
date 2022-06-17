@@ -198,6 +198,7 @@ export class CustomerController {
                     } 
 
                 }
+                client.release();
             })
     }
 }
