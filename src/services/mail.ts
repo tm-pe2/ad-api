@@ -4,8 +4,7 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { getUserById } from './user';
 import { begin } from '../utils/database-connector';
 import * as mailConfig from '../configs/mailServiceConfig.json'
-import { invoiceOverdue } from './invoice';
-import { override } from 'joi';
+import { InvoiceOverdue } from '../models/invoice';
 
 export class MailService {
     private transport: Transporter<SMTPTransport.SentMessageInfo>;
@@ -71,7 +70,7 @@ export class MailService {
         const title = `Dear ${user.first_name} ${user.last_name}`;
         const body = [//TODO make link config file link
             `you have new invoices added to your account.`,
-            `For more details click <a href='${/*mailConfig.baseLink*/ "localhost:4200"}/manageinvoices'>this link</a>.`
+            `For more details click <a href='${mailConfig.baseLink}/manageinvoices'>this link</a>.`
         ];
 
         return this.transport.sendMail({
@@ -82,7 +81,7 @@ export class MailService {
             html: this.htmlFormat(title, body),
         }).catch(e => Logger.warn("sending mail failed: " + e))
     }
-    async overdueInvoice(invoiceInfo: invoiceOverdue): Promise<SentMessageInfo> {
+    async overdueInvoice(invoiceInfo: InvoiceOverdue): Promise<SentMessageInfo> {
         const client = await begin();
         //info from db
         const title = `Dear ${invoiceInfo.user.first_name} ${invoiceInfo.user.last_name}`;

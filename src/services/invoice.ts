@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
-import { Invoice, INVOICE_STATUS, InvoicesStatuses } from "../models/invoice";
+import { Invoice, INVOICE_STATUS, InvoiceOverdue } from "../models/invoice";
 import { invoiceQueries } from "../queries/invoice";
-import { begin, execute } from "../utils/database-connector";
+import { begin, commit, execute } from "../utils/database-connector";
 import { Contract } from "../models/contract";
 import { MailService } from "./mail";
 import { User } from "../models/user";
@@ -98,10 +98,10 @@ export async function setOverdue() {
         new Date().toISOString()]);
     if (sql.rowCount === 0) return;
 
-    const invoices = sql.rows as invoiceOverdue[];
+    const invoices = sql.rows as InvoiceOverdue[];
 
     //console.log(invoices);
-
+    //TODO update script etc to have the reminded status
     const ms = new MailService();
     const date = new Date().toISOString();
     invoices.forEach(o => {
@@ -111,17 +111,7 @@ export async function setOverdue() {
         ).catch(() => {
             updateInvoiceStatus(client, o.id, INVOICE_STATUS.LATE);
         })
-
-        //ms.overdueInvoice(o)
     });
-    //new 
+    commit(client)
+    client.release();
 }
-
-export interface invoiceOverdue extends Invoice {
-    user: User
-
-}
-/*export async function startIntervalsOverdue() {
-    setInterval(setOverdue, 10000);
-}*/
-
