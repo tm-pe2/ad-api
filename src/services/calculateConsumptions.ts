@@ -1,10 +1,7 @@
 import { PoolClient } from "pg";
 import { addConsumption, getContractIdByMeterId, getIndexValueById } from "./index-value";
-import { connectClient } from "../utils/database-connector";
 import { generateAnnualInvoice } from "../utils/generate-invoice-util";
-import { INVOICE_TYPE } from "../models/invoice";
-import { getContractById, getContractByUserId } from "./contract";
-import { Contract } from "../models/contract";
+import { getContractById } from "./contract";
 
 export async function calcConsumptionMeter(client: PoolClient, id: number) {
 
