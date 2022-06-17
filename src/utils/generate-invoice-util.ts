@@ -8,6 +8,8 @@ import {Consumption, Meter} from "../models/consumption";
 import {getInvoiceByContractIdAndPeriod, insertInvoice} from "../services/invoice";
 import {getMetersByContractId} from "../services/meter";
 import {getLastConsumptionByMeterId} from "../services/consumption";
+import { MailService } from "../services/mail";
+import { Logger } from "./logger";
 
 export const generateInvoices = async (invoiceType: INVOICE_TYPE) => {
     const client = await connectClient();
@@ -37,8 +39,9 @@ const handleAdvancePayments = async (activeContracts: Contract[]) => {
         if (timeForAdvanceInvoice) {
             try {
                 await generateAdvanceInvoice(contract);
+                new MailService().sendInvoice(contract.user_id)
             } catch (e) {
-                console.log('Error when generating advance invoice for contract with id: ' + contract.id + ' -> ' + e);
+                Logger.error('Error when generating advance invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
         }
     }
@@ -56,8 +59,9 @@ const handleAnnualPayments = async (activeContracts: Contract[]) => {
                     return;
                 }
                 await generateAnnualInvoice(contract);
+                new MailService().sendInvoice(contract.user_id)
             } catch (e) {
-                console.log('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
+                Logger.error('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
         }
     }
@@ -89,7 +93,8 @@ const generateAdvanceInvoice = async (contract: Contract) => {
         status: INVOICE_STATUS.DUE,
         type: INVOICE_TYPE.ADVANCE,
         address: undefined,
-        customer: undefined
+        customer: undefined,
+        tariff: undefined
     };
 
     const invoiceId = await insertInvoice(client, invoice);
@@ -132,7 +137,8 @@ export const generateAnnualInvoice = async (contract: Contract) => {
         status: INVOICE_STATUS.DUE,
         type: endTotal > 0 ? INVOICE_TYPE.DEBIT : INVOICE_TYPE.CREDIT,
         address: undefined,
-        customer: undefined
+        customer: undefined,
+        tariff: undefined
     };
 
     const invoiceId = await insertInvoice(client, invoice);
