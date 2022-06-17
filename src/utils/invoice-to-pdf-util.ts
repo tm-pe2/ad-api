@@ -8,9 +8,8 @@ import {Estimation} from "../models/estimation";
 import {getEstimationById} from "../services/estimation";
 import {getContractById} from "../services/contract";
 import {Contract} from "../models/contract";
-
+import PDFDocument from 'pdfkit'
 const fs = require('fs');
-const PDFDocument = require("pdfkit");
 const resourcePath = path.join(path.resolve(__dirname), '..', 'resources');
 
 let doc: typeof PDFDocument;
@@ -19,7 +18,6 @@ export const generatePdf = async (invoiceId: number) => {
     return new Promise<void>(async resolve => {
         const client = await connectClient();
         const destinationPath = getPathToInvoiceFile(invoiceId);
-        doc = null;
         doc = new PDFDocument({size: "A4", margin: 50});
 
         const invoice: any | null = await getInvoiceById(client, invoiceId);
@@ -58,7 +56,7 @@ export const generatePdf = async (invoiceId: number) => {
 
 export const fileExistsForInvoice = (invoiceId: number): boolean => {
     try {
-        fs.accessSync(getPathToInvoiceFile(invoiceId), fs.F_OK);
+        fs.accessSync(getPathToInvoiceFile(invoiceId), fs.constants.F_OK);
         return true;
     } catch {
         return false;
