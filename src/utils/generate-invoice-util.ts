@@ -59,7 +59,7 @@ const handleAnnualPayments = async (activeContracts: Contract[]) => {
                     return;
                 }
                 await generateAnnualInvoice(contract);
-                
+                new MailService().sendInvoice(contract.user_id)
             } catch (e) {
                 Logger.error('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
