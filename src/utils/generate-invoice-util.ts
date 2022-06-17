@@ -11,12 +11,13 @@ import {getLastConsumptionByMeterId} from "../services/consumption";
 import { MailService } from "../services/mail";
 import { Logger } from "./logger";
 
-export const generateInvoices = async (invoiceType: INVOICE_TYPE) => {
+export const generateInvoices = async ( invoiceType: INVOICE_TYPE) => {
     const client = await connectClient();
     const activeContracts: Contract[] | null = await getAllActiveContracts(client);
     if (activeContracts) {
         await handleActiveContracts(activeContracts, invoiceType);
     }
+    client.release();
     return true;
 }
 
