@@ -38,6 +38,8 @@ try {
     
 
      scheduleInvoiceJobs();
+     calcConstumptionMeter(3)
+
 })();
 
 function onClose(http: Server) {
