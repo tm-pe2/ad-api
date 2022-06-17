@@ -15,12 +15,14 @@ export async function calcConstumptionMeter(id : number){
 
    try{
     var values = await getIndexValueById(client,id);
+    //console.log("values",values);
 
     if(values && values.length>1){
 
             var prevValue = values[0].index_value;
             var currentValue = values[1].index_value; 
             var meter_id = values[0].meter_id;
+            console.log(meter_id);
             
             var exportData: Array<number | Date> = [];
             exportData[0] = meter_id;
@@ -40,6 +42,8 @@ export async function calcConstumptionMeter(id : number){
             }
 
            const output = await addConsumption(client,exportData);
+           //console.log(exportData);
+           //console.log(output);
            
            if(!output){
                throw new Error("Could't add the consumption");                
@@ -50,7 +54,7 @@ export async function calcConstumptionMeter(id : number){
 
                const contract = await getContractById(client, contractId);
            
-            if(contract){generateAnnualInvoice(contract);}
+            if(contract){ await generateAnnualInvoice(contract);}
         }
         else{
             throw new Error("couldn't get contract id");

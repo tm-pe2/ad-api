@@ -145,6 +145,8 @@ export const generateAnnualInvoice = async (contract: Contract) => {
 
 const getTotalConsumption = async (contract: Contract) => {
     const client = await connectClient();
+    
+    console.log(contract);
 
     const meters: Meter[] | null = await getMetersByContractId(client, contract.id);
     if (!meters) {
@@ -152,19 +154,20 @@ const getTotalConsumption = async (contract: Contract) => {
     }
     let totalConsumption = 0;
     for (const meter of meters) {
+        console.log(meter.id);
         const consumption: Consumption | null = await getLastConsumptionByMeterId(client, meter.id);
+        console.log(consumption);
 
-        if (!consumption) {
-            throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
-        }
-
+        if (consumption) {
+            
         const consumptionIsValid = consumption.consumed_value > 0
-            && consumption.calculated_date > contract.start_date
+            && consumption.calculated_date >= contract.start_date
             && consumption.calculated_date <= contract.end_date;
         if (!consumptionIsValid) {
             throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
         }
         totalConsumption += consumption.consumed_value;
+    }
     }
 
     client.release();
