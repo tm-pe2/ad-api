@@ -1,12 +1,16 @@
 import dotenv from 'dotenv';
-import express, {Express} from 'express';
+import express from 'express';
 import * as DBConnector from './utils/database-connector';
-import { Env } from './utils/env';
-import { Logger } from './utils/logger';
-import { setRoutes } from './routes';
-import { createServer, Server } from 'http';
+import {Env} from './utils/env';
+import {Logger} from './utils/logger';
+import {setRoutes} from './routes';
+import {createServer, Server} from 'http';
 import settings from './configs/settings.json';
-import { invoiceQueries } from './queries/invoice';
+import {invoiceQueries} from './queries/invoice';
+import {generateInvoices} from "./utils/generate-invoice-util";
+import {INVOICE_TYPE} from "./models/invoice";
+import { scheduleInvoiceJobs } from './utils/schedule-jobs';
+import { calcConstumptionMeter } from './services/calculateConsumptions';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -28,11 +32,13 @@ try {
     });
     
     DBConnector.init();
-
+    
     process.on('SIGINT', () => {onClose(server)});
     process.on('SIGTERM', () => {onClose(server)});
-      
-    // scheduleInvoiceJobs();
+    
+
+     scheduleInvoiceJobs();
+
 })();
 
 function onClose(http: Server) {

@@ -1,4 +1,5 @@
 import { PoolClient } from "pg";
+import { calcConstumptionMeter } from "./calculateConsumptions";
 import { Consumption, ConsumptionPost, Meter } from "../models/consumption";
 import { CONTRACT_STATUS } from "../models/contract";
 import { MeterType } from "../models/estimation";
@@ -8,6 +9,7 @@ import { execute } from "../utils/database-connector";
 import {activivateContractByMeterId, getContractIdByMeterId} from "./contract";
 import { getSmartMeterValue } from "./meter";
 import { createPlanning } from "./planning";
+import { calcConsumptionsMeter } from "../calculateConstumptions/calculateConsumptions";
 
 export async function getConsumptionById(client: PoolClient, id: number): Promise<Consumption[] | null> {
     const consumption = await execute(client, consumptionQueries.getConsumptionById, [id]);
@@ -49,8 +51,23 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
                 throw new Error("Planning not created");
             }
         }
-        // else: Contract already activated
+        else{
+            calcConsumptionsMeter(client, meter.id);
+        }
     }
 
     return res.rowCount > 0;
 }
+
+export async function getLastConsumptionByMeterId(client: PoolClient, id: number): Promise<Consumption | null> {
+    const consumption = await execute(client, consumptionQueries.getLastConsumptionByMeterId, [id]);
+    if (consumption.rowCount === 0) return null;
+    return consumption.rows[0] as Consumption;
+}
+
+export async function getConsumptionsByContractId(client: PoolClient, id: number): Promise<Consumption[] | null> {
+    const consumptions = await execute(client, consumptionQueries.getConsumptionsByContractId, [id]);
+    if (consumptions.rowCount === 0) return null;
+    return consumptions.rows as Consumption[];
+}
+
