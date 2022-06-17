@@ -8,6 +8,8 @@ export interface Planning {
         last_name: string,
         email: string,
         phone: string,
+        birth_date: Date,
+        national_registry_number: string,
         address: Address,
     },
     contract_id: number,

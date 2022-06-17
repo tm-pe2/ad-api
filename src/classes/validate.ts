@@ -1,5 +1,5 @@
 import { Address } from "../models/address";
-import { Consumption, ConsumptionPost } from "../models/consumption";
+import { ConsumptionPost } from "../models/consumption";
 import { BuildingType as BUILDING_TYPE, EquipmentType as EQUIPMENT_TYPE, EstimationRegistration, MeterType as METER_TYPE, ServiceType as SERVICE_TYPE } from "../models/estimation";
 import { PlanningStatus } from "../models/planning";
 import { Supplier } from "../models/supplier";
@@ -53,6 +53,7 @@ class Validate {
         const re = /^BE[0-9]{10}$/;
         if (!re.test(String(vatNumber)))
             throw new Error("Invalid vat number");
+        console.log("vat number")
     }
 
     static checkAddresses(addresses: Address[]): void {
@@ -60,9 +61,13 @@ class Validate {
             throw new Error("No address(es) provided");
     
         for (const address of addresses) {
+            this.checkAddress(address);
+        }
+    }
+    static checkAddress(address: Address): void {
             if (address.street == null || address.city_id == null || address.house_number == null)
                 throw new Error("Invalid address supplied");
-        }
+            console.log("address")
     }
 
     static checkMeters(meters: ConsumptionPost["meters"]): void {
@@ -146,9 +151,19 @@ export class ValidateInterface {
         if(!(planning in PlanningStatus))
             throw new Error("Invalid planning status");
     }
+
     static checkConsumption(consumption: ConsumptionPost){
         Validate.checkDate(consumption.read_date);
         Validate.checkMeters(consumption.meters);
     }
-}
 
+    static checkSupplierEdit(supplier: Supplier): void {
+        if (!supplier.company_name)
+            throw new Error("No company name provided");
+        console.log("company name")
+        Validate.checkVatNumber(supplier.vat_number);
+        Validate.checkAddress(supplier.address);
+        if (!(['gas', 'electricity'].includes(supplier.service_type)))
+            throw new Error("Invalid service type");
+    }
+}

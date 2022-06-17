@@ -66,7 +66,7 @@ export class EstimationController {
 
                 // Add meters
                 for (const meter of input.meters) {
-                    const meterId = await addNewMeter(client, contractId, meter.meter_type, input.family_size, meter.value);
+                    const meterId = await addNewMeter(client, contractId, meter.meter_type, input.family_size);
                     if (meterId === null) {
                         throw new Error("Could not add meter");
                     }
