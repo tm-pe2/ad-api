@@ -9,6 +9,7 @@ import { execute } from "../utils/database-connector";
 import {activivateContractByMeterId, getContractIdByMeterId} from "./contract";
 import { getSmartMeterValue } from "./meter";
 import { createPlanning } from "./planning";
+import { calcConsumptionsMeter } from "../calculateConstumptions/calculateConsumptions";
 
 export async function getConsumptionById(client: PoolClient, id: number): Promise<Consumption[] | null> {
     const consumption = await execute(client, consumptionQueries.getConsumptionById, [id]);
@@ -51,7 +52,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             }
         }
         else{
-            calcConstumptionMeter(meter.id);
+            calcConsumptionsMeter(client, meter.id);
         }
     }
 
