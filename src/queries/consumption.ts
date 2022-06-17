@@ -33,16 +33,16 @@ const selectConsumptionQuery = `
             'index_value', iv.index_value,
             'read_date', iv.read_date
     ) as meter
-    FROM ${TABLES.USERS} as u
-    LEFT JOIN ${TABLES.CUSTOMERS} as cus ON u.id = cus.user_id
-    LEFT JOIN ${TABLES.CUSTOMERS_CONTRACTS} as cc ON cus.user_id = cc.user_id
-    LEFT JOIN ${TABLES.CONTRACTS} as c ON cc.contract_id = c.id
+    FROM ${TABLES.CONSUMPTIONS} as cons
+    LEFT JOIN ${TABLES.METERS} as m ON cons.meter_id = m.id
+    LEFT JOIN LATERAL (SELECT * FROM ${TABLES.INDEXED_VALUES} WHERE meter_id = m.id ORDER BY read_date DESC LIMIT 1) as iv ON true
+    LEFT JOIN ${TABLES.CONTRACTS_METERS} as cm ON cm.meter_id = m.id
+    LEFT JOIN ${TABLES.CONTRACTS} as c ON c.id = cm.contract_id
     LEFT JOIN ${TABLES.ADDRESSES} as a ON c.address_id = a.id
     LEFT JOIN ${TABLES.CITIES} as ci ON a.city_id = ci.id
-    LEFT JOIN ${TABLES.CONTRACTS_METERS} as cm ON c.id = cm.contract_id
-    LEFT JOIN ${TABLES.METERS} as m ON cm.meter_id = m.id
-    LEFT JOIN ${TABLES.CONSUMPTIONS} as cons on m.id = cons.meter_id
-    LEFT JOIN ${TABLES.INDEXED_VALUES} as iv ON cons.id = iv.meter_id
+    LEFT JOIN ${TABLES.CUSTOMERS_CONTRACTS} as cc ON c.id = cc.contract_id
+    LEFT JOIN ${TABLES.CUSTOMERS} as cus ON cc.user_id = cus.user_id
+    LEFT JOIN ${TABLES.USERS} as u ON cus.user_id = u.id
     LEFT JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
 `
 const insertConsumption = `
@@ -51,8 +51,8 @@ const insertConsumption = `
 
 export const consumptionQueries = {
     getConsumptionById: selectConsumptionQuery + `
-        WHERE u.id = $1
-        GROUP BY cons.id, u.id, a.id, m.id, iv.id, cus.type_id, ci.city_name,ci.postal_code
+        WHERE cons.id = $1
+        GROUP BY cons.id,u.id, cus.type_id,a.id,ci.city_name,ci.postal_code,m.id,iv.index_value,iv.read_date
     `,
     insertConsumption: insertConsumption,
     getLastConsumptionByMeterId: selectConsumptionQuery + `
