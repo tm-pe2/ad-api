@@ -1,13 +1,14 @@
-import {execute} from "../utils/database-connector";
+import {connectClient, execute} from "../utils/database-connector";
 import { PoolClient } from "pg";
 
 import { MeterType } from "../models/estimation";
 import { meterQueries } from "../queries/meters";
 import fetch from "node-fetch";
+import { consumptionQueries } from "../queries/consumption";
 
 export async function addNewMeter(client:PoolClient,
     contractId: number, meterType: MeterType, familySize: number): Promise<number | null> {
-    
+
     let ph_id;
     if (meterType == MeterType.SMART) {
         ph_id = await generateSmartMeter(familySize);
@@ -21,6 +22,12 @@ export async function addNewMeter(client:PoolClient,
         meterType, ph_id_str
     ]);
     if (meterRes.rowCount === 0) return null;
+
+    await execute(client, consumptionQueries.insertConsumption, [
+        meterRes.rows[0].id,
+        0,
+        new Date()
+    ]);
 
     const contractRes = await execute(client, meterQueries.insertContractMeter, [
         contractId, meterRes.rows[0].id
