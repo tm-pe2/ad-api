@@ -38,10 +38,10 @@ export class UserController {
             .patch('/:id', async (req, res, next) => {
                 try {
                     const client = await connectClient();
-                    const status = Boolean(req.body.status)
+                    const active = Boolean(req.body.active)
                     
-                    const id = await execute(client, userQueries.changeStatus, [req.params.id, status])
-                    res.status(200).send({ message: "set status of user: " + id.rows[0] + " to " + status })
+                    const id = await execute(client, userQueries.changeStatus, [req.params.id, active])
+                    res.status(200).send({ message: "set status of user: " + id.rows[0] + " to " + active })
                 } catch (error) {
                     res.status(500).json({
                         message: "something went wrong updating the user",
