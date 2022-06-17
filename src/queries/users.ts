@@ -19,7 +19,7 @@ const getUserById = `
                 'postal_code', c.postal_code, 
                 'country', a.country)
             ) as addresses,
-        array_agg(r.id) as roles
+        array_agg(DISTINCT r.id) as roles
     FROM ${TABLES.USERS} as u
     JOIN ${TABLES.USERS_ADDRESSES} as ua ON u.id = ua.user_id
     JOIN ${TABLES.ADDRESSES} as a ON ua.address_id = a.id
@@ -35,7 +35,7 @@ const getUserAuthInfo = `
         u.id,
         u.email,
         u.password,
-        array_agg(r.id) as roles
+        array_agg(DISTINCT r.id) as roles
     FROM ${TABLES.USERS} as u
     JOIN ${TABLES.USERS_ROLES} as ur ON u.id = ur.user_id
     JOIN roles as r ON ur.role_id = r.id
