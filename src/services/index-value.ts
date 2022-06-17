@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { index_value } from "../models/index-value";
+import { contract_id, index_value } from "../models/index-value";
 import {indexValueQueries} from "../queries/index-values"
 import { execute } from "../utils/database-connector";
 
@@ -19,4 +19,12 @@ export async function addConsumption(client: PoolClient, consumption : Array<num
         consumption[2],
     ]);
     return res.rowCount > 0;
+}
+
+export async function getContractID(client : PoolClient,id:number): Promise<contract_id[] | null>{
+    const index_values = await execute(client, indexValueQueries.selectContractQuery,[id]);
+    if(index_values.rowCount == 0){
+        return null;
+    }
+    return index_values.rows;
 }
