@@ -168,8 +168,8 @@ const getTotalConsumption = async (contract: Contract) => {
         if (consumption) {
             
         const consumptionIsValid = consumption.consumed_value > 0
-            && consumption.calculated_date >= contract.start_date
-            && consumption.calculated_date <= contract.end_date;
+            && new Date(consumption.calculated_date) >= new Date(contract.start_date)
+            && new Date(consumption.calculated_date) <= new Date(contract.end_date);
         if (!consumptionIsValid) {
             throw new Error('Meter with id: ' + meter.id + ' does not have valid consumption reading');
         }
