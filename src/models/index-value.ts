@@ -5,7 +5,3 @@ export interface index_value{
     read_date: Date,
     user_id:number
 }
-
-export interface contract_id{
-    contract_id:number;
-}

@@ -34,19 +34,13 @@ const instertConsumptionValue = `
     INSERT INTO ${TABLES.CONSUMPTIONS} as cons (meter_id,consumed_value,calculated_date) VALUES ($1,$2,$3)
 `
 
-const selectContractQuery = `
+const selectContractQuery = `    
         SELECT
-        c.id,
-        json_agg(
-            json_build_object(
-                'id',c.id,
-            )
-        ) as contrac_id
+            c.id
         FROM ${TABLES.CONTRACTS_METERS} as cm
         INNER JOIN ${TABLES.CONTRACTS} as c on c.id = cm.contract_id
         WHERE meter_id = $1
-    
-`
+`;
 
 export const indexValueQueries = {
     selectIndexValueQuery:selectIndexValueQuery,

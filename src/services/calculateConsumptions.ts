@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { addConsumption, getContractID, getIndexValueById } from "./index-value";
+import {addConsumption, getContractIdByMeterId, getIndexValueById} from "./index-value";
 import { connectClient } from "../utils/database-connector";
 import {generateAnnualInvoice} from "../utils/generate-invoice-util";
 import {INVOICE_TYPE} from "../models/invoice";
@@ -44,11 +44,11 @@ export async function calcConstumptionMeter(id : number){
            if(!output){
                throw new Error("Could't add the consumption");                
            }
-           const contract_id = await getContractID(client,meter_id);
+           const contractId = await getContractIdByMeterId(client, meter_id);
 
-           if(contract_id){
+           if(contractId){
 
-            const contract = await getContractById(client,contract_id[0].contract_id);          
+               const contract = await getContractById(client, contractId);
            
             if(contract){generateAnnualInvoice(contract);}
         }

@@ -55,7 +55,6 @@ const handleAnnualPayments = async (activeContracts: Contract[]) => {
                 if (invoiceExists) {
                     return;
                 }
-                //const totalConsumption = await getTotalConsumption(contract);
                 await generateAnnualInvoice(contract);
             } catch (e) {
                 console.log('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
