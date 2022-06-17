@@ -68,7 +68,7 @@ const insertCustomersUsersQuery = `
 
 const activateContractbyMeterIdQuery = `
     UPDATE ${TABLES.CONTRACTS}
-    SET status_id = $2, start_date = $3, end_date = $4
+    SET status_id = $2,start_date = $3,end_date = $4
     WHERE id = (
         SELECT contract_id
         FROM ${TABLES.CONTRACTS_METERS}

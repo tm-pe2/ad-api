@@ -36,6 +36,7 @@ export class PlanningController {
                 Logger.error(err);
                 res.sendStatus(500);
             }
+            client.release();
         })
     }
 }

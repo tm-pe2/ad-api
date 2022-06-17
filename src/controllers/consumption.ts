@@ -52,12 +52,13 @@ export class ConsumptionController {
                     for(const meter of consumption.meters) {
                         //console.log(meter);
                         const consumptionInserted = await addIndexedValue(client, meter, consumption.read_date);
+  
                         if (!consumptionInserted) {
                             throw new Error("Consumption not inserted");
                         }
                     }
                     await commit(client);
-                    res.sendStatus(200);
+                    res.sendStatus(200).send("Consumption inserted");
                 }
                 catch (error) {
                     rollback(client)
