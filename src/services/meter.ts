@@ -70,11 +70,8 @@ export async function generateSmartMeter(occupants: number) : Promise<number> {
         .then((raw: any) => raw.json())
         .then((response: any) => {
             generated_meterid = response.id;
-            console.log(response);
-            console.log("smart meter generated: ", generated_meterid);
             fetch("http://10.97.0.100:3000/meter/" + generated_meterid + "/device", device_data)
             .then(() => {
-                console.log("general consumption device added");
                 resolve(generated_meterid);
             })
             .catch((error: any) => {

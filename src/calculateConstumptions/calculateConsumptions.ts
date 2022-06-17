@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 import { addConsumption, getIndexValueById } from "../services/index-value";
 import { connectClient } from "../utils/database-connector";
 
-export async function calcConstumtionMeter(id : number){
+export async function calcConstumtionMeter(id : number, readDate: Date){
     
     const limit = 10000000;
     var actualConstumption = 0;
@@ -20,7 +20,7 @@ export async function calcConstumtionMeter(id : number){
             
             var exportData: Array<number | Date> = [];
             exportData[0] = meter_id;
-            exportData[2] = new Date();
+            exportData[2] = new Date(readDate);
 
             if(currentValue < prevValue){
                 var beforeTurnOver = limit - prevValue; 

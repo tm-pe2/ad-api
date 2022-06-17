@@ -64,9 +64,8 @@ export class ConsumptionController {
                         }
                         return;
                     }
-                    consumption.read_date = new Date();
+                    //consumption.read_date = new Date();
                     for(const meter of consumption.meters) {
-                        //console.log(meter);
                         const consumptionInserted = await addIndexedValue(client, meter, consumption.read_date);
   
                         if (!consumptionInserted) {
@@ -74,17 +73,17 @@ export class ConsumptionController {
                         }
                     }
                     await commit(client);
-                    res.sendStatus(200).send("Consumption inserted");
+                    res.status(200).send("Consumption inserted");
                 }
                 catch (error) {
                     rollback(client)
                     if (error instanceof Error) {
-                        res.sendStatus(500).json({
+                        res.status(500).json({
                             message: error.message
                         });
                     }
                     else {
-                        res.sendStatus(500).json({
+                        res.status(500).json({
                             message: "Unknown error"
                         });
                     }
@@ -93,4 +92,3 @@ export class ConsumptionController {
             })
     }
 }
-

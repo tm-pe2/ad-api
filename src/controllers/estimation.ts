@@ -34,8 +34,6 @@ export class EstimationController {
                     }
                     return;
                 }
-
-                console.log(input);
                 // TODO validate
     
                 // Check address

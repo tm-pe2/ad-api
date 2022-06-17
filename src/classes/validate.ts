@@ -134,7 +134,7 @@ export class ValidateInterface {
         if (!estimation.meters)
             throw new Error("No meters provided");
         for (const meter of estimation.meters) {
-            console.log(meter);
+            //console.log(meter);
             if (!(meter.meter_type == METER_TYPE.MANUAL ||
                 meter.meter_type == METER_TYPE.SMART))
                 throw new Error("Invalid meter type");
