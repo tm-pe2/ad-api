@@ -1,4 +1,5 @@
 import { Address } from "cluster";
+import { Meter } from "./consumption";
 
 export interface Planning {
     id: number,
@@ -11,7 +12,12 @@ export interface Planning {
         birth_date: Date,
         national_registry_number: string,
         address: Address,
-    },
+    }[],
+    meters: { //TODO use meters interface?
+        id: number,
+        meter_type: string,
+        physical_id: number,
+    }[],
     contract_id: number,
     date: Date,
     status: PlanningStatus,

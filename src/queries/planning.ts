@@ -1,13 +1,13 @@
 import { MeterType } from "../models/estimation";
 import { TABLES } from "./tables";
-
+// FIXME gives list of users that are the same 
 const getAllPlannings = `
     SELECT
         p.id,
         p.contract_id,
         p.date,
         p.status_id as status,
-        json_build_object(
+        json_agg(json_build_object(
             'id', u.id,
             'first_name', u.first_name,
             'last_name', u.last_name,
@@ -23,7 +23,12 @@ const getAllPlannings = `
             'postal_code', ct.postal_code, 
             'country', a.country
         )
-        ) as user
+        )) AS users,
+        JSON_AGG(
+            JSON_BUILD_OBJECT('id', m.id, 'physical_id', m.physical_id,
+    
+    'meter_type', m.meter_type
+            )) as meters
     FROM ${TABLES.PLANNINGS} as p
     LEFT JOIN ${TABLES.CONTRACTS} as c ON p.contract_id = c.id
     LEFT JOIN ${TABLES.CONTRACTS_METERS} as cm ON c.id = cm.contract_id
@@ -32,6 +37,7 @@ const getAllPlannings = `
     LEFT JOIN ${TABLES.CITIES} as ct ON a.city_id = ct.id
     LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON a.id = ua.address_id
     LEFT JOIN ${TABLES.USERS} as u ON ua.user_id = u.id
+    GROUP BY p.id
 `;
 
 const changePlanningStatus = `
