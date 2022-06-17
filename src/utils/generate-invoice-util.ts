@@ -58,9 +58,8 @@ const handleAnnualPayments = async (activeContracts: Contract[]) => {
                 if (invoiceExists) {
                     return;
                 }
-                const totalConsumption = await getTotalConsumption(contract);
-                await generateAnnualInvoice(contract, totalConsumption);
-
+                await generateAnnualInvoice(contract);
+                
             } catch (e) {
                 Logger.error('Error when generating annual invoice for contract with id: ' + contract.id + ' -> ' + e);
             }
@@ -106,8 +105,10 @@ const generateAdvanceInvoice = async (contract: Contract) => {
     }
 }
 
-const generateAnnualInvoice = async (contract: Contract, totalConsumption: number) => {
+export const generateAnnualInvoice = async (contract: Contract) => {
     const currentDate = new Date();
+
+    const totalConsumption = await getTotalConsumption(contract);
 
     const client = await connectClient();
     const estimation: Estimation | null = await getEstimationById(client, contract.estimation_id);
@@ -171,6 +172,8 @@ const getTotalConsumption = async (contract: Contract) => {
         }
         totalConsumption += consumption.consumed_value;
     }
+
+    client.release();
     return totalConsumption;
 }
 

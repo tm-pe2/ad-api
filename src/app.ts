@@ -9,6 +9,8 @@ import settings from './configs/settings.json';
 import {invoiceQueries} from './queries/invoice';
 import {generateInvoices} from "./utils/generate-invoice-util";
 import {INVOICE_TYPE} from "./models/invoice";
+import { scheduleInvoiceJobs } from './utils/schedule-jobs';
+import { calcConstumptionMeter } from './services/calculateConsumptions';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
@@ -30,13 +32,13 @@ try {
     });
     
     DBConnector.init();
-
+    
     process.on('SIGINT', () => {onClose(server)});
     process.on('SIGTERM', () => {onClose(server)});
-      
-    // scheduleInvoiceJobs();
-    // await generateInvoices(INVOICE_TYPE.DEBIT);
-    // await generateInvoices(INVOICE_TYPE.ADVANCE);
+    
+
+     scheduleInvoiceJobs();
+
 })();
 
 function onClose(http: Server) {

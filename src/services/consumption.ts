@@ -1,4 +1,5 @@
 import { PoolClient } from "pg";
+import { calcConstumptionMeter } from "./calculateConsumptions";
 import { Consumption, ConsumptionPost, Meter } from "../models/consumption";
 import { CONTRACT_STATUS } from "../models/contract";
 import { MeterType } from "../models/estimation";
@@ -49,7 +50,9 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
                 throw new Error("Planning not created");
             }
         }
-        // else: Contract already activated
+        else{
+            calcConstumptionMeter(meter.id);
+        }
     }
 
     return res.rowCount > 0;
