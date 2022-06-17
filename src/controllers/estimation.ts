@@ -9,6 +9,7 @@ import { addNewMeter } from "../services/meter";
 import { begin, commit, rollback } from "../utils/database-connector";
 import { Logger } from "../utils/logger";
 import { PlanningStatus } from "../models/planning";
+import { ValidateInterface } from "../classes/validate";
 
 export class EstimationController {
     static router(): Router {
@@ -17,6 +18,23 @@ export class EstimationController {
             const client = await begin();
             try {
                 const input: EstimationRegistration = req.body;
+
+                try {
+                    ValidateInterface.checkEstimationRegistration(input);
+                }
+                catch (err) {
+                    if(err instanceof Error){
+                        res.status(400).json({
+                            message: err.message
+                        });
+                    }
+                    else{
+                        Logger.warn(err);
+                        res.sendStatus(400);
+                    }
+                    return;
+                }
+
                 console.log(input);
                 // TODO validate
     
