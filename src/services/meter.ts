@@ -116,10 +116,15 @@ export async function smartMeterValueToDB(meter_id: number, meter_value: number)
 
     const meter: Meter = {
         id: meter_id,
+        physical_id: 0,
         meter_type: MeterType.SMART,
-        value: meter_value
+        index_value: meter_value
     }
 
-    const rows = await execute(client, consumptionQueries.insertConsumption, [meter_id, value, read_date])
     const consumptionInserted = await addIndexedValue(client, meter, read_date);
+    if (!consumptionInserted) {
+        console.log("Inserting the smart meter value failed");
+    }
+
+    client.release
 }
