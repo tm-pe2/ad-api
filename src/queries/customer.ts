@@ -20,7 +20,7 @@ const selectCustomerQuery = `
                     'postal_code',ci.postal_code, 
                     'country',a.country)
                 ) as addresses,
-            array_agg(r.id) as roles
+            array_agg(DISTINCT r.id) as roles
         FROM ${TABLES.CUSTOMERS} as c
         LEFT JOIN ${TABLES.USERS} as u ON c.user_id = u.id
         LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON u.id = ua.user_id
