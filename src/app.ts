@@ -38,7 +38,6 @@ try {
     
 
      scheduleInvoiceJobs();
-     calcConstumptionMeter(3)
 
 })();
 

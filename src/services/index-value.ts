@@ -5,6 +5,7 @@ import { execute } from "../utils/database-connector";
 
 export async function getIndexValueById(client : PoolClient,id:number): Promise<index_value[] | null>{
     const index_values = await execute(client, indexValueQueries.selectIndexValueQuery,[id]);
+    console.log(index_values.rows);
     if(index_values.rowCount == 0){
         return null;
     }

@@ -52,6 +52,9 @@ export async function calcConstumptionMeter(id : number){
            
             if(contract){generateAnnualInvoice(contract);}
         }
+        else{
+            throw new Error("couldn't get contract id");
+        }
         
         client.release();
             }
