@@ -13,16 +13,16 @@ export const generateInvoices = async (invoiceType: INVOICE_TYPE) => {
     const client = await connectClient();
     const activeContracts: Contract[] | null = await getAllActiveContracts(client);
     if (activeContracts) {
-        handleActiveContracts(activeContracts, invoiceType);
+        await handleActiveContracts(activeContracts, invoiceType);
     }
     return true;
 }
 
-const handleActiveContracts = (activeContracts: Contract[], invoiceType: INVOICE_TYPE) => {
+const handleActiveContracts = async (activeContracts: Contract[], invoiceType: INVOICE_TYPE) => {
     if (invoiceType == INVOICE_TYPE.ADVANCE) {
-        handleAdvancePayments(activeContracts);
+        await handleAdvancePayments(activeContracts);
     } else {
-        handleAnnualPayments(activeContracts);
+        await handleAnnualPayments(activeContracts);
     }
 }
 

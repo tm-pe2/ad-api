@@ -49,8 +49,10 @@ export async function calcConstumptionMeter(id : number){
            if(contractId){
 
                const contract = await getContractById(client, contractId);
-           
-            if(contract){generateAnnualInvoice(contract);}
+
+                   if(contract){await generateAnnualInvoice(contract);}
+
+
         }
         else{
             throw new Error("couldn't get contract id");
