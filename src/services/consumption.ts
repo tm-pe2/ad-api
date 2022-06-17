@@ -52,7 +52,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             }
         }
         else{
-            calcConstumtionMeter(meter.id, readDate);
+            calcConsumptionsMeter(meter.id);
         }
     }
 

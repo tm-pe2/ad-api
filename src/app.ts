@@ -7,7 +7,6 @@ import {setRoutes} from './routes';
 import {createServer, Server} from 'http';
 import settings from './configs/settings.json';
 import { scheduleInvoiceJobs } from './utils/schedule-jobs';
-import { calcConstumtionMeter } from './calculateConstumptions/calculateConsumptions';
 
 if (process.env.NODE_ENV == null || process.env.NODE_ENV === 'development') {
     dotenv.config();
