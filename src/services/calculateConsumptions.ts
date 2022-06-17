@@ -1,9 +1,9 @@
 import { PoolClient } from "pg";
-import { addConsumption, getIndexValueById } from "../services/index-value";
+import { addConsumption, getIndexValueById } from "./index-value";
 import { connectClient } from "../utils/database-connector";
 import {generateAnnualInvoice} from "../utils/generate-invoice-util";
 import {INVOICE_TYPE} from "../models/invoice";
-import { getContractByUserId } from "../services/contract";
+import { getContractByUserId } from "./contract";
 import { Contract } from "../models/contract";
 
 export async function calcConstumptionMeter(id : number){
@@ -36,18 +36,21 @@ export async function calcConstumptionMeter(id : number){
             else{
                 actualConstumption = currentValue - prevValue; 
                 exportData[1] = actualConstumption;
-                
+            
             }
 
            const output = await addConsumption(client,exportData);
+           
+           
+           var contracts = await getContractByUserId(client,values[0].user_id);
+           
+           client.release();
+           
+           if(contracts){
+                for(var c of contracts){
 
-            var contract = await getContractByUserId(client,values[0].user_id);
-    
-            client.release();
-            
-            if(contract){
-
-            generateAnnualInvoice(contract[0]);
+                    generateAnnualInvoice(c);
+                }
             }
            
             if(!output){
