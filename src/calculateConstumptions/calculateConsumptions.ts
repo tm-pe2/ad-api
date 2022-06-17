@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 import { addConsumption, getIndexValueById } from "../services/index-value";
 import { connectClient } from "../utils/database-connector";
 
-export async function calcConstumtionMeter(id : number){
+export async function calcConsumptionsMeter(id : number){
     
     const limit = 10000000;
     var actualConstumption = 0;
