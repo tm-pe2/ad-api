@@ -35,12 +35,12 @@ export class UserController {
                     });
                 client.release();
             })
-            .patch('/status/:id', async (req, res, next) => {
+            .patch('/:id', async (req, res, next) => {
                 try {
                     const client = await connectClient();
                     const status = Boolean(req.body.status)
                     
-                    const id = await execute(client, userQueries.changeStatus, [req.params.id, "FALSE"])
+                    const id = await execute(client, userQueries.changeStatus, [req.params.id, status])
                     res.status(200).send({ message: "set status of user: " + id.rows[0] + " to " + status })
                 } catch (error) {
                     res.status(500).json({
