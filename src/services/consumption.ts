@@ -37,7 +37,7 @@ export async function addIndexedValue(client: PoolClient, meter: Meter, readDate
             // Read date + 11 months
             const endContractPlanning = new Date(readDate.getTime());
             endContractPlanning.setMonth(endContractPlanning.getMonth() + 11);
-            const planning = createPlanning(client, contractId, readDate, PLANNING_STATUS.SCHEDULED);
+            const planning = createPlanning(client, contractId, endContractPlanning, PLANNING_STATUS.SCHEDULED);
             if (planning == null) {
                 throw new Error("Planning not created");
             }
