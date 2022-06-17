@@ -32,6 +32,7 @@ const getAllPlannings = `
     LEFT JOIN ${TABLES.CITIES} as ct ON a.city_id = ct.id
     LEFT JOIN ${TABLES.USERS_ADDRESSES} as ua ON a.id = ua.address_id
     LEFT JOIN ${TABLES.USERS} as u ON ua.user_id = u.id
+    group by p.id,u.id, a.id, ct.city_name, ct.postal_code
 `;
 
 const changePlanningStatus = `
