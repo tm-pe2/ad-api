@@ -198,6 +198,8 @@ const addMonths = (date: Date, amount: number) => {
 }
 
 export const monthDiff = (from: Date, to: Date) => {
+    from = new Date(from);
+    to = new Date(to);
     const years = to.getFullYear() - from.getFullYear();
     const months = to.getMonth() - from.getMonth();
     return 12 * years + months;
