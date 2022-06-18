@@ -47,6 +47,7 @@ export const generatePdf = async (invoiceId: number) => {
             generateAnnualInvoicePdf(invoice, contract, estimation, consumptions);
         }
 
+        client.release();
         doc.end();
         let b = doc.pipe(fs.createWriteStream(destinationPath));
 
