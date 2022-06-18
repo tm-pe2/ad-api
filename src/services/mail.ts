@@ -59,6 +59,7 @@ export class MailService {
             `For more details click <a href='${mailConfig.baseLink}/manageinvoices'>this link</a>.`
         ];
 
+        client.release();
         return this.transport.sendMail({
             from: this.from,
             to: user.email,
@@ -68,7 +69,6 @@ export class MailService {
         }).catch(e => Logger.warn("sending mail failed: " + e))
     }
     async overdueInvoice(invoiceInfo: InvoiceOverdue): Promise<SentMessageInfo> {
-        const client = await begin();
         //info from db
         const title = `Dear ${invoiceInfo.user.first_name} ${invoiceInfo.user.last_name}`;
         const body = [
