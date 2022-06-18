@@ -24,11 +24,13 @@ export async function addNewMeter(client:PoolClient,
     ]);
     if (meterRes.rowCount === 0) return null;
 
-    await execute(client, consumptionQueries.insertConsumption, [
-        meterRes.rows[0].id,
-        0,
-        new Date()
-    ]);
+    if (meterType == MeterType.SMART) {
+        await execute(client, consumptionQueries.insertConsumption, [
+            meterRes.rows[0].id,
+            0,
+            new Date()
+        ]);
+    }
 
     const contractRes = await execute(client, meterQueries.insertContractMeter, [
         contractId, meterRes.rows[0].id
